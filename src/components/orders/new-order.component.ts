@@ -9,4 +9,9 @@ export class NewOrderComponent implements OnInit {
     constructor() { }
 
     ngOnInit(): void { }
+
+
+    save () {
+        console.log('saving...')
+    }
 }
