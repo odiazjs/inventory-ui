@@ -1,0 +1,63 @@
+.sidebar-wrapper {
+    position: absolute;
+    max-height: none;
+    min-height: 100%;
+    overflow: hidden;
+    width: 230px;
+    z-index: 4;
+    box-shadow: inset -1px 0 0 0 #ddd;
+    background-color: white;
+    .logo-title {
+        margin: 0 20px;
+        border-bottom: 1px solid rgba(102,97,91,.3);
+    }
+}
+
+.title {
+    text-transform: uppercase;
+    display: block;
+    font-size: 18px;
+    text-align: center;
+    font-weight: 400;
+    line-height: 30px;
+}
+
+.logo img {
+    width: 42px;
+    top: 16px;
+    left: 18px;
+    margin: 9px;
+}
+
+li.active>a:before {
+    border-right: 17px solid #ddd;
+    border-top: 17px solid transparent;
+    border-bottom: 17px solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    right: 1px;
+    margin-top: 10px;
+}
+
+li.active>a:after {
+    border-right: 17px solid #f4f3ef;
+    border-top: 17px solid transparent;
+    border-bottom: 17px solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    margin-top: 10px;
+    transition: all 0.5s ease;
+}
+
+li.active>a:before {
+    -webkit-animation: scale-up-hor-right 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+	        animation: scale-up-hor-right 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
+li.active>a:after {
+    -webkit-animation: scale-up-hor-right 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+	        animation: scale-up-hor-right 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}

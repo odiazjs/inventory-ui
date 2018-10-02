@@ -1,0 +1,26 @@
+<div class="sidebar-wrapper">
+    <div class="flex-container row logo-title">
+        <div class="col-xs">
+            <div class="logo">
+                <img alt="" src="https://jive.com/wp-content/themes/jive_wordpress/img/logo-jive-logmein.svg">
+            </div>
+        </div>
+        <div class="col">
+            <div class="title">
+                <h1>Jive Inventory</h1>
+            </div>
+        </div>
+    </div>
+    <div class="flex-container row">
+        <ul>
+            <ng-container *ngFor="let item of menu">
+                <li *ngIf="!item.isHidden" [ngClass]="{'active': item.isActive}" (click)="setActive(item);">
+                    <a href="javascript:void(0);">
+                        <i class="material-icons primary">{{item.icon}}</i>
+                        <label class="icon">{{item.label}}</label>
+                    </a>
+                </li>
+            </ng-container>
+        </ul>
+    </div>
+</div>

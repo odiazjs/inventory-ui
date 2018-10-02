@@ -1,0 +1,646 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css?family=Titillium+Web');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+$font-family: 'Titillium Web';
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: none;
+    font: normal normal 18px/25px $font-family, sans-serif;
+    color: #777;
+    background-color: #f4f3ef;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font: 600 18px $font-family, sans-serif;
+    color: #333;
+    text-transform: uppercase;
+}
+
+h2 {
+    font: 500 18px $font-family, sans-serif;
+    color: #333;
+    text-transform: none;
+}
+
+h3 {
+    font: 400 16px $font-family, sans-serif;
+    color: #442366;
+    text-transform: none;
+}
+
+h4 {
+    font: 400 15px $font-family, sans-serif;
+    color: #333;
+    text-transform: none;
+}
+
+p {
+    margin: 0px 0;
+    font-size: 100%;
+    color: #9a9a9a;
+}
+
+input:focus {outline:none;}
+button:focus {outline:none;}
+
+.padded-aside {
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 10px;
+}
+
+/* Input and form controls */
+
+.btn-container {
+    margin-left: 0px;
+    a.btn-primary {
+        background-color: darkcyan;
+        height: 46px;
+        display: block;
+        padding: 0.4em;
+        margin-left: 0em;
+        border-radius: 0em;
+        box-sizing: border-box;
+        text-decoration: none;
+        font-weight: 400;
+        color: #FFFFFF;
+        position: relative;
+        transition: border-width 0.2s ease, transform 0.2s ease, margin-bottom 0.2s ease;
+        margin-bottom: 6px;
+        .add-new {
+            padding-right: 0.2em;
+            /* margin-bottom: 15px; */
+            top: 3;
+            /* margin-right: 0.2em; */
+            vertical-align: sub;
+            font-size: 36px;
+            /* float: left; */
+        }
+        .btn-text {
+            font-size: 16px;
+            font-weight: 200;
+            margin-bottom: 20px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+    }
+    a.btn-secondary {
+        background-color: white;
+        height: 46px;
+        display: block;
+        padding: 0.4em;
+        margin-left: 0em;
+        border-radius: 0em;
+        box-sizing: border-box;
+        text-decoration: none;
+        font-weight: 400;
+        color: #FFFFFF;
+        position: relative;
+        transition: border-width 0.2s ease, transform 0.2s ease, margin-bottom 0.2s ease;
+        margin-bottom: 6px;
+        .add-new{
+            padding-right: 0.2em;
+            top: 3;
+            vertical-align: sub;
+            font-size: 36px;
+        }
+        .btn-text {
+            font-size: 16px;
+            font-weight: 200;
+            margin-bottom: 2px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+    }
+
+    a.btn-primary span i, i.material-icons {
+        padding: 4px;
+        color: snow;
+    }
+
+    a.btn-primary i, a.btn-secondary i, i.material-icons {
+        padding: 4px;
+        color: darkgray;
+    }
+}
+
+a.btn-primary:active {
+    transform:translateY(2px);
+    //box-shadow:inset 0 0.6em 2em -0.3em rgb(249, 249, 249), inset 0 0 0em 0.05em rgb(249,249,249);
+}
+
+a.btn-secondary:active {
+    transform:translateY(2px);
+    //box-shadow:inset 0 0.6em 2em -0.3em rgba(0,0,0,0.15),inset 0 0 0em 0.05em rgba(255,255,255,0.12);
+}
+
+// search input group
+
+* {
+    box-sizing: border-box;
+  }
+
+  ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: #d7d7d7;
+        opacity: 1; /* Firefox */
+    }
+
+    :-ms-input-placeholder { /* Internet Explorer 10-11 */
+        color: #d7d7d7;
+    }
+
+    ::-ms-input-placeholder { /* Microsoft Edge */
+        color: #d7d7d7;
+    }
+  
+  /* Style the search field */
+  form.example input[type=text], input[type=date], select {
+    padding: 10px;
+    font-size: 17px;
+    border: 0px solid #ddd;
+    float: left;
+    height: 46px;
+    width: 100%;
+    background: white;
+    font-family: 'Titillium Web';
+  }
+
+  form.example input[type=text].search {
+        width: 80% !important;
+  }
+  
+  /* Style the submit button */
+  form.example button {
+    float: left;
+    width: 20%;
+    height: 46px;
+    padding: 10px;
+    background: darkcyan;
+    color: white;
+    font-size: 17px;
+    border: 1px solid #ddd;
+    border-left: none; /* Prevent double borders */
+    cursor: pointer;
+    transition: border-width 0.2s ease, transform 0.2s ease, margin-bottom 0.2s ease;
+  }
+
+  form.example button i.material-icons {
+      color: snow;
+  }
+  
+  form.example button:hover {
+    transform:translateX(1px);
+  }
+  
+  /* Clear floats */
+  form.example::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
+  // Responsive Table
+
+    $breakpoint: 750px;
+    $heading-color: gray;
+
+* {
+  box-sizing: border-box;
+}
+
+.wrapper {
+  width: 100%;
+}
+
+.is-striped { background-color: rgba(233,200,147,0.2) }
+
+
+/* Table column sizing
+================================== */
+.date-cell  { width: 20%; }
+.topic-cell  { width: 41%; }
+.access-link-cell  { width: 13%; }
+.replay-link-cell  { width: 13%; }
+.pdf-cell  { width: 13%; }
+
+/* Apply styles
+================================== */
+.Rtable {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 0 3em 0;
+  padding: 0;
+  //box-shadow: 0 0 40px rgba(0,0,0,0.2);
+  
+  .Rtable-row {
+    width: 100%;
+    display: flex;
+    background-color: white;
+    border: 1px #ddd solid;
+    
+    .Rtable-cell {
+      box-sizing: border-box;
+      flex-grow: 1;
+      padding: 0.6em 1em;
+      overflow: hidden; // Or flex might break
+      list-style: none;
+
+      &.column-heading {
+        background-color: gray;
+        color: white;
+        /* padding: 0.7em; */
+        font-size: 16px;
+        padding-left: 1.2em;
+      }
+
+      .Rtable-cell--heading {
+        display: none;
+      }
+
+      .Rtable-cell--content {
+        .row-title {
+            color: #2fb5e8;
+            font-size: 16px;
+            font-weight: 500;
+        }
+      }
+      .Rtable-cell--content.date-content {
+        font-size: 14px;
+        font-weight: 100;
+        color: lightgray;
+      }
+      .Rtable-cell--content.title-content {
+        font-size: 16px;
+        font-weight: 100;
+        color: gray;
+      }
+    }
+  }
+}
+
+/* Responsive
+==================================== */
+@media all and (max-width: $breakpoint) {
+  .is-striped {
+    background-color: white;
+  }
+  
+  .Rtable--collapse  {
+    display: block;
+    width: 100%;
+    padding: 1em;
+    box-shadow: none;
+    
+    .Rtable-row {
+      box-sizing: border-box;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 2em;
+      box-shadow: 0 0 40px rgba(0,0,0,0.2);
+      
+      .Rtable-cell {
+        width: 100% !important;
+        display: flex;
+        align-items: center;
+
+        .Rtable-cell--heading {
+          display: inline-block;
+          flex: 1;
+          max-width: 120px;
+          min-width: 120px;
+          color: $heading-color;
+          font-weight: 700;
+          border-right: 1px solid #ccc;
+          margin-right: 1em;
+        }
+
+        .Rtable-cell--content {
+          flex: 2;
+          padding-left: 1em;
+        }
+      }
+    }
+    
+    .topic-cell {
+      background-color: $heading-color;
+      color: white;
+      font-weight: 700;
+      order: -1;
+      
+      .Rtable-cell--content {
+        padding-left: 0 !important;
+      }
+    }
+    
+    .Rtable-row--head {
+      display: none;
+    }
+  }
+}
+
+// Non-Flex modernizer fallback
+.no-flexbox .Rtable {
+  display: block;
+  
+  &.Rtable-cell {
+    width: 100%;
+  }
+}
+
+/* Flexbox */
+
+.flex-container {
+    display: flex;
+    &.row {
+        flex-direction: row;
+    }
+    &.col {
+        flex-direction: column;
+    }
+}
+
+.flex-grid {
+    display: flex;
+}
+
+.col {
+    flex: 1;
+}
+.col-xxs {
+    flex: 0.06;
+}
+.col-xs {
+    flex: 0.11;
+}
+.col-sm {
+    flex: 0.33;
+}
+.col-md {
+    flex: 0.5;
+}
+.col-lg {
+    flex: 0.66;
+}
+
+.col, .col-xxs, .col-xs, .col-sm, .col-md, .col-lg {
+    margin-right: 0.2em;
+}
+  
+  .flex-grid-thirds {
+    display: flex;
+    justify-content: space-between;
+  }
+  .flex-grid-thirds .col {
+    width: 32%;
+  }
+
+  @media (max-width: 400px) {
+    .flex-grid {
+      display: block;
+    }
+  }
+
+.chartjs-hidden-iframe {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Utility */
+
+.left {
+    text-align: left;
+}
+  
+.right {
+    text-align: right;
+}
+
+.center {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+a {
+    display: block;
+    text-decoration: none;
+    margin: 0px 0px 0px 20px;
+    transition: all 0.5s ease;
+}
+
+ul {
+    margin: 10px 0px;
+    padding-left: 0px;
+    width: 100%;
+}
+
+li {
+    cursor: pointer;
+    height: 50px;
+    line-height: 3;
+    list-style: none;
+    transition: background-color 0.5s ease;
+}
+
+li:hover {
+    background-color: #eee;
+}
+
+
+// Material Icons
+
+i.material-icons.invert {
+    transform: rotate(180deg) scaleX(1);
+}
+
+i.material-icons.primary {
+    font-size: 28px;
+    vertical-align: middle;
+    position: relative;
+    color: #c4d600;
+}
+
+i.material-icons.small {
+    font-size: 28px;
+}
+
+i.material-icons.medium {
+    font-size: 40px;
+}
+
+i.material-icons.large {
+    font-size: 52px;
+}
+
+label.icon {
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 16px;
+    color: #9a9a9a;
+}
+
+// Common component styles
+
+.card {
+    border-radius: 0px;
+    box-shadow: 0 2px 2px hsla(38,16%,76%,.5);
+    background-color: #fff;
+    color: #252422;
+    position: relative;
+    z-index: 1;
+    .chart {
+        padding: 5px;
+        .title {
+            padding: 10px;
+            font-size: 20px;
+            .subtitle {
+                color: darkgray;
+                font-size: 14px;
+            }
+        }
+    }
+    .content {
+        padding: 10px;
+        .bottom-line{
+            padding: 0px 0px 10px 0px;
+            border-bottom: 1px #d7d7d7 solid;
+        }
+        .header {
+            color: darkgray;
+            font-size: 16px;
+            font-weight: 100;
+        }
+        .detail {
+            font-size: 24px;
+        }
+        .update {
+            color: darkgray;
+            font-size: 14px;
+            font-weight: 100px;
+        }
+    }
+}
+
+/* The container */
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+    background-color: green;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+// Transitions
+
+.scale-up-hor-right {
+	-webkit-animation: scale-up-hor-right 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+	        animation: scale-up-hor-right 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
+/* ----------------------------------------------
+ * Generated by Animista on 2018-9-28 10:45:4
+ * w: http://animista.net, t: @cssanimista
+ * ---------------------------------------------- */
+
+/**
+ * ----------------------------------------
+ * animation scale-up-hor-right
+ * ----------------------------------------
+ */
+ @-webkit-keyframes scale-up-hor-right {
+    0% {
+      -webkit-transform: scaleX(0.4);
+              transform: scaleX(0.4);
+      -webkit-transform-origin: 100% 100%;
+              transform-origin: 100% 100%;
+    }
+    100% {
+      -webkit-transform: scaleX(1);
+              transform: scaleX(1);
+      -webkit-transform-origin: 100% 100%;
+              transform-origin: 100% 100%;
+    }
+  }
+  @keyframes scale-up-hor-right {
+    0% {
+      -webkit-transform: scaleX(0.4);
+              transform: scaleX(0.4);
+      -webkit-transform-origin: 100% 100%;
+              transform-origin: 100% 100%;
+    }
+    100% {
+      -webkit-transform: scaleX(1);
+              transform: scaleX(1);
+      -webkit-transform-origin: 100% 100%;
+              transform-origin: 100% 100%;
+    }
+  }
+  

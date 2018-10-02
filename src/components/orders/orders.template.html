@@ -1,0 +1,242 @@
+<div class="flex-grid padded-aside">
+    <div class="col-md">
+        <div class="flex-grid">
+            <div class="col-sm">
+                <div class="btn-container">
+                    <a href="javascript:void(0);" (click)="newOrder();" class="btn-primary">
+                        <span><i class="material-icons small">save</i></span>
+                        <div class="btn-text">New Order(s)</div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-xs">
+                <div class="btn-container">
+                    <a href="javascript:void(0);" class="btn-secondary">
+                         <span class="left">
+                            <i class="material-icons small">edit</i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+            <div class="col-xs">
+                <div class="btn-container">
+                    <a href="javascript:void(0);" class="btn-secondary">
+                         <span class="left">
+                            <i class="material-icons small">delete</i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md">
+                <form class="example" action="javascript:void(0);">
+                    <input class="search" type="text" placeholder="Search.." name="search">
+                    <button type="submit"><i class="material-icons small">search</i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md">
+        <div class="flex-grid">
+            <div class="col-sm">
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="flex-container row padded-aside">
+    <div class="col card">
+        <div class="chart">
+            <div class="title">
+                Orders over time
+                <div class="subtitle">
+                    Updated every 60 seconds
+                </div>
+            </div>
+            <div class="chart">
+                <canvas #linechart id="lineChart" height="auto">{{ lineChart }}</canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="flex-container row padded-aside">
+    <div class="wrapper">
+        <div class="Rtable Rtable--5cols Rtable--collapse">
+            <div class="Rtable-row Rtable-row--head">
+                <div class="Rtable-cell pdf-cell column-heading">Checkbox</div>
+                <div class="Rtable-cell date-cell column-heading">Order No.</div>
+                <div class="Rtable-cell date-cell column-heading">Ticket No.</div>
+                <div class="Rtable-cell date-cell column-heading">Type</div>
+                <div class="Rtable-cell date-cell column-heading">Order Type</div>
+                <div class="Rtable-cell date-cell column-heading">Date</div>
+                <div class="Rtable-cell date-cell column-heading">Status</div>
+                <div class="Rtable-cell date-cell column-heading">Select</div>
+            </div>
+
+            <div class="Rtable-row">
+                <div class="Rtable-cell pdf-cell">
+                    <div class="Rtable-cell--heading">Checkbox</div>
+                    <div class="Rtable-cell--content date-content"><span class="row-title">
+                            <label class="container">
+                                <input type="checkbox" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+                        </span>
+                    </div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Order No.</div>
+                    <div class="Rtable-cell--content date-content"><span class="row-title">002154</span><br />6:00 pm
+                        (CDT)</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Ticket No.</div>
+                    <div class="Rtable-cell--content title-content">0000054587</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Type</div>
+                    <div class="Rtable-cell--content title-content">In</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Order Type</div>
+                    <div class="Rtable-cell--content title-content">Buy</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Date</div>
+                    <div class="Rtable-cell--content title-content">Date</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Status</div>
+                    <div class="Rtable-cell--content title-content">Completed</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Select</div>
+                    <div class="Rtable-cell--content title-content">Checked</div>
+                </div>
+            </div>
+            <div class="Rtable-row">
+                <div class="Rtable-cell pdf-cell">
+                    <div class="Rtable-cell--heading">Checkbox</div>
+                    <div class="Rtable-cell--content date-content"><span class="row-title">
+                            <label class="container">
+                                <input type="checkbox" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+                        </span>
+                    </div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Order No.</div>
+                    <div class="Rtable-cell--content date-content"><span class="row-title">002154</span><br />6:00 pm
+                        (CDT)</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Ticket No.</div>
+                    <div class="Rtable-cell--content title-content">0000054587</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Type</div>
+                    <div class="Rtable-cell--content title-content">In</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Order Type</div>
+                    <div class="Rtable-cell--content title-content">Buy</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Date</div>
+                    <div class="Rtable-cell--content title-content">Date</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Status</div>
+                    <div class="Rtable-cell--content title-content">Completed</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Select</div>
+                    <div class="Rtable-cell--content title-content">Checked</div>
+                </div>
+            </div>
+            <div class="Rtable-row">
+                <div class="Rtable-cell pdf-cell">
+                    <div class="Rtable-cell--heading">Checkbox</div>
+                    <div class="Rtable-cell--content date-content"><span class="row-title">
+                            <label class="container">
+                                <input type="checkbox" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+                        </span>
+                    </div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Order No.</div>
+                    <div class="Rtable-cell--content date-content"><span class="row-title">002154</span><br />6:00 pm
+                        (CDT)</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Ticket No.</div>
+                    <div class="Rtable-cell--content title-content">0000054587</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Type</div>
+                    <div class="Rtable-cell--content title-content">In</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Order Type</div>
+                    <div class="Rtable-cell--content title-content">Buy</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Date</div>
+                    <div class="Rtable-cell--content title-content">Date</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Status</div>
+                    <div class="Rtable-cell--content title-content">Completed</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Select</div>
+                    <div class="Rtable-cell--content title-content">Checked</div>
+                </div>
+            </div>
+            <div class="Rtable-row">
+                <div class="Rtable-cell pdf-cell">
+                    <div class="Rtable-cell--heading">Checkbox</div>
+                    <div class="Rtable-cell--content date-content"><span class="row-title">
+                            <label class="container">
+                                <input type="checkbox" >
+                                <span class="checkmark"></span>
+                            </label>
+                        </span>
+                    </div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Order No.</div>
+                    <div class="Rtable-cell--content date-content"><span class="row-title">002154</span><br />6:00 pm
+                        (CDT)</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Ticket No.</div>
+                    <div class="Rtable-cell--content title-content">0000054587</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Type</div>
+                    <div class="Rtable-cell--content title-content">In</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Order Type</div>
+                    <div class="Rtable-cell--content title-content">Buy</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Date</div>
+                    <div class="Rtable-cell--content title-content">Date</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Status</div>
+                    <div class="Rtable-cell--content title-content">Completed</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Select</div>
+                    <div class="Rtable-cell--content title-content">Checked</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
