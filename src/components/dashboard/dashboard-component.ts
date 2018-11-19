@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, NgZone, AfterViewInit } from '@angular/core';
 
-import * as moment from 'moment'
+import * as moment from 'moment';
 import Chart from 'chart.js';
 
 @Component({
@@ -13,9 +13,10 @@ export class DashboardComponent implements OnInit {
     barChart: any = [];
     lineChart: any = [];
 
-    constructor() { }
+    constructor(private zone: NgZone) { }
 
     ngOnInit(): void {
+
         const el = <HTMLCanvasElement>document.getElementById('barChart');
         const ctx = el.getContext('2d');
 
@@ -72,81 +73,9 @@ export class DashboardComponent implements OnInit {
             }
         });
 
-        // line chart
+        // // line chart
         const lineEl = <HTMLCanvasElement>document.getElementById('lineChart');
         const lineCtx = lineEl.getContext('2d');
 
-        function hoursEarlier(hours) {
-            return moment().subtract(hours, 'h').toDate();
-        };
-
-        var speedData = {
-            labels: [hoursEarlier(10), hoursEarlier(9.4), hoursEarlier(8), hoursEarlier(7), hoursEarlier(6), hoursEarlier(5), hoursEarlier(4)],
-            datasets: [{
-                label: "",
-                data: [0, 59, 75, 20, 20, 55, 40],
-                borderWidth: 0.6,
-                lineTension: 0.25,
-                fill: false,
-                borderColor: 'orange',
-                backgroundColor: 'transparent',
-                pointBorderColor: 'orange',
-                pointBackgroundColor: 'rgba(255,150,0,0.5)',
-                pointRadius: 3,
-                pointHoverRadius: 10,
-                pointHitRadius: 30,
-                pointBorderWidth: 1,
-                pointStyle: 'rectRounded'
-            }]
-        };
-
-        var chartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            legend: {
-                display: false,
-                position: 'top',
-                labels: {
-                    boxWidth: 50,
-                    fontColor: '#424242'
-                }
-            },
-            scales: {
-                xAxes: [{
-                    type: "time",
-                    time: {
-                        unit: 'hour',
-                        unitStepSize: 0.6,
-                        round: 'hour',
-                        tooltipFormat: "h:mm:ss a",
-                        displayFormats: {
-                            hour: 'MMM D, h:mm A'
-                        }
-                    }
-                }],
-                yAxes: [{
-                    gridLines: {
-                        color: "black"
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: "# Units",
-                        fontColor: "green"
-                    }
-                }]
-            }
-        };
-
-        this.lineChart = new Chart(lineCtx, {
-            type: 'line',
-            data: speedData,
-            options: chartOptions
-        });
-
-        //resize hack
-        window.addEventListener('resize', () => {
-             this.barChart.resize();
-             this.lineChart.resize();
-        })
     }
 }

@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { HttpWrapper } from '../common/barrel';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +9,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'inventory-ui';
+  constructor(
+    @Inject(HttpWrapper) public httpWrapper: HttpWrapper<HttpResponse<{}>>
+  ) {
+
+  }
 }

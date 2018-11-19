@@ -3,7 +3,8 @@ import {
     DashboardComponent, 
     OrdersComponent, 
     NewOrderComponent, 
-    ProductsComponent, 
+    ProductsComponent,
+    InventoryComponent,
     NavbarComponent } from './barrel';
 
 export const APP_COMPONENTS = [
@@ -12,5 +13,6 @@ export const APP_COMPONENTS = [
     DashboardComponent,
     OrdersComponent,
     NewOrderComponent,
-    ProductsComponent
+    ProductsComponent,
+    InventoryComponent
 ]

@@ -1,4 +1,41 @@
-.navbar-container {
-    height: 80px;
-    border-bottom: 2px solid #ddd;
+.navbar {
+    height: 60px;
+    z-index: 5;
+    background-color: white;
+    border-bottom: 2px solid #d9d9d9;
+    .title {
+        margin: 16px 0px;
+    }
+}
+
+.logo img {
+    width: 36px;
+    margin: 8px;
+}
+
+.user-profile {
+    .avatar {
+        float: right;
+        i {
+            line-height: 1.4 !important;
+        }
+    }
+    .info {
+        padding: 8px 0px;
+        .name {
+            font-size: 18px;
+        }
+        .job-title {
+            color: darkcyan;
+            font-size: 13px;
+            font-weight: 100;
+            margin-top: -12px;
+        }
+    }
+    .arrow-dwn {
+        i {
+            line-height: 2 !important;
+        }
+        float: right;
+    }
 }

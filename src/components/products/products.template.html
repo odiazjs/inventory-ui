@@ -1,0 +1,125 @@
+<!-- ORDER CONTROLS -->
+<div class="flex-grid padded-aside">
+        <div class="col-md">
+            <div class="flex-grid">
+                <div class="col-sm">
+                    <div class="btn-container">
+                        <a href="javascript:void(0);" (click)="newProduct();" class="btn-primary">
+                            <span><i class="material-icons small">save</i></span>
+                            <div class="btn-text">New Product(s)</div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs">
+                    <div class="btn-container">
+                        <a href="javascript:void(0);" class="btn-secondary">
+                             <span class="left">
+                                <i class="material-icons small">edit</i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs">
+                    <div class="btn-container">
+                        <a href="javascript:void(0);" class="btn-secondary">
+                             <span class="left">
+                                <i class="material-icons small">delete</i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <form class="example" action="javascript:void(0);">
+                        <input class="search" type="text" placeholder="Search.." name="search">
+                        <button type="submit"><i class="material-icons small">search</i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="flex-grid">
+                <div class="col-sm">
+    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ORDER BY TIME CHART -->
+    <div class="flex-container row padded-aside">
+        <div class="col card">
+            <div class="chart">
+                <div class="title">
+                    Products over time
+                    <div class="subtitle">
+                        Updated every 60 seconds
+                    </div>
+                </div>
+                <div class="chart">
+                    <canvas #linechart id="lineChart" height="auto">{{ lineChart }}</canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ORDER DATA TABLE -->
+    <div class="flex-container row padded-aside">
+        <div class="wrapper">
+            <div class="Rtable Rtable--5cols Rtable--collapse">
+                <div class="Rtable-row Rtable-row--head">
+                    <div class="Rtable-cell small-cell column-heading">Select</div>
+                    <div class="Rtable-cell date-cell column-heading">Barcode</div>
+                    <div class="Rtable-cell date-cell column-heading">Total Items</div>
+                    <div class="Rtable-cell date-cell column-heading">Created Date</div>
+                    <div class="Rtable-cell date-cell column-heading">Min Price</div>
+                    <div class="Rtable-cell date-cell column-heading">Max Price</div>
+                    <div class="Rtable-cell date-cell column-heading">Avg Price</div>
+                    <div class="Rtable-cell date-cell column-heading">Last Rec Price</div>
+                </div>
+    
+                <div class="Rtable-row" *ngFor="let product of productsList">
+                    <div class="Rtable-cell small-cell">
+                        <div class="Rtable-cell--heading">Select</div>
+                        <div class="Rtable-cell--content date-content"><span class="row-title">
+                                <label class="container">
+                                    <input type="checkbox" checked="checked">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="Rtable-cell date-cell">
+                        <div class="Rtable-cell--heading">Barcode</div>
+                        <div class="Rtable-cell--content date-content">
+                            <span class="row-title">{{product.barcode}}</span>
+                            <!-- <br />6:00 pm(CDT) -->
+                        </div>
+                    </div>
+                    <div class="Rtable-cell date-cell">
+                        <div class="Rtable-cell--heading">Total Items</div>
+                        <div class="Rtable-cell--content title-content">{{product.totalItems}}</div>
+                    </div>
+                    <div class="Rtable-cell date-cell">
+                        <div class="Rtable-cell--heading">Created Date</div>
+                        <div class="Rtable-cell--content title-content">{{product.createdDate | formatDate}}</div>
+                    </div>
+                    <div class="Rtable-cell date-cell">
+                        <div class="Rtable-cell--heading">Min Price</div>
+                        <div class="Rtable-cell--content title-content">{{product.minPrice}}</div>
+                    </div>
+                    <div class="Rtable-cell date-cell">
+                        <div class="Rtable-cell--heading">Max Price</div>
+                        <div class="Rtable-cell--content title-content">{{product.maxPrice}}</div>
+                    </div>
+                    <div class="Rtable-cell date-cell">
+                        <div class="Rtable-cell--heading">Avg Price</div>
+                        <div class="Rtable-cell--content title-content">{{product.avgPrice}}</div>
+                    </div>
+                    <div class="Rtable-cell date-cell">
+                        <div class="Rtable-cell--heading">Last Rec Price</div>
+                        <div class="Rtable-cell--content title-content">{{product.lastRecordedPrice}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

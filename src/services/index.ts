@@ -1,5 +1,15 @@
-import { MenuService } from './barrel'
+import {
+    MenuService,
+    OrderService,
+    OrderMockService,
+    ProductService,
+    ProductMockService
+} from './barrel'
 
 export const APP_SERVICES = [
-    MenuService
+    MenuService,
+    OrderService,
+    OrderMockService,
+    ProductService,
+    ProductMockService
 ]

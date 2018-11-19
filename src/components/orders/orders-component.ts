@@ -1,26 +1,71 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, AfterContentInit } from '@angular/core';
 
 import * as moment from 'moment'
 import Chart from 'chart.js';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
+import OrderModel from '../../models/order.model';
+import { OrderService } from '../../services/order.service';
+import { startWith, delay } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { OrderDetailDto } from 'src/models/order.dto';
 
 @Component({
     selector: 'app-orders',
     templateUrl: './orders.template.html',
     styleUrls: ['./orders.component.scss']
 })
-export class OrdersComponent implements OnInit {
-    
-    lineChart: any = [];
 
-    constructor(private store: Store) { }
+export class OrdersComponent implements AfterContentInit {
 
-    newOrder () {
+    lineChart: Array<any> = [];
+    orderList: Array<OrderModel> = [];
+
+    canEdit: boolean = false;
+
+    constructor(
+        private store: Store,
+        public orderService: OrderService
+    ) { }
+
+    getAllOrders() {
+        Observable.of().pipe(startWith(null), delay(0)).subscribe(() => {
+            this.orderService.getList()
+                .subscribe((result: any) => {
+                    console.log('orders...', result);
+                    this.orderList = [...result]
+                })
+        })
+    }
+
+    newOrder() {
         this.store.dispatch(new Navigate(['/orders/new']))
     }
-    
-    ngOnInit(): void {
+
+    editOrder() {
+        const { id } = this.orderList.find(x => x.checked)
+        this.store.dispatch(new Navigate(['/orders/', id]))
+    }
+
+    validateCanEdit () {
+        this.canEdit = this.orderList.find(x => x.checked) !== undefined;
+    }
+
+    toggleCheck (order: OrderModel) {
+        const checkedValue = this.orderList.find(x => x.checked);
+        if (checkedValue && order.id === checkedValue.id) {
+            order.checked = false;
+        } else {
+            this.orderList.forEach(order => order.checked = false)
+            order.checked = true;
+        }
+        this.validateCanEdit();
+    }
+
+    ngAfterContentInit(): void {
+
+        this.getAllOrders();
+
         // line chart
         const lineEl = <HTMLCanvasElement>document.getElementById('lineChart');
         const lineCtx = lineEl.getContext('2d');

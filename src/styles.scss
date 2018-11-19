@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
-$font-family: 'Titillium Web';
+@import "globals";
 
 html, body {
     width: 100%;
@@ -14,44 +14,49 @@ body {
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: none;
     font: normal normal 18px/25px $font-family, sans-serif;
-    color: #777;
-    background-color: #f4f3ef;
+    color: $font-color-dark;
+    background-color: $bg-color;
     margin: 0;
     padding: 0;
 }
 
+h1, h2, h3, h4 {
+    margin: 5px 0px;
+    color: $font-color-dark;
+}
+
 h1 {
-    font: 600 18px $font-family, sans-serif;
-    color: #333;
-    text-transform: uppercase;
+    font: 500 20px $font-family, sans-serif;
+    text-transform: none;
 }
 
 h2 {
     font: 500 18px $font-family, sans-serif;
-    color: #333;
     text-transform: none;
 }
 
 h3 {
     font: 400 16px $font-family, sans-serif;
-    color: #442366;
     text-transform: none;
 }
 
 h4 {
     font: 400 15px $font-family, sans-serif;
-    color: #333;
     text-transform: none;
 }
 
 p {
     margin: 0px 0;
     font-size: 100%;
-    color: #9a9a9a;
+    color: $font-color-light;
 }
 
 input:focus {outline:none;}
 button:focus {outline:none;}
+
+.padded-top {
+    margin-top: 10px;
+}
 
 .padded-aside {
     padding-top: 10px;
@@ -229,9 +234,7 @@ a.btn-secondary:active {
 ================================== */
 .date-cell  { width: 20%; }
 .topic-cell  { width: 41%; }
-.access-link-cell  { width: 13%; }
-.replay-link-cell  { width: 13%; }
-.pdf-cell  { width: 13%; }
+.small-cell  { width: 13%; }
 
 /* Apply styles
 ================================== */
@@ -361,6 +364,7 @@ a.btn-secondary:active {
 /* Flexbox */
 
 .flex-container {
+    height: inherit;
     display: flex;
     &.row {
         flex-direction: row;
@@ -394,6 +398,7 @@ a.btn-secondary:active {
 }
 
 .col, .col-xxs, .col-xs, .col-sm, .col-md, .col-lg {
+    height: inherit;
     margin-right: 0.2em;
 }
   
@@ -435,26 +440,31 @@ a.btn-secondary:active {
 a {
     display: block;
     text-decoration: none;
-    margin: 0px 0px 0px 20px;
     transition: all 0.5s ease;
 }
 
+a.disabled {
+    background-color: #d9d9d9 !important;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 ul {
-    margin: 10px 0px;
+    margin: 0px 0px;
     padding-left: 0px;
     width: 100%;
 }
 
 li {
     cursor: pointer;
-    height: 50px;
+    height: 90px;
     line-height: 3;
     list-style: none;
     transition: background-color 0.5s ease;
 }
 
-li:hover {
-    background-color: #eee;
+li:hover, li:focus-within, li.active {
+    background-color: darkcyan;
 }
 
 
@@ -464,9 +474,22 @@ i.material-icons.invert {
     transform: rotate(180deg) scaleX(1);
 }
 
+i.material-icons.dark {
+    color: #424242 !important;
+}
+
 i.material-icons.primary {
     font-size: 28px;
-    vertical-align: middle;
+    vertical-align: bottom;
+    margin-bottom: 0px;
+    position: relative;
+    color: #cccc;
+}
+
+i.material-icons.secondary {
+    font-size: 28px;
+    vertical-align: bottom;
+    margin-bottom: 0px;
     position: relative;
     color: #c4d600;
 }
@@ -476,18 +499,21 @@ i.material-icons.small {
 }
 
 i.material-icons.medium {
-    font-size: 40px;
+    font-size: 34px;
 }
 
 i.material-icons.large {
-    font-size: 52px;
+    font-size: 40px;
 }
 
 label.icon {
     cursor: pointer;
-    margin-left: 10px;
-    font-size: 16px;
-    color: #9a9a9a;
+    font-size: 14px;
+    font-weight: 500;
+    top: -8px;
+    position: relative;
+    vertical-align: super;
+    color: $font-color-light;
 }
 
 // Common component styles
@@ -537,7 +563,6 @@ label.icon {
     display: block;
     position: relative;
     padding-left: 35px;
-    margin-bottom: 12px;
     cursor: pointer;
     font-size: 22px;
     -webkit-user-select: none;
@@ -560,7 +585,7 @@ label.icon {
     left: 0;
     height: 25px;
     width: 25px;
-    background-color: #eee;
+    background-color: #d7d7d7;
 }
 
 /* On mouse-over, add a grey background color */
@@ -596,6 +621,46 @@ label.icon {
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
+}
+
+// Modal
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+.modal-container {
+    .content {
+        height: fit-content;
+        background: whitesmoke;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        margin: 10%;
+        z-index: 1;
+        .inner {
+            margin: 20px;
+        }
+    }
+    .last-results {
+        margin: 10px;
+        .result-item {
+            text-align: -webkit-center;
+        }
+    }
+    .result-container {
+        overflow-y: auto;
+        height: 200px;
+    }
 }
 
 // Transitions

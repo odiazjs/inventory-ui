@@ -4,6 +4,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Observable } from 'rxjs';
 import { MenuItem } from '../types';
 import { MenuService } from '../../services/menu-service';
+import { parseUrl } from 'src/common/url';
 
 @Component({
     selector: 'app-sidebar',
@@ -20,15 +21,8 @@ export class SidebarComponent implements OnInit {
     ngOnInit(): void {
         this.routeState$.subscribe(routerState => {
             if (routerState.state) {
-                const parseUrl = (url) => {
-                    return url.substring(0, url.lastIndexOf('/'))
-                }
                 this.menu.map(item => item.isActive = false);
-                let stateUrl = routerState.state.url;
-                // let parseUrlResult = parseUrl(stateUrl);
-                // if ( parseUrlResult && parseUrlResult !== -1 ) {
-                //     stateUrl = parseUrlResult;
-                // }
+                let stateUrl = parseUrl(routerState.state.url);
                 this.menu.filter(item => item.routeUrl == stateUrl).pop().isActive = true;
             }
         });
@@ -36,9 +30,6 @@ export class SidebarComponent implements OnInit {
 
     setActive (item: MenuItem) {
         const selectedMenuItem = this.menu.filter(x => x.isActive).pop();
-        if (item.label == selectedMenuItem.label) {
-            return;
-        }
         this.menu.forEach(menuItem => {
             menuItem.isActive = false;
             if (menuItem.label == item.label){

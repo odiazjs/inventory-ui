@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Headers, RequestOptionsArgs, RequestMethod, RequestOptions } from '@angular/http';
+import { RequestOptionsArgs, RequestMethod } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of'
@@ -20,48 +20,53 @@ export class HttpWrapper<T> {
         return this.request(RequestMethod.Get, url, null, options);
     }
 
-    post(url: string, body: any, options?: RequestOptionsArgs): Observable<T> {
+    post<T>(url: string, body: any, options?: RequestOptionsArgs): Observable<T> {
         return this.request(RequestMethod.Post, url, body, options);
     }
 
-    put(url: string, body: any, options?: RequestOptionsArgs): Observable<T> {
+    put<T>(url: string, body: any, options?: RequestOptionsArgs): Observable<T> {
         return this.request(RequestMethod.Put, url, body, options);
     }
 
-    delete(url: string, options?: RequestOptionsArgs): Observable<T> {
+    delete<T>(url: string, options?: RequestOptionsArgs): Observable<T> {
         return this.request(RequestMethod.Delete, url, null, options);
     }
 
-    patch(url: string, body: any, options?: RequestOptionsArgs): Observable<T> {
+    patch<T>(url: string, body: any, options?: RequestOptionsArgs): Observable<T> {
         return this.request(RequestMethod.Patch, url, body, options);
     }
 
-    head(url: string, options?: RequestOptionsArgs): Observable<T> {
+    head<T>(url: string, options?: RequestOptionsArgs): Observable<T> {
         return this.request(RequestMethod.Head, url, null, options);
     }
 
-    private request(method: RequestMethod, url: string, body?: any, options?: RequestOptionsArgs): Observable<T> {
+    private request<T>(method: RequestMethod, url: string, body?: any, options?: RequestOptionsArgs): Observable<T> {
+        const disableRequest = () => {
+            this.isInRequest = false;
+        }
         const requestOptions = new HttpRequest<any>(
             RequestMethod[method.toString()],
             url,
             body
         )
+        this.isInRequest = true;
         return Observable.create((observer) => {
             this.http.request(requestOptions)
                 .subscribe((response: any | HttpResponse<any>) => {
                     if (response.type) {
-                        this.isInRequest = false
+                        disableRequest();
                         observer.next(response.body);
                         observer.complete();
                     }
                     if (response.error) {
-                        this.isInRequest = false
+                        disableRequest();
                         observer.error(response)
                         if (response.status === 401) {
                             this.router.navigateByUrl('/login')
                         }
                     }
                 }, (error) => {
+                    disableRequest();
                     observer.error(error)
                 })
         })

@@ -5,3 +5,8 @@ export interface MenuItem {
     isActive: boolean;
     isHidden?: boolean;
 }
+
+export interface Dictionary<T> {
+    [id: string]: T;
+}
+

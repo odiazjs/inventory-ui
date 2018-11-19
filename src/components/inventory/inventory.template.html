@@ -1,0 +1,197 @@
+<!-- ORDER CONTROLS -->
+<div class="flex-container row padded-aside">
+    <h2>Filter Inventory Item</h2>
+</div>
+<div class="flex-container row padded-aside">
+    <div class="col-xs">
+        <div class="btn-container" (click)="showModal();">
+            <a href="javascript:void(0);" class="btn-secondary">
+                 <span class="left">
+                    <i class="material-icons small">edit</i>
+                </span>
+            </a>
+        </div>
+    </div>
+    <div class="col">
+        <form class="example" action="javascript:void(0);">
+            <input class="search" type="text" placeholder="Product SKU or Name" name="search">
+            <button type="submit"><i class="material-icons small">search</i></button>
+        </form>
+    </div>
+    <div class="col-md">
+        <form class="example" action="javascript:void(0);">
+            <select name="orderstate">
+                <option value="volvo">Warehouse A</option>
+                <option value="Manufacturer">Manufacturer</option>
+            </select>
+        </form>
+    </div>
+    <div class="col-md">
+        <form class="example" action="javascript:void(0);">
+            <select name="orderstate">
+                <option>Item Status</option>
+            </select>
+        </form>
+    </div>
+    <div class="col-md">
+        <form class="example" action="javascript:void(0);">
+            <select name="orderstate">
+                <option>Inventory</option>
+            </select>
+        </form>
+    </div>
+    <div class="col-sm">
+        <div class="btn-container">
+            <a href="javascript:void(0);" (click)="newOrder();" class="btn-primary">
+                <span><i class="material-icons small">save</i></span>
+                <div class="btn-text">Filter</div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- PRODUCT ORDER DETAIL DATA TABLE -->
+<div class="flex-container row padded-aside">
+    <div class="wrapper">
+        <div class="Rtable Rtable--5cols Rtable--collapse">
+            <div class="Rtable-row Rtable-row--head">
+                <div class="Rtable-cell small-cell column-heading">Select</div>
+                <div class="Rtable-cell date-cell column-heading">Barcode</div>
+                <div class="Rtable-cell small-cell column-heading">Product</div>
+                <div class="Rtable-cell small-cell column-heading">Serial No.</div>
+                <div class="Rtable-cell small-cell column-heading">Qty</div>
+                <div class="Rtable-cell small-cell column-heading">Price</div>
+                <div class="Rtable-cell date-cell column-heading">Warehouse</div>
+                <div class="Rtable-cell small-cell column-heading">Inventory</div>
+                <div class="Rtable-cell date-cell column-heading">Inventory Status</div>
+                <div class="Rtable-cell date-cell column-heading">Item Status</div>
+            </div>
+
+            <div class="Rtable-row" *ngFor="let item of productsList">
+
+                <div class="Rtable-cell small-cell">
+                    <div class="Rtable-cell--heading">Select</div>
+                    <div class="Rtable-cell--content date-content"><span class="row-title">
+                            <label class="container">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                            </label>
+                        </span>
+                    </div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Barcode</div>
+                    <div class="Rtable-cell--content date-content">07350053850019</div>
+                </div>
+                <div class="Rtable-cell small-cell">
+                    <div class="Rtable-cell--heading">Product</div>
+                    <div class="Rtable-cell--content title-content">{{item.id}}</div>
+                </div>
+                <div class="Rtable-cell small-cell">
+                    <div class="Rtable-cell--heading">Serial No.</div>
+                    <div class="Rtable-cell--content title-content">000000101</div>
+                </div>
+                <div class="Rtable-cell small-cell">
+                    <div class="Rtable-cell--heading">Qty</div>
+                    <div class="Rtable-cell--content title-content">1</div>
+                </div>
+                <div class="Rtable-cell small-cell">
+                    <div class="Rtable-cell--heading">Price</div>
+                    <div class="Rtable-cell--content title-content">{{item.avgPrice}}</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Warehouse</div>
+                    <div class="Rtable-cell--content title-content">Warehouse A</div>
+                </div>
+                <div class="Rtable-cell small-cell">
+                    <div class="Rtable-cell--heading">Inventory</div>
+                    <div class="Rtable-cell--content title-content">Jive New</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Inventory Status</div>
+                    <div class="Rtable-cell--content title-content">On Hand</div>
+                </div>
+                <div class="Rtable-cell date-cell">
+                    <div class="Rtable-cell--heading">Item Status</div>
+                    <div class="Rtable-cell--content title-content">New</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-container" *ngIf="modalShown">
+    <div class="content">
+        <div class="inner">
+            <div class="flex-container row padded-aside">
+                <h2 class="center">On Inventory Item</h2>
+            </div>
+            <div class="flex-container row padded-aside">
+                <h2 class="center">Product: -Product Name- Quantity: 1 Manufacturer -Manufacturer Name- Product Group: -Group Name- </h2>
+            </div>
+            <div class="flex-container row padded-aside">
+                <div class="col-md">
+                    <form class="example" action="javascript:void(0);">
+                        <select name="orderstate">
+                            <option>Warehouse</option>
+                        </select>
+                    </form>
+                </div>
+                <div class="col-md">
+                    <form class="example" action="javascript:void(0);">
+                        <select name="orderstate">
+                            <option>Inventory</option>
+                        </select>
+                    </form>
+                </div>
+                <div class="col-md">
+                    <form class="example" action="javascript:void(0);">
+                        <select name="orderstate">
+                            <option>On-hand</option>
+                        </select>
+                    </form>
+                </div>
+                <div class="col-md">
+                    <form class="example" action="javascript:void(0);">
+                        <select name="orderstate">
+                            <option>New</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+            <div class="flex-container row padded-aside">
+                <div class="col-md">
+                    <form class="example" action="javascript:void(0);">
+                        <select name="orderstate">
+                            <option>Assigned To</option>
+                        </select>
+                    </form>
+                </div>
+                <div class="col-md">
+                    <form class="example" action="javascript:void(0);">
+                        <input class="search" type="text" placeholder="MAC Address / Serial No." name="mac">
+                    </form>
+                </div>
+            </div>
+            <div class="flex-container row padded-aside">
+                <div class="col">&nbsp;</div>
+                <div class="col-md">
+                    <div class="btn-container">
+                        <a href="javascript:void(0);" (click)="showModal();" class="btn-primary center">
+                            <div class="btn-text">Save</div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="btn-container">
+                        <a href="javascript:void(0);" (click)="showModal();" class="btn-primary center">
+                            <div class="btn-text">Cancel</div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col">&nbsp;</div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop"></div>
+</div>

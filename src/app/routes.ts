@@ -4,7 +4,8 @@ import {
     DashboardComponent,
     OrdersComponent,
     NewOrderComponent,
-    ProductsComponent
+    ProductsComponent,
+    InventoryComponent
 } from '../components/barrel';
 
 export const appRoutes: Routes = [
@@ -12,5 +13,7 @@ export const appRoutes: Routes = [
     { path: 'dashboard', component: DashboardComponent },
     { path: 'orders', component: OrdersComponent },
     { path: 'orders/new', component: NewOrderComponent },
+    { path: 'orders/:id', component: NewOrderComponent },
     { path: 'products', component: ProductsComponent },
+    { path: 'inventory', component: InventoryComponent },
 ];

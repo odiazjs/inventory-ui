@@ -11,6 +11,7 @@
   },
   "private": true,
   "dependencies": {
+    "@amcharts/amcharts4": "^4.0.0-beta.55",
     "@angular/animations": "^6.1.0",
     "@angular/common": "^6.1.0",
     "@angular/compiler": "^6.1.0",
@@ -22,9 +23,14 @@
     "@angular/router": "^6.1.0",
     "@ngxs/router-plugin": "^3.2.0",
     "@ngxs/store": "^3.2.0",
+    "@types/lodash": "^4.14.118",
     "chart.js": "^2.7.2",
     "core-js": "^2.5.4",
+    "lodash": "^4.17.11",
     "rxjs": "~6.2.0",
+    "to-camel-case": "^1.0.0",
+    "to-snake-case": "^1.0.0",
+    "typings": "^2.1.1",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

@@ -7,24 +7,18 @@
         </div>
     </div>
     <div class="flex-container row padded-aside">
-        <div class="col-xxs">
-            <label class="container">IN
-                <input type="radio" checked="checked" name="radio">
-                <span class="checkmark"></span>
-            </label>
-        </div>
-        <div class="col-xxs">
-            <i class="material-icons small invert">input</i>
-        </div>
-        <div class="col-xxs">
-            <label class="container">OUT
-                <input type="radio" name="radio">
-                <span class="checkmark"></span>
-            </label>
-        </div>
-        <div class="col-xxs">
-            <i class="material-icons small">input</i>
-        </div>
+        <ng-container *ngFor="let orderType of orderTypes; let i = index">
+            <div class="col-xxs">
+                <label class="container">{{orderType.name}}
+                    <input type="radio" name="radio" [checked]="orderProducts.order.orderType.id == orderTypes[i].id"
+                        (change)="switchRadioBtns($event, orderTypes[i])">
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+            <div class="col-xxs">
+                <i [ngClass]="{'invert': orderType.name == 'IN'}" class="material-icons small">{{orderType.icon}}</i>
+            </div>
+        </ng-container>
     </div>
     <div class="flex-grid padded-aside">
         <div class="col">
@@ -36,27 +30,22 @@
     <div class="flex-container row padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input type="text" placeholder="Order No." name="search">
+                <input [(ngModel)]="orderProducts.order.orderNumber" type="text" placeholder="Order No." name="search">
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <select>
-                    <option value="volvo">Buy</option>
-                    <option value="saab">On-Hand</option>
-                    <option value="mercedes">Sold Out To</option>
-                </select>
+                <input [ngModel]="orderProducts.order.orderDate | date:'yyyy-MM-dd'" (ngModelChange)="orderProducts.order.orderDate = $event"
+                    type="date" name="orderdate" />
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input id="date" type="date" value="2017-06-01">
+                <input type="text" [(ngModel)]="orderProducts.order.ticketNumber" placeholder="Ticket No." name="ticketno">
             </form>
         </div>
         <div class="col-sm">
-            <form class="example" action="javascript:void(0);">
-                <input type="text" placeholder="Ticket No." name="search">
-            </form>
+            &nbsp;
         </div>
     </div>
     <div class="flex-grid padded-aside">
@@ -69,39 +58,29 @@
     <div class="flex-container row padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <select>
-                    <option value="volvo">Warehouse A</option>
-                    <option value="saab">Warehouse B</option>
-                    <option value="mercedes">Warehouse C</option>
-                    <option value="audi">Warehouse D</option>
+                <select required [(ngModel)]="orderProducts.orderDetail.warehouseCat" name="warehouse">
+                    <option *ngFor="let item of warehouses" [ngValue]="item">{{item.name}}</option>
                 </select>
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <select>
-                    <option value="volvo">Jive New</option>
-                    <option value="saab">B-Stock</option>
-                    <option value="mercedes">Z David Bowely</option>
-                    <option value="audi">Demos</option>
+                <select required [(ngModel)]="orderProducts.orderDetail.inventoryCat" name="inventory">
+                    <option *ngFor="let item of inventories" [ngValue]="item">{{item.name}}</option>
                 </select>
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <select>
-                    <option value="volvo">Buy</option>
-                    <option value="saab">On-Hand</option>
-                    <option value="mercedes">Sold Out To</option>
+                <select required [(ngModel)]="orderProducts.orderDetail.onInventoryStatusCat" name="oninvstatus">
+                    <option *ngFor="let item of inventoryStatuses" [ngValue]="item">{{item.name}}</option>
                 </select>
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <select>
-                    <option value="volvo">New</option>
-                    <option value="saab">Used</option>
-                    <option value="mercedes">Defective</option>
+                <select required [(ngModel)]="orderProducts.orderDetail.itemStatusCat" name="itemstatus">
+                    <option *ngFor="let item of itemStatuses" [ngValue]="item">{{item.name}}</option>
                 </select>
             </form>
         </div>
@@ -118,7 +97,15 @@
     <div class="flex-grid padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input class="search" type="text" placeholder="Search.." name="search">
+                <input (keyup)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })' class="search" type="text" placeholder="Search.." name="search">
+                <button type="submit"><i class="material-icons small">search</i></button>
+            </form>
+        </div>
+        <div class="col-sm">
+            <form class="example" action="javascript:void(0);">
+                <input [(ngModel)]="scannedSerialNo"
+                    (keyup)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_MACADDRESS })' 
+                    class="search" type="text" placeholder="MAC Address" name="mac">
                 <button type="submit"><i class="material-icons small">search</i></button>
             </form>
         </div>
@@ -127,9 +114,8 @@
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <select>
-                    <option value="volvo">Save as Draft</option>
-                    <option value="saab">Save as Final</option>
+                <select required [(ngModel)]="orderProducts.order.orderState" name="orderstate">
+                    <option *ngFor="let state of orderStates" [ngValue]="state">Save as {{state}}</option>
                 </select>
             </form>
         </div>
@@ -142,188 +128,73 @@
             </div>
         </div>
     </div>
+
+    <div class="tabs-container padded-aside">
+        <div class="flex-container row">
+            <div class="col-xs" *ngFor="let item of orderDetailArray">
+                <div class="tab" [ngClass]="{'tabSelected': selectedProductKey === item.key}" (click)="toggleProductKey(item.key)">
+                    {{item.key}}
+                    <span class="count">
+                        <strong>[{{item.value.length}}] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>
+                    </span>
+                </div>
+                <div class="close" (click)="deleteProduct(item)">x</div>
+            </div>
+        </div>
+    </div>
+    <!-- PRODUCT ORDER DETAIL DATA TABLE -->
     <div class="flex-container row padded-aside">
         <div class="wrapper">
             <div class="Rtable Rtable--5cols Rtable--collapse">
                 <div class="Rtable-row Rtable-row--head">
-                    <div class="Rtable-cell pdf-cell column-heading">Checkbox</div>
-                    <div class="Rtable-cell date-cell column-heading">Order No.</div>
-                    <div class="Rtable-cell date-cell column-heading">Ticket No.</div>
-                    <div class="Rtable-cell date-cell column-heading">Type</div>
-                    <div class="Rtable-cell date-cell column-heading">Order Type</div>
-                    <div class="Rtable-cell date-cell column-heading">Date</div>
-                    <div class="Rtable-cell date-cell column-heading">Status</div>
-                    <div class="Rtable-cell date-cell column-heading">Select</div>
+                    <div class="Rtable-cell small-cell column-heading">Serial no</div>
+                    <div class="Rtable-cell topic-cell column-heading">Name</div>
+                    <div class="Rtable-cell small-cell column-heading">Qty</div>
+                    <div class="Rtable-cell small-cell column-heading">Price</div>
+                    <div class="Rtable-cell date-cell column-heading">Warehouse</div>
+                    <div class="Rtable-cell date-cell column-heading">Inventory</div>
+                    <div class="Rtable-cell date-cell column-heading">Inventory Status</div>
+                    <div class="Rtable-cell date-cell column-heading">Item Status</div>
                 </div>
 
-                <div class="Rtable-row">
-                    <div class="Rtable-cell pdf-cell">
-                        <div class="Rtable-cell--heading">Checkbox</div>
-                        <div class="Rtable-cell--content date-content"><span class="row-title">
-                                <label class="container">
-                                    <input type="checkbox" checked="checked">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </span>
+                <ng-container *ngFor="let orderDetail of orderDetailArray">
+                    <ng-container *ngIf="selectedProductKey === orderDetail.key">
+                        <div class="Rtable-row" *ngFor="let item of orderDetail.value">
+                            <div class="Rtable-cell small-cell">
+                                <div class="Rtable-cell--heading">Serial No.</div>
+                                <div class="Rtable-cell--content date-content">{{item.serialNumber}}</div>
+                            </div>
+                            <div class="Rtable-cell topic-cell">
+                                <div class="Rtable-cell--heading">Name</div>
+                                <div class="Rtable-cell--content title-content">{{item.name}}</div>
+                            </div>
+                            <div class="Rtable-cell small-cell">
+                                <div class="Rtable-cell--heading">Qty</div>
+                                <div class="Rtable-cell--content title-content">{{item.quantity}}</div>
+                            </div>
+                            <div class="Rtable-cell small-cell">
+                                <div class="Rtable-cell--heading">Price</div>
+                                <div class="Rtable-cell--content title-content">{{item.price}}</div>
+                            </div>
+                            <div class="Rtable-cell date-cell">
+                                <div class="Rtable-cell--heading">Warehouse</div>
+                                <div class="Rtable-cell--content title-content">{{item.warehouseCat.name}}</div>
+                            </div>
+                            <div class="Rtable-cell date-cell">
+                                <div class="Rtable-cell--heading">Inventory</div>
+                                <div class="Rtable-cell--content title-content">{{item.inventoryCat.name}}</div>
+                            </div>
+                            <div class="Rtable-cell date-cell">
+                                <div class="Rtable-cell--heading">Inventory Status</div>
+                                <div class="Rtable-cell--content title-content">{{item.onInventoryStatusCat.name}}</div>
+                            </div>
+                            <div class="Rtable-cell date-cell">
+                                <div class="Rtable-cell--heading">Item Status</div>
+                                <div class="Rtable-cell--content title-content">{{item.itemStatusCat.name}}</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Order No.</div>
-                        <div class="Rtable-cell--content date-content"><span class="row-title">002154</span><br />6:00
-                            pm
-                            (CDT)</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Ticket No.</div>
-                        <div class="Rtable-cell--content title-content">0000054587</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Type</div>
-                        <div class="Rtable-cell--content title-content">In</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Order Type</div>
-                        <div class="Rtable-cell--content title-content">Buy</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Date</div>
-                        <div class="Rtable-cell--content title-content">Date</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Status</div>
-                        <div class="Rtable-cell--content title-content">Completed</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Select</div>
-                        <div class="Rtable-cell--content title-content">Checked</div>
-                    </div>
-                </div>
-                <div class="Rtable-row">
-                    <div class="Rtable-cell pdf-cell">
-                        <div class="Rtable-cell--heading">Checkbox</div>
-                        <div class="Rtable-cell--content date-content"><span class="row-title">
-                                <label class="container">
-                                    <input type="checkbox" checked="checked">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Order No.</div>
-                        <div class="Rtable-cell--content date-content"><span class="row-title">002154</span><br />6:00
-                            pm
-                            (CDT)</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Ticket No.</div>
-                        <div class="Rtable-cell--content title-content">0000054587</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Type</div>
-                        <div class="Rtable-cell--content title-content">In</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Order Type</div>
-                        <div class="Rtable-cell--content title-content">Buy</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Date</div>
-                        <div class="Rtable-cell--content title-content">Date</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Status</div>
-                        <div class="Rtable-cell--content title-content">Completed</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Select</div>
-                        <div class="Rtable-cell--content title-content">Checked</div>
-                    </div>
-                </div>
-                <div class="Rtable-row">
-                    <div class="Rtable-cell pdf-cell">
-                        <div class="Rtable-cell--heading">Checkbox</div>
-                        <div class="Rtable-cell--content date-content"><span class="row-title">
-                                <label class="container">
-                                    <input type="checkbox" checked="checked">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Order No.</div>
-                        <div class="Rtable-cell--content date-content"><span class="row-title">002154</span><br />6:00
-                            pm
-                            (CDT)</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Ticket No.</div>
-                        <div class="Rtable-cell--content title-content">0000054587</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Type</div>
-                        <div class="Rtable-cell--content title-content">In</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Order Type</div>
-                        <div class="Rtable-cell--content title-content">Buy</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Date</div>
-                        <div class="Rtable-cell--content title-content">Date</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Status</div>
-                        <div class="Rtable-cell--content title-content">Completed</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Select</div>
-                        <div class="Rtable-cell--content title-content">Checked</div>
-                    </div>
-                </div>
-                <div class="Rtable-row">
-                    <div class="Rtable-cell pdf-cell">
-                        <div class="Rtable-cell--heading">Checkbox</div>
-                        <div class="Rtable-cell--content date-content"><span class="row-title">
-                                <label class="container">
-                                    <input type="checkbox">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Order No.</div>
-                        <div class="Rtable-cell--content date-content"><span class="row-title">002154</span><br />6:00
-                            pm
-                            (CDT)</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Ticket No.</div>
-                        <div class="Rtable-cell--content title-content">0000054587</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Type</div>
-                        <div class="Rtable-cell--content title-content">In</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Order Type</div>
-                        <div class="Rtable-cell--content title-content">Buy</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Date</div>
-                        <div class="Rtable-cell--content title-content">Date</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Status</div>
-                        <div class="Rtable-cell--content title-content">Completed</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Select</div>
-                        <div class="Rtable-cell--content title-content">Checked</div>
-                    </div>
-                </div>
+                    </ng-container>
+                </ng-container>
             </div>
         </div>
     </div>

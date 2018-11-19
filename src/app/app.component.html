@@ -1,12 +1,22 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div class="main-container">
+<div class="loader" *ngIf="httpWrapper.isInRequest">
+    <div class="sk-folding-cube">
+        <div class="sk-cube1 sk-cube"></div>
+        <div class="sk-cube2 sk-cube"></div>
+        <div class="sk-cube4 sk-cube"></div>
+        <div class="sk-cube3 sk-cube"></div>
+    </div>
+</div>
+<div class="app-container">
+    <div class="navbar-container">
+        <app-navbar></app-navbar>
+    </div>
     <div class="sidebar">
         <app-sidebar></app-sidebar>
     </div>
-    <div class="navbar">
-        <app-navbar></app-navbar>
-    </div>
-    <div class="router">
-        <router-outlet></router-outlet>
+    <div class="main-container" [ngClass]="{'is-loading': httpWrapper.isInRequest}">
+        <div class="router">
+            <router-outlet></router-outlet>
+        </div>
     </div>
 </div>
