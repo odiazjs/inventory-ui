@@ -5,7 +5,9 @@ import {
     NewOrderComponent, 
     ProductsComponent,
     InventoryComponent,
-    NavbarComponent } from './barrel';
+    NavbarComponent, 
+    LoginComponent
+} from './barrel';
 
 export const APP_COMPONENTS = [
     SidebarComponent,
@@ -14,5 +16,6 @@ export const APP_COMPONENTS = [
     OrdersComponent,
     NewOrderComponent,
     ProductsComponent,
-    InventoryComponent
+    InventoryComponent,
+    LoginComponent
 ]

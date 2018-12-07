@@ -3,14 +3,15 @@ import { OrderProductsModel } from '../../models/order.model';
 import { ProductOrderDetailModel } from '../../models/product.model';
 import { Subject, Observable } from 'rxjs';
 import { map, debounceTime, distinctUntilChanged, flatMap, startWith, delay, tap } from 'rxjs/operators';
-import { ProductMockService } from '../../services/product-mock.service';
-import { CatalogModel, OrderProductsDto } from '../../models/order.dto';
+import { CatalogModel, OrderProductsDto, CatalogDto } from '../../models/order.dto';
 import ProductDto from '../../models/product.dto';
 import { ProductService, OrderService } from 'src/services/barrel';
 import { Dictionary } from 'src/components/types';
 import { KeysPipe } from 'src/common/keys.pipe';
 import { ActivatedRoute } from '@angular/router';
 import { isEmpty } from 'lodash';
+import { Store, Select } from '@ngxs/store';
+import { GetAll } from 'src/ngxs/models/catalogState.model';
 
 @Component({
     selector: 'app-new-order',
@@ -34,30 +35,12 @@ export class NewOrderComponent implements OnInit {
         'Discarded'
     ];
 
-    warehouses: CatalogModel[] = [
-        { id: 1, name: 'Warehouse A' },
-        { id: 2, name: 'Warehouse B' },
-        { id: 3, name: 'Warehouse C' }
-    ];
+    @Select(state => state.catalogs) catalogs$: Observable<Dictionary<CatalogDto[]>>;
 
-    inventories: CatalogModel[] = [
-        { id: 1, name: 'Jive New' },
-        { id: 2, name: 'Bi-Stock' },
-        { id: 3, name: 'Z David Bowley' },
-        { id: 4, name: 'Demos' }
-    ];
-
-    inventoryStatuses: CatalogModel[] = [
-        { id: 1, name: 'Buy' },
-        { id: 2, name: 'On-Hand' },
-        { id: 3, name: 'Sold Out To' }
-    ];
-
-    itemStatuses: CatalogModel[] = [
-        { id: 1, name: 'New' },
-        { id: 2, name: 'Used' },
-        { id: 3, name: 'Defective' }
-    ];
+    warehouses: CatalogModel[] = [];
+    inventories: CatalogModel[] = [];
+    inventoryStatuses: CatalogModel[] = [];
+    itemStatuses: CatalogModel[] = [];
 
     orderProducts: OrderProductsModel = {
         order: {
@@ -68,12 +51,7 @@ export class NewOrderComponent implements OnInit {
             ticketNumber: null,
             notes: "some notes."
         },
-        orderDetail: {
-            warehouseCat: this.warehouses[0],
-            inventoryCat: this.inventories[0],
-            onInventoryStatusCat: this.inventoryStatuses[0],
-            itemStatusCat: this.itemStatuses[0]
-        }
+        orderDetail: {} as any
     };
 
     selectedProductKey: string;
@@ -83,6 +61,7 @@ export class NewOrderComponent implements OnInit {
     orderDetailMap: Dictionary<ProductOrderDetailModel[]> = {};
 
     constructor(
+        private store: Store,
         public productService: ProductService,
         public orderService: OrderService,
         public activatedRoute: ActivatedRoute
@@ -94,6 +73,22 @@ export class NewOrderComponent implements OnInit {
             .pipe(
                 startWith(null),
                 delay(0),
+                tap(() => { this.store.dispatch(new GetAll()) }),
+                tap(() => {
+                    this.catalogs$.subscribe(catalogDictionary => {
+                        this.warehouses = catalogDictionary['Warehouses'];
+                        this.inventories = catalogDictionary['Inventories'];
+                        this.inventoryStatuses = catalogDictionary['InventoryStatus'];
+                        this.itemStatuses = catalogDictionary['ItemStatus'];
+                        
+                        this.orderProducts.orderDetail = {
+                            warehouseCat: this.warehouses[0],
+                            inventoryCat: this.inventories[0],
+                            onInventoryStatusCat: this.inventoryStatuses[0],
+                            itemStatusCat: this.itemStatuses[0]
+                        }
+                    })
+                }),
                 tap(() => {
                     // check if its an order update
                     const params = this.activatedRoute.snapshot.params;

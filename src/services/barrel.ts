@@ -3,3 +3,6 @@ export * from './order.service';
 export * from './order-mock.service';
 export * from './product.service';
 export * from './product-mock.service';
+export * from './auth.service';
+export * from './inventory-item.service';
+export * from './catalog.service';

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductService } from '../../services/product.service';
 import { startWith, delay } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ProductModel } from '../../models/product.model';
+import { InventoryItemService } from 'src/services/barrel';
 
 @Component({
     selector: 'app-inventory',
@@ -12,15 +12,16 @@ import { ProductModel } from '../../models/product.model';
 export class InventoryComponent implements OnInit {
 
     modalShown: boolean = false;
-    productsList: ProductModel[] = []
+    itemsList: ProductModel[] = []
 
-    constructor(private productService: ProductService) { }
+    constructor(private inventoryItemService: InventoryItemService) { }
 
     ngOnInit(): void {
         Observable.of().pipe(startWith(null), delay(0)).subscribe(() => {
-            this.productService.getList()
+            this.inventoryItemService.getList()
                 .subscribe((result: any) => {
-                    this.productsList = [...result]
+                    console.log('inventory item list ----->', result);
+                    this.itemsList = [...result]
                 })
         })
     }
@@ -29,7 +30,7 @@ export class InventoryComponent implements OnInit {
         return this.modalShown = !this.modalShown;
     }
 
-    newOrder() {
-        
+    filterItems () {
+
     }
 }

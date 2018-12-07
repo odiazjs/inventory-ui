@@ -6,11 +6,11 @@
 // http://192.168.0.134:8000/api/v1/orders
 // http://192.168.0.151:8000/api -> Eduardo PC
 // http://192.168.1.105:8000/api -> Eduardo PC Asura Media 2.4G
-const configFile = {
+export const configFile = {
     'protocol': 'http',
     'scheme': 'Bearer',
     'api': {
-        'baseUrl': '192.168.0.134:8000/api',
+        'baseUrl': 'localhost:8000/api',
         'apiVersion': 'v1'
     },
     'urlConfig': {
@@ -27,6 +27,15 @@ const configFile = {
         },
         'products': {
             'getAllProducts': 'products'
+        },
+        'inventoryItems': {
+            'getAllItems': 'inventory_items'
+        },
+        'catalogs':{
+            'getAllWarehouses': 'warehouses',
+            'getALlInventories': 'inventories',
+            'getAllOnInventoryStatus': 'on-inventory-status',
+            'getAllItemStatus': 'item-status'            
         }
     }
 };
@@ -40,12 +49,20 @@ const {
     urlConfig: {
         auth: { url, version, loginEndpoint },
         orders: { getAllOrders },
-        products: { getAllProducts }
+        products: { getAllProducts },
+        inventoryItems: { getAllItems },
+        catalogs: { getAllWarehouses, getALlInventories, getAllOnInventoryStatus,  getAllItemStatus}
     }
 } = configFile;
 
 export const urlConfig = {
+    authUrl: `${protocol}://${baseUrl}/${apiVersion}/${loginEndpoint}`,
     getOrdersUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllOrders}`,
-    getProductsUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllProducts}`
+    getProductsUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllProducts}`,
+    getAllItemsUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllItems}`,
+    getCatalogWarehousesUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllWarehouses}`,
+    getCatalogInventoriesUrl: `${protocol}://${baseUrl}/${apiVersion}/${getALlInventories}`,
+    getCatalogOnInventoryStatusUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllOnInventoryStatus}`,
+    getCatalogAllItemStatusUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllItemStatus}`
 };
 

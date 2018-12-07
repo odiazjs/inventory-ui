@@ -7,7 +7,10 @@
         <div class="sk-cube3 sk-cube"></div>
     </div>
 </div>
-<div class="app-container">
+<div class="login" *ngIf="!(authInfo$ | async)?.token">
+    <app-login></app-login>
+</div>
+<div class="app-container" *ngIf="(authInfo$ | async)?.token">
     <div class="navbar-container">
         <app-navbar></app-navbar>
     </div>

@@ -7,7 +7,7 @@ declare var require;
 const toCamelCase = require('to-camel-case');
 const toSnakeCase = require('to-snake-case');
 
-const serializeCase = (obj) => {
+export const serializeCase = (obj) => {
   let key, keys = Object.keys(obj);
   let n = keys.length;
   let newobj = {};
@@ -18,7 +18,7 @@ const serializeCase = (obj) => {
   return newobj;
 }
 
-const serializeSnakeCase = (obj) => {
+export const serializeSnakeCase = (obj): any => {
   let key, keys = Object.keys(obj);
   let n = keys.length;
   let newobj = {};
@@ -42,23 +42,29 @@ export class ResourceService<T> {
   readonly SERIALIZE_CASE = 'SERIALIZE';
   readonly DESERIALIZE_CASE = 'DESERIALIZE';
   constructor(
-    private httpClient: HttpWrapper<HttpResponse<T>>,
-    private baseUrl: string,
-    private serializer: (value: T, serializeDirection: string) => T
+    public httpClient: HttpWrapper<HttpResponse<T>>,
+    public baseUrl: string,
+    private serializer: (value: T, serializeDirection: string) => any
   ) {
   }
 
   create(item: T): Observable<any> {
-    Object.keys(item)
-      .forEach(key => {
-        if (Array.isArray(item[key])) {
-          item[key] = [...item[key].map(obj => {
-            return serializeSnakeCase(obj)
-          })]
-        } else {
-          item[key] = serializeSnakeCase(item[key])
-        }
-      })
+    if (typeof item === 'object') {
+      Object.keys(item)
+        .forEach(key => {
+          if (Array.isArray(item[key])) {
+            item[key] = [...item[key].map(obj => {
+              return serializeSnakeCase(obj)
+            })]
+          } else if (typeof item[key] === 'object') {
+            item[key] = serializeSnakeCase(item[key])
+          } else {
+            item = serializeSnakeCase(item);
+          }
+        })
+    } else {
+      item = serializeSnakeCase(item);
+    }
     return this.httpClient
       .post<T>(`${this.baseUrl}`, item)
       .pipe(
@@ -80,15 +86,12 @@ export class ResourceService<T> {
         map((result: T) => { return this.serializer(result, this.SERIALIZE_CASE) })
       );
   }
-  getList(paramsObject: any = {}): Observable<HttpResponse<T>> {
+  getList(paramsObject: any = {}): Observable<T> {
     return this.httpClient
       .get(`${this.baseUrl}`)
       .pipe(
         map((list: any[]) => {
           return list.map(serializeCase)
-        }),
-        map((httpResponse: HttpResponse<T>) => {
-          return httpResponse;
         })
       );
   }

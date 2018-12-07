@@ -47,13 +47,12 @@ export class OrderProductsDto {
     }
 }
 
-export class Catalog {
+export class CatalogDto {
     id: number;
     name: string;
     enabled?: boolean;
-    order_direction?: string;
 }
 
-export class CatalogModel extends Catalog {
+export class CatalogModel extends CatalogDto {
     icon?: string;
 }

@@ -5,11 +5,13 @@ import {
     OrdersComponent,
     NewOrderComponent,
     ProductsComponent,
-    InventoryComponent
+    InventoryComponent,
+    LoginComponent
 } from '../components/barrel';
 
 export const appRoutes: Routes = [
     { path: '',   redirectTo: '/dashboard', pathMatch: 'full' },
+    { path: 'login', component: LoginComponent },
     { path: 'dashboard', component: DashboardComponent },
     { path: 'orders', component: OrdersComponent },
     { path: 'orders/new', component: NewOrderComponent },
