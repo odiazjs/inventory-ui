@@ -20,7 +20,7 @@ export class AuthService extends ResourceService<any> {
         return this.create(payload);
     }
     logout(): Observable<any> {
-        return Observable.of();
+        return Observable.of([]);
     }
 }
 

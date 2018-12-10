@@ -1,12 +1,18 @@
-import ProductDto from "./product.dto";
+import { ProductDto } from "./product.dto";
 import { OrderDetailModel } from "./order.model";
 
-export class ProductModel extends ProductDto {
-    constructor (dto: ProductDto) {
-        super()    
+export class ProductModel {
+    id: number;
+    name: string;
+    masterName: string;
+    partNumber: string;
+    manufacturer: string;
+    productGroup: string;
+    checked?: boolean;
+    constructor(dto: ProductDto) {
     }
 }
 
-export interface ProductOrderDetailModel extends ProductModel, OrderDetailModel {
+export interface ProductOrderDetailModel extends OrderDetailModel {
 
 }

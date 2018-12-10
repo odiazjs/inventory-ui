@@ -463,8 +463,17 @@ li {
     transition: background-color 0.5s ease;
 }
 
+li.nostyle {
+    cursor: auto !important;
+    height: auto;
+}
+
 li:hover, li:focus-within, li.active {
     background-color: darkcyan;
+}
+
+li.nostyle:hover, li.nostyle:focus-within, li.nostyle.active {
+    background-color: none !important;
 }
 
 

@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderProductsModel } from '../../models/order.model';
-import { ProductOrderDetailModel } from '../../models/product.model';
+import { ProductOrderDetailModel, ProductModel } from '../../models/product.model';
 import { Subject, Observable } from 'rxjs';
 import { map, debounceTime, distinctUntilChanged, flatMap, startWith, delay, tap } from 'rxjs/operators';
 import { CatalogModel, OrderProductsDto, CatalogDto } from '../../models/order.dto';
-import ProductDto from '../../models/product.dto';
 import { ProductService, OrderService } from 'src/services/barrel';
 import { Dictionary } from 'src/components/types';
 import { KeysPipe } from 'src/common/keys.pipe';
@@ -98,7 +97,7 @@ export class NewOrderComponent implements OnInit {
                                 console.log('get order by id', result);
                                 this.orderProducts.order = result.order;
                                 result.products.forEach(item => {
-                                    this.handleProductDict(item.product);
+                                    this.handleProductDict(item.product as any);
                                 })
                                 result.products.forEach(item => {
                                     const qtyCounter = 0;
@@ -115,7 +114,7 @@ export class NewOrderComponent implements OnInit {
                 })
             ).subscribe();
 
-        let product: ProductDto;
+        let product: ProductModel;
         const onScan$ =
             this.onScanSubscription.pipe(
                 map((data: any) => {
@@ -131,7 +130,7 @@ export class NewOrderComponent implements OnInit {
                 this.productService.getList()
                     .subscribe((products) => {
                         let matches = [];
-                        const result: ProductDto[] = products as any;
+                        const result: ProductModel[] = products;
 
                         switch (message) {
                             case this.SCAN_EVENT_PARTNO:
@@ -156,7 +155,7 @@ export class NewOrderComponent implements OnInit {
         onScan$.remove(onScan$);
     }
 
-    handleProductDict(product: ProductDto) {
+    handleProductDict(product: ProductModel) {
         const { partNumber } = product;
         if (!this.orderDetailMap[partNumber]) {
             this.orderDetailMap[partNumber] = [];
