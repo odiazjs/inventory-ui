@@ -105,6 +105,7 @@ export class InventoryComponent implements OnInit {
         this.inventoryItemService.update(dto)
             .subscribe(result => {
                 this.getList();
+                this.showModal();
                 console.log('result update inventory item -----> ', result);
             })
     }
