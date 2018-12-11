@@ -44,7 +44,7 @@ export class ResourceService<T> {
   constructor(
     public httpClient: HttpWrapper<HttpResponse<T>>,
     public baseUrl: string,
-    private serializer: (value: T, serializeDirection: string) => any
+    private serializer: (value: any, serializeDirection: string) => any
   ) {
   }
 
@@ -71,10 +71,26 @@ export class ResourceService<T> {
         map(item => { return this.serializer(item, this.DESERIALIZE_CASE) })
       );
   }
-  update(item: any, id: number | string): Observable<T> {
-    const serializedItem = this.serializer(item, this.DESERIALIZE_CASE);
+  update(item: any, id?: number | string): Observable<T> {
+    if (typeof item === 'object') {
+      Object.keys(item)
+        .forEach(key => {
+          if (Array.isArray(item[key])) {
+            item[key] = [...item[key].map(obj => {
+              return serializeSnakeCase(obj)
+            })]
+          } else if (typeof item[key] === 'object') {
+            item[key] = serializeSnakeCase(item[key])
+          } else {
+            item = serializeSnakeCase(item);
+          }
+        })
+    } else {
+      item = serializeSnakeCase(item);
+    }
+    const url = id ? `${this.baseUrl}/${id}` : `${this.baseUrl}`
     return this.httpClient
-      .put<T>(`${this.baseUrl}/${id}`, serializedItem)
+      .put<T>(`${url}`, item)
       .pipe(
         map(item => { return this.serializer(item, this.SERIALIZE_CASE) })
       );

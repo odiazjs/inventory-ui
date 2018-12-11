@@ -8,13 +8,16 @@ import 'rxjs/add/observable/throw'
 
 import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Logout } from 'src/ngxs/models/authState.model';
+import { Store } from '@ngxs/store';
 
 @Injectable()
 export class HttpWrapper<T> {
     isInRequest: boolean = false
     constructor(
-        private http: HttpClient, 
-        private router: Router
+        private http: HttpClient,
+        private router: Router,
+        private store: Store
     ) { }
     get(url: string, options?: RequestOptionsArgs): Observable<T> {
         return this.request(RequestMethod.Get, url, null, options);
@@ -44,6 +47,15 @@ export class HttpWrapper<T> {
         const disableRequest = () => {
             this.isInRequest = false;
         }
+        const checkUnauthorized = (response) => {
+            if (response.status === 401) {
+                this.store.dispatch(new Logout())
+                    .subscribe((result) => {
+                        this.router.navigate(['/login']);
+                    })
+
+            }
+        }
         const requestOptions = new HttpRequest<any>(
             RequestMethod[method.toString()],
             url,
@@ -60,14 +72,13 @@ export class HttpWrapper<T> {
                     }
                     if (response.error) {
                         disableRequest();
-                        observer.error(response)
-                        if (response.status === 401) {
-                            this.router.navigateByUrl('/login')
-                        }
+                        checkUnauthorized(response);
+                        observer.error(response);
                     }
                 }, (error) => {
                     disableRequest();
-                    observer.error(error)
+                    checkUnauthorized(error);
+                    observer.error(error);
                 })
         })
     }

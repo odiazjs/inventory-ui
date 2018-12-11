@@ -1,15 +1,17 @@
+import { CatalogModel } from "./order.dto";
+import { ProductModel } from "./product.model";
+
 export class InventoryItemModel {
     id: number;
-    product: number;
+    product: ProductModel;
     serialNumber: string;
-    itemStatus: number;
-    onInventoryStatus: number;
-    inventory: number;
-    warehouse: number;
+    itemStatus: CatalogModel;
+    onInventoryStatus: CatalogModel;
+    inventory: CatalogModel;
+    warehouse: CatalogModel;
     price: string;
     assignedUser: number;
     notes: string;
-    constructor () {
-        
-    }
+    checked?: boolean;
+    constructor () { }
 }
