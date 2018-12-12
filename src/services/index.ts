@@ -6,7 +6,7 @@ import {
     ProductService,
     ProductMockService,
     InventoryItemService,
-    CatalogsService.
+    CatalogsService,
     InventoryItemFilterService
 } from './barrel'
 
