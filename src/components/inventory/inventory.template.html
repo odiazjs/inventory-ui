@@ -19,7 +19,7 @@
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <select required [(ngModel)]="filterValues.warehouseCat" name="warehouse">
+            <select required [(ngModel)]="filterValues.warehouseCat"  name="warehouse" >
                 <option *ngFor="let item of warehouses" [ngValue]="item">{{item.name}}</option>
             </select>
         </form>
@@ -33,21 +33,21 @@
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <select required [(ngModel)]="filterValues.onInventoryStatusCat" name="oninvstatus">
+            <select required [(ngModel)]="filterValues.onInventoryStatusCat"  name="oninvstatus">
                 <option *ngFor="let item of inventoryStatuses" [ngValue]="item">{{item.name}}</option>
             </select>
         </form>
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <select required [(ngModel)]="filterValues.itemStatusCat" name="itemstatus">
+            <select required [(ngModel)]="filterValues.itemStatusCat"  name="itemstatus">
                 <option *ngFor="let item of itemStatuses" [ngValue]="item">{{item.name}}</option>
             </select>
         </form>
     </div>
     <div class="col-sm">
         <div class="btn-container">
-            <a href="javascript:void(0);" (click)="newOrder();" class="btn-primary">
+            <a href="javascript:void(0);" (click)="filterItems();" class="btn-primary">
                 <span><i class="material-icons small">save</i></span>
                 <div class="btn-text">Filter</div>
             </a>

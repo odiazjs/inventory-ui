@@ -6,3 +6,4 @@ export * from './product-mock.service';
 export * from './auth.service';
 export * from './inventory-item.service';
 export * from './catalog.service';
+export * from './inventory-item-filter.service';

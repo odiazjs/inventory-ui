@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { startWith, delay, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { InventoryItemService } from 'src/services/barrel';
+import { InventoryItemService, InventoryItemFilterService } from 'src/services/barrel';
 import { InventoryItemModel } from 'src/models/inventoryItem.model';
 import { Dictionary } from '../types';
 import { CatalogDto, CatalogModel } from 'src/models/order.dto';
 import { Select, Store } from '@ngxs/store';
 import { GetAll } from 'src/ngxs/models/catalogState.model';
-import { InventoryItemDto } from 'src/models/inventoryItem.dto';
 
 @Component({
     selector: 'app-inventory',
@@ -37,7 +36,8 @@ export class InventoryComponent implements OnInit {
 
     constructor(
         private store: Store,
-        private inventoryItemService: InventoryItemService) { }
+        private inventoryItemService: InventoryItemService,
+        private inventoryITemFilterService: InventoryItemFilterService ) { }
 
     ngOnInit(): void {
         Observable.of()
@@ -69,7 +69,6 @@ export class InventoryComponent implements OnInit {
     getList() {
         this.inventoryItemService.getList()
             .subscribe((result: any) => {
-                console.log('inventory item list ----->', result);
                 this.itemsList = [...result]
             })
     }
@@ -84,6 +83,16 @@ export class InventoryComponent implements OnInit {
     }
 
     filterItems() {
+        const dto = {
+            itemStatusId: this.filterValues.itemStatusCat.id,
+            onInventoryStatusId: this.filterValues.onInventoryStatusCat.id,
+            inventoryId: this.filterValues.inventoryCat.id,
+            warehouseId: this.filterValues.warehouseCat.id,
+        }
+        this.inventoryITemFilterService.getList(dto)
+        .subscribe( (result: any) => {
+            this.itemsList = [...result]
+        });
 
     }
 
@@ -106,7 +115,6 @@ export class InventoryComponent implements OnInit {
             .subscribe(result => {
                 this.getList();
                 this.showModal();
-                console.log('result update inventory item -----> ', result);
             })
     }
 }
