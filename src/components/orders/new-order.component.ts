@@ -112,9 +112,9 @@ export class NewOrderComponent implements OnInit {
                                     const qtyCounter = 0;
                                     const cataloguesConfig = {
                                         warehouseCat: this.warehouses.find(x => x.id === item.warehouse),
-                                        inventoryCat: this.warehouses.find(x => x.id === item.inventory),
-                                        onInventoryStatusCat: this.warehouses.find(x => x.id === item.onInventoryStatus),
-                                        itemStatusCat: this.warehouses.find(x => x.id === item.itemStatus)
+                                        inventoryCat: this.inventories.find(x => x.id === item.inventory),
+                                        onInventoryStatusCat: this.inventoryStatuses.find(x => x.id === item.onInventoryStatus),
+                                        itemStatusCat: this.itemStatuses.find(x => x.id === item.itemStatus)
                                     }
                                     this.handleProductItems(qtyCounter + 1, item, cataloguesConfig);
                                 })
