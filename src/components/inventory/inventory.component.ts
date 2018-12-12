@@ -7,7 +7,6 @@ import { Dictionary } from '../types';
 import { CatalogDto, CatalogModel } from 'src/models/order.dto';
 import { Select, Store } from '@ngxs/store';
 import { GetAll } from 'src/ngxs/models/catalogState.model';
-import { InventoryItemDto } from 'src/models/inventoryItem.dto';
 
 @Component({
     selector: 'app-inventory',
@@ -70,7 +69,6 @@ export class InventoryComponent implements OnInit {
     getList() {
         this.inventoryItemService.getList()
             .subscribe((result: any) => {
-                console.log('inventory item list ----->', result);
                 this.itemsList = [...result]
             })
     }
@@ -93,7 +91,6 @@ export class InventoryComponent implements OnInit {
         }
         this.inventoryITemFilterService.getList(dto)
         .subscribe( (result: any) => {
-            //console.log('New inventory item list ----->', result);
             this.itemsList = [...result]
         });
 
@@ -118,7 +115,6 @@ export class InventoryComponent implements OnInit {
             .subscribe(result => {
                 this.getList();
                 this.showModal();
-                console.log('result update inventory item -----> ', result);
             })
     }
 }

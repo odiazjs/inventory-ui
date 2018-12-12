@@ -68,25 +68,34 @@ export class NewOrderComponent implements OnInit {
 
     ngOnInit(): void {
 
+        const initCatalogues = (catalogDictionary) => {
+            this.warehouses = catalogDictionary['Warehouses'];
+            this.inventories = catalogDictionary['Inventories'];
+            this.inventoryStatuses = catalogDictionary['InventoryStatus'];
+            this.itemStatuses = catalogDictionary['ItemStatus'];
+            this.orderProducts.orderDetail = {
+                warehouseCat: this.warehouses[0],
+                inventoryCat: this.inventories[0],
+                onInventoryStatusCat: this.inventoryStatuses[0],
+                itemStatusCat: this.itemStatuses[0]
+            }
+        }
+
         Observable.of()
             .pipe(
                 startWith(null),
                 delay(0),
-                tap(() => { this.store.dispatch(new GetAll()) }),
                 tap(() => {
                     this.catalogs$.subscribe(catalogDictionary => {
-                        this.warehouses = catalogDictionary['Warehouses'];
-                        this.inventories = catalogDictionary['Inventories'];
-                        this.inventoryStatuses = catalogDictionary['InventoryStatus'];
-                        this.itemStatuses = catalogDictionary['ItemStatus'];
-                        
-                        this.orderProducts.orderDetail = {
-                            warehouseCat: this.warehouses[0],
-                            inventoryCat: this.inventories[0],
-                            onInventoryStatusCat: this.inventoryStatuses[0],
-                            itemStatusCat: this.itemStatuses[0]
+                        if (isEmpty(catalogDictionary)) {
+                            this.store.dispatch(new GetAll())
+                                .subscribe(result => {
+                                    initCatalogues(result.catalogs)
+                                })
+                        } else {
+                            initCatalogues(catalogDictionary);
                         }
-                    })
+                    });
                 }),
                 tap(() => {
                     // check if its an order update
