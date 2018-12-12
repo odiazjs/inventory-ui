@@ -19,28 +19,28 @@
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <select required [(ngModel)]="filterValues.warehouseCat" (ngModelChange)="filterItems2($event)" name="warehouse" >
+            <select required [(ngModel)]="filterValues.warehouseCat"  name="warehouse" >
                 <option *ngFor="let item of warehouses" [ngValue]="item">{{item.name}}</option>
             </select>
         </form>
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <select required [(ngModel)]="filterValues.inventoryCat" (ngModelChange)="filterItems2($event)" name="inventory">
+            <select required [(ngModel)]="filterValues.inventoryCat" name="inventory">
                 <option *ngFor="let item of inventories" [ngValue]="item">{{item.name}}</option>
             </select>
         </form>
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <select required [(ngModel)]="filterValues.onInventoryStatusCat" (ngModelChange)="filterItems2($event)" name="oninvstatus">
+            <select required [(ngModel)]="filterValues.onInventoryStatusCat"  name="oninvstatus">
                 <option *ngFor="let item of inventoryStatuses" [ngValue]="item">{{item.name}}</option>
             </select>
         </form>
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <select required [(ngModel)]="filterValues.itemStatusCat" (ngModelChange)="filterItems2($event)" name="itemstatus">
+            <select required [(ngModel)]="filterValues.itemStatusCat"  name="itemstatus">
                 <option *ngFor="let item of itemStatuses" [ngValue]="item">{{item.name}}</option>
             </select>
         </form>

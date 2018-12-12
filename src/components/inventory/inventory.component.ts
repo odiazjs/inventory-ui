@@ -85,24 +85,18 @@ export class InventoryComponent implements OnInit {
     }
 
     filterItems() {
-        console.log(this.filterValues);
         const dto = {
             itemStatusId: this.filterValues.itemStatusCat.id,
             onInventoryStatusId: this.filterValues.onInventoryStatusCat.id,
             inventoryId: this.filterValues.inventoryCat.id,
             warehouseId: this.filterValues.warehouseCat.id,
         }
-        console.log(dto);
         this.inventoryITemFilterService.getList(dto)
         .subscribe( (result: any) => {
-            console.log('inventory item list ----->', result);
+            //console.log('New inventory item list ----->', result);
             this.itemsList = [...result]
         });
 
-    }
-
-    filterItems2(newValue) {
-        console.log(newValue);        
     }
 
     update() {
