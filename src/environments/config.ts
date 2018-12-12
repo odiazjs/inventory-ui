@@ -29,7 +29,8 @@ export const configFile = {
             'getAllProducts': 'products'
         },
         'inventoryItems': {
-            'getAllItems': 'inventory_items'
+            'getAllItems': 'inventory_items',
+            'getFilteredItems': 'inventory_items?'
         },
         'catalogs':{
             'getAllWarehouses': 'warehouses',
@@ -50,7 +51,7 @@ const {
         auth: { url, version, loginEndpoint },
         orders: { getAllOrders },
         products: { getAllProducts },
-        inventoryItems: { getAllItems },
+        inventoryItems: { getAllItems, getFilteredItems },
         catalogs: { getAllWarehouses, getALlInventories, getAllOnInventoryStatus,  getAllItemStatus}
     }
 } = configFile;
@@ -60,6 +61,7 @@ export const urlConfig = {
     getOrdersUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllOrders}`,
     getProductsUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllProducts}`,
     getAllItemsUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllItems}`,
+    getFilteredItemsUrl: `${protocol}://${baseUrl}/${apiVersion}/${getFilteredItems}`,
     getCatalogWarehousesUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllWarehouses}`,
     getCatalogInventoriesUrl: `${protocol}://${baseUrl}/${apiVersion}/${getALlInventories}`,
     getCatalogOnInventoryStatusUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllOnInventoryStatus}`,

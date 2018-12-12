@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { startWith, delay, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { InventoryItemService } from 'src/services/barrel';
+import { InventoryItemService, InventoryItemFilterService } from 'src/services/barrel';
 import { InventoryItemModel } from 'src/models/inventoryItem.model';
 import { Dictionary } from '../types';
 import { CatalogDto, CatalogModel } from 'src/models/order.dto';
@@ -37,7 +37,8 @@ export class InventoryComponent implements OnInit {
 
     constructor(
         private store: Store,
-        private inventoryItemService: InventoryItemService) { }
+        private inventoryItemService: InventoryItemService,
+        private inventoryITemFilterService: InventoryItemFilterService ) { }
 
     ngOnInit(): void {
         Observable.of()
@@ -84,7 +85,24 @@ export class InventoryComponent implements OnInit {
     }
 
     filterItems() {
+        console.log(this.filterValues);
+        const dto = {
+            itemStatusId: this.filterValues.itemStatusCat.id,
+            onInventoryStatusId: this.filterValues.onInventoryStatusCat.id,
+            inventoryId: this.filterValues.inventoryCat.id,
+            warehouseId: this.filterValues.warehouseCat.id,
+        }
+        console.log(dto);
+        this.inventoryITemFilterService.getList(dto)
+        .subscribe( (result: any) => {
+            console.log('inventory item list ----->', result);
+            this.itemsList = [...result]
+        });
 
+    }
+
+    filterItems2(newValue) {
+        console.log(newValue);        
     }
 
     update() {
