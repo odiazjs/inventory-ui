@@ -215,13 +215,13 @@ export class NewOrderComponent implements OnInit {
         const productsArray = [];
         this.orderDetailArray.map(item => {
             item.value.forEach(item => {
-                const { id, product, quantity, price } = item;
+                const { id, serialNumber, product, quantity, price } = item;
                 const { itemStatusCat, onInventoryStatusCat, inventoryCat, warehouseCat } = this.orderProducts.orderDetail;
                 let payload = {
                     id,
                     order: this.orderProducts.order.id,
                     product,
-                    serialNumber: '000000005',
+                    serialNumber,
                     itemStatus: itemStatusCat.id,
                     onInventoryStatus: onInventoryStatusCat.id,
                     inventory: inventoryCat.id,
