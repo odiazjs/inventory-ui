@@ -97,14 +97,14 @@
     <div class="flex-grid padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input (keyup)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })' class="search" type="text" placeholder="Search.." name="search">
+                <input (keyup)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })' class="search"
+                    type="text" placeholder="Search.." name="search">
                 <button type="submit"><i class="material-icons small">search</i></button>
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input [(ngModel)]="scannedSerialNo"
-                    (keyup)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_MACADDRESS })' 
+                <input [(ngModel)]="scannedSerialNo" (keyup)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_MACADDRESS })'
                     class="search" type="text" placeholder="MAC Address" name="mac">
                 <button type="submit"><i class="material-icons small">search</i></button>
             </form>
@@ -142,15 +142,53 @@
             </div>
         </div>
     </div>
-    <!-- PRODUCT ORDER DETAIL DATA TABLE -->
+
+    <!-- Products list matching part no. -->
     <div class="flex-container row padded-aside">
+        <div class="wrapper" *ngIf="orderProducts.order.orderType == 2">
+            <div class="Rtable Rtable--5cols Rtable--collapse">
+                <div class="Rtable-row Rtable-row--head">
+                    <div class="Rtable-cell small-cell column-heading">Serial no</div>
+                    <div class="Rtable-cell topic-cell column-heading">Name</div>
+                    <div class="Rtable-cell date-cell column-heading">Avg Price</div>
+                    <div class="Rtable-cell date-cell column-heading">Total Items</div>
+                </div>
+
+                <ng-container>
+                    <div cdkDropList #todoList="cdkDropList" 
+                        [cdkDropListData]="availableProductsList" 
+                        [cdkDropListConnectedTo]="[doneList]"
+                        class="drag-list"
+                        (cdkDropListDropped)="drop($event)">
+                            <div class="Rtable-row draggable" *ngFor="let product of availableProductsList" cdkDrag>
+                                <div class="Rtable-cell small-cell">
+                                    <div class="Rtable-cell--heading">Serial No.</div>
+                                    <div class="Rtable-cell--content date-content">{{product.serialNumber}}</div>
+                                </div>
+                                <div class="Rtable-cell topic-cell">
+                                    <div class="Rtable-cell--heading">Name</div>
+                                    <div class="Rtable-cell--content title-content">{{product.name}}</div>
+                                </div>
+                                <div class="Rtable-cell date-cell">
+                                    <div class="Rtable-cell--heading">Avg Price</div>
+                                    <div class="Rtable-cell--content title-content">{{product.avgPrice}}</div>
+                                </div>
+                                <div class="Rtable-cell date-cell">
+                                    <div class="Rtable-cell--heading">Total Items</div>
+                                    <div class="Rtable-cell--content title-content">{{product.totalItems}}</div>
+                                </div>
+                            </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+
+        <!-- Product Items Selected -->
         <div class="wrapper">
             <div class="Rtable Rtable--5cols Rtable--collapse">
                 <div class="Rtable-row Rtable-row--head">
                     <div class="Rtable-cell small-cell column-heading">Serial no</div>
                     <div class="Rtable-cell topic-cell column-heading">Name</div>
-                    <div class="Rtable-cell small-cell column-heading">Qty</div>
-                    <div class="Rtable-cell small-cell column-heading">Price</div>
                     <div class="Rtable-cell date-cell column-heading">Warehouse</div>
                     <div class="Rtable-cell date-cell column-heading">Inventory</div>
                     <div class="Rtable-cell date-cell column-heading">Inventory Status</div>
@@ -167,14 +205,6 @@
                             <div class="Rtable-cell topic-cell">
                                 <div class="Rtable-cell--heading">Name</div>
                                 <div class="Rtable-cell--content title-content">{{item.name}}</div>
-                            </div>
-                            <div class="Rtable-cell small-cell">
-                                <div class="Rtable-cell--heading">Qty</div>
-                                <div class="Rtable-cell--content title-content">{{item.quantity}}</div>
-                            </div>
-                            <div class="Rtable-cell small-cell">
-                                <div class="Rtable-cell--heading">Price</div>
-                                <div class="Rtable-cell--content title-content">{{item.price}}</div>
                             </div>
                             <div class="Rtable-cell date-cell">
                                 <div class="Rtable-cell--heading">Warehouse</div>
@@ -198,4 +228,6 @@
             </div>
         </div>
     </div>
+
+
 </div>

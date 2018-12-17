@@ -108,7 +108,8 @@ export class ResourceService<T> {
       .pipe(
         map((list: any[]) => {
           return list.map(serializeCase)
-        })
+        }),
+        map(item => this.serializer(item, this.SERIALIZE_CASE))
       );
   }
   deleteById(id: number) {

@@ -37,6 +37,9 @@ import { KeysPipe } from 'src/common/keys.pipe';
 import { APP_STATES } from '../ngxs/state/index'
 import { TokenInterceptor } from 'src/common/token.interceptor';
 
+// Material Modules
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 ​
 export interface RouterStateParams {
   url: string;
@@ -81,7 +84,8 @@ export class CustomRouterStateSerializer implements RouterStateSerializer<Router
     NgxsRouterPluginModule.forRoot(),
     NgxsStoragePluginModule.forRoot({
       key: ['auth', 'catalogs']
-    })
+    }),
+    DragDropModule
   ],
   providers: [
     HttpWrapper,

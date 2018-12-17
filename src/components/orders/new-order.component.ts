@@ -4,13 +4,16 @@ import { ProductOrderDetailModel, ProductModel } from '../../models/product.mode
 import { Subject, Observable } from 'rxjs';
 import { map, debounceTime, distinctUntilChanged, flatMap, startWith, delay, tap } from 'rxjs/operators';
 import { CatalogModel, OrderProductsDto, CatalogDto } from '../../models/order.dto';
-import { ProductService, OrderService } from 'src/services/barrel';
+import { ProductService, OrderService, InventoryItemService } from 'src/services/barrel';
 import { Dictionary } from 'src/components/types';
 import { KeysPipe } from 'src/common/keys.pipe';
 import { ActivatedRoute } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { Store, Select } from '@ngxs/store';
 import { GetAll } from 'src/ngxs/models/catalogState.model';
+
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { ResourceService } from 'src/services/resource.service';
 
 @Component({
     selector: 'app-new-order',
@@ -59,9 +62,12 @@ export class NewOrderComponent implements OnInit {
     orderDetailArray: Array<{ key: any, value: any }> = [];
     orderDetailMap: Dictionary<ProductOrderDetailModel[]> = {};
 
+    availableProductsList: ProductModel[] = [];
+
     constructor(
         private store: Store,
         public productService: ProductService,
+        public inventoryItemService: InventoryItemService,
         public orderService: OrderService,
         public activatedRoute: ActivatedRoute
     ) { }
@@ -136,32 +142,51 @@ export class NewOrderComponent implements OnInit {
             ).subscribe((eventData) => {
                 if (isEmpty(eventData.value.trim())) return;
                 const { value, message } = eventData;
-                this.productService.getList()
-                    .subscribe((products) => {
-                        let matches = [];
-                        const result: ProductModel[] = products;
+                
+                if (this.orderProducts.order.orderType == 2) {
+                    this.inventoryItemService.getList()
+                        .subscribe((items) => { 
+                            this.availableProductsList = [...items] as any;
+                        });
+                } else {
+                    this.productService.getList()
+                        .subscribe((products) => {
+                            let matches = [];
+                            const result: any[] = products;
+                            switch (message) {
+                                case this.SCAN_EVENT_PARTNO:
+                                    matches = result.filter(x => x.partNumber === value);
+                                    if (matches.length) {
+                                        product = [...matches].shift();
+                                        this.handleProductDict(product);
+                                    }
+                                    break;
+                                case this.SCAN_EVENT_MACADDRESS: 4
+                                    const qtyCounter = 0;
+                                    matches = result.filter(x => x.partNumber === this.selectedProductKey);
+                                    const productItem: any = { product: [...matches].shift() };
+                                    productItem.serialNumber = value;
+                                    this.handleProductItems(qtyCounter, productItem, this.orderProducts.orderDetail)
+                                    break;
 
-                        switch (message) {
-                            case this.SCAN_EVENT_PARTNO:
-                                matches = result.filter(x => x.partNumber === value);
-                                if (matches.length) {
-                                    product = [...matches].shift();
-                                    this.handleProductDict(product);
-                                }
-                                break;
-                            case this.SCAN_EVENT_MACADDRESS: 4
-                                const qtyCounter = 0;
-                                matches = result.filter(x => x.partNumber === this.selectedProductKey);
-                                const productItem: any = { product: [...matches].shift() };
-                                productItem.serialNumber = value;
-                                this.handleProductItems(qtyCounter, productItem, this.orderProducts.orderDetail)
-                                break;
-
-                        }
-                    });
+                            }
+                        });
+                }
             });
 
         onScan$.remove(onScan$);
+    }
+
+    drop(event: CdkDragDrop<string[]>) {
+        if (event.previousContainer === event.container) {
+            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+        } else {
+            transferArrayItem(event.previousContainer.data,
+                event.container.data,
+                event.previousIndex,
+                event.currentIndex);
+        }
+        console.log('Data sets ---> ', this.availableProductsList)
     }
 
     handleProductDict(product: ProductModel) {
@@ -202,9 +227,8 @@ export class NewOrderComponent implements OnInit {
     }
 
     switchRadioBtns(event, newValue) {
-        console.log('radio event...', event);
         this.orderProducts.order.orderType = newValue.id;
-        console.log('new value...', this.orderProducts.order.orderType);
+        console.log('new value...', this.orderProducts);
     }
 
     toggleProductKey(key: string) {
