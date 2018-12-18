@@ -1,47 +1,16 @@
 <!-- ORDER CONTROLS -->
+<div class="flex-container row padded-aside">
+    <h1>Products</h1>
+</div>
 <div class="flex-grid padded-aside">
+        <h2 >Search by: </h2>
         <div class="col-md">
-            <div class="flex-grid">
-                <div class="col-sm">
-                    <div class="btn-container">
-                        <a href="javascript:void(0);" (click)="newProduct();" class="btn-primary">
-                            <span><i class="material-icons small">save</i></span>
-                            <div class="btn-text">New Product(s)</div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-xs">
-                    <div class="btn-container">
-                        <a href="javascript:void(0);" class="btn-secondary">
-                             <span class="left">
-                                <i class="material-icons small">edit</i>
-                            </span>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-xs">
-                    <div class="btn-container">
-                        <a href="javascript:void(0);" class="btn-secondary">
-                             <span class="left">
-                                <i class="material-icons small">delete</i>
-                            </span>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md">
-                    <form class="example" action="javascript:void(0);">
-                        <input class="search" type="text" placeholder="Search.." name="search">
+                    <form class="flex-container row  example" action="javascript:void(0);">
+                        <input class="search col-md" type="text" placeholder="Product name" name="search">
+                        <input class="search col-md" type="text" placeholder="Manufacturer" name="search">
+                        <input class="search col-md" type="text" placeholder="Group" name="search">
                         <button type="submit"><i class="material-icons small">search</i></button>
                     </form>
-                </div>
-            </div>
-        </div>
-        <div class="col-md">
-            <div class="flex-grid">
-                <div class="col-sm">
-    
-                </div>
-            </div>
         </div>
     </div>
     
@@ -68,9 +37,12 @@
             <div class="Rtable Rtable--5cols Rtable--collapse">
                 <div class="Rtable-row Rtable-row--head">
                     <div class="Rtable-cell small-cell column-heading">Select</div>
-                    <div class="Rtable-cell date-cell column-heading">Barcode</div>
+                    <div class="Rtable-cell date-cell column-heading">Name</div> 
+                    <div class="Rtable-cell date-cell column-heading">Manufacturer</div>                    
+                    <div class="Rtable-cell date-cell column-heading">Product Group</div>                                        
+                    <div class="Rtable-cell date-cell column-heading">Part Number</div>
+                    <div class="Rtable-cell date-cell column-heading">Barcode</div>                    
                     <div class="Rtable-cell date-cell column-heading">Total Items</div>
-                    <div class="Rtable-cell date-cell column-heading">Created Date</div>
                     <div class="Rtable-cell date-cell column-heading">Min Price</div>
                     <div class="Rtable-cell date-cell column-heading">Max Price</div>
                     <div class="Rtable-cell date-cell column-heading">Avg Price</div>
@@ -89,11 +61,24 @@
                         </div>
                     </div>
                     <div class="Rtable-cell date-cell">
+                        <div class="Rtable-cell--heading">Name</div>
+                        <div class="Rtable-cell--content title-content">{{product.name}}</div>
+                    </div>
+                    <div class="Rtable-cell date-cell">
+                            <div class="Rtable-cell--heading">Manufacturer</div>
+                            <div class="Rtable-cell--content title-content">{{product.manufacturer}}</div>
+                    </div>
+                    <div class="Rtable-cell date-cell">
+                            <div class="Rtable-cell--heading">Product Group</div>
+                            <div class="Rtable-cell--content title-content">{{product.productGroup}}</div>
+                    </div>
+                    <div class="Rtable-cell date-cell">
+                        <div class="Rtable-cell--heading">Part Number</div>
+                        <div class="Rtable-cell--content title-content">{{product.partNumber}}</div>
+                    </div>
+                    <div class="Rtable-cell date-cell">
                         <div class="Rtable-cell--heading">Barcode</div>
-                        <div class="Rtable-cell--content date-content">
-                            <span class="row-title">{{product.barcode}}</span>
-                            <!-- <br />6:00 pm(CDT) -->
-                        </div>
+                        <div class="Rtable-cell--content title-content">{{product.barcode}}</div>
                     </div>
                     <div class="Rtable-cell date-cell">
                         <div class="Rtable-cell--heading">Total Items</div>

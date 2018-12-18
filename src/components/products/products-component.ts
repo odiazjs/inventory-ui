@@ -17,9 +17,6 @@ export class ProductsComponent implements AfterContentInit {
 
     constructor(private productService: ProductService) { }
 
-    newProduct () {
-        
-    }
 
     getAllProducts() {
         Observable.of().pipe(startWith(null), delay(0)).subscribe(() => {
