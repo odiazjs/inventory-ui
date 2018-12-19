@@ -184,11 +184,11 @@ export class ProductsComponent implements AfterContentInit, OnInit {
         }
         if (this.productSearchName !== undefined && this.productSearchName !== '') {
             dto.name = this.productSearchName;
-            this.productSearchService.getList(dto)
-            .subscribe( (result: any) => {
-                this.productsList = [...result]
-            });
         }
+        this.productSearchService.getList(dto)
+        .subscribe( (result: any) => {
+            this.productsList = [...result]
+        });
     }
 
     restoreSearch(){
