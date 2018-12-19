@@ -7,7 +7,8 @@ import {
     ProductMockService,
     InventoryItemService,
     CatalogsService,
-    InventoryItemFilterService
+    InventoryItemFilterService,
+    ProductSearchService
 } from './barrel';
 
 export const APP_SERVICES = [
@@ -19,5 +20,6 @@ export const APP_SERVICES = [
     ProductMockService,
     InventoryItemService,
     CatalogsService,
-    InventoryItemFilterService
+    InventoryItemFilterService,
+    ProductSearchService
 ];

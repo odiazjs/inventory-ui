@@ -1,8 +1,8 @@
 <div class="flex-container row padded-aside">
-    <h2>Inventory Item</h2>
+    <h1>Inventory Item</h1>
 </div>
 <div class="flex-container row padded-aside">
-    <div class="col-xs">
+    <div class="col-xs padded-top">
         <div class="btn-container" (click)="showModal();">
             <a href="javascript:void(0);" class="btn-secondary">
                  <span class="left">
@@ -11,20 +11,28 @@
             </a>
         </div>
     </div>
-    <div class="col">
+    
+    <div class="col padded-top">
         <form class="example" action="javascript:void(0);">
             <input class="search" type="text" placeholder="Product SKU or Name" name="search">
             <button type="submit"><i class="material-icons small">search</i></button>
         </form>
     </div>
+    
     <div class="col-sm">
+        <div class="title">
+            Warehouse
+        </div>
         <form class="example" action="javascript:void(0);">
             <select required [(ngModel)]="filterValues.warehouseCat"  name="warehouse" >
                 <option *ngFor="let item of warehouses" [ngValue]="item">{{item.name}}</option>
             </select>
         </form>
     </div>
-    <div class="col-sm">
+    <div class="col-md">
+        <div class="title">
+            Inventory Name
+        </div>
         <form class="example" action="javascript:void(0);">
             <select required [(ngModel)]="filterValues.inventoryCat" name="inventory">
                 <option *ngFor="let item of inventories" [ngValue]="item">{{item.name}}</option>
@@ -32,6 +40,11 @@
         </form>
     </div>
     <div class="col-sm">
+        <div class="col">
+            <div class="title">
+                Status
+            </div>
+        </div>
         <form class="example" action="javascript:void(0);">
             <select required [(ngModel)]="filterValues.onInventoryStatusCat"  name="oninvstatus">
                 <option *ngFor="let item of inventoryStatuses" [ngValue]="item">{{item.name}}</option>
@@ -39,17 +52,30 @@
         </form>
     </div>
     <div class="col-sm">
+        <div class="col">
+            <div class="title">
+                Item Status
+            </div>
+        </div>
         <form class="example" action="javascript:void(0);">
             <select required [(ngModel)]="filterValues.itemStatusCat"  name="itemstatus">
                 <option *ngFor="let item of itemStatuses" [ngValue]="item">{{item.name}}</option>
             </select>
         </form>
     </div>
-    <div class="col-sm">
+    <div class="col-sm padded-top">
         <div class="btn-container">
             <a href="javascript:void(0);" (click)="filterItems();" class="btn-primary">
-                <span><i class="material-icons small">save</i></span>
+                <span><i class="material-icons small">filter_list</i></span>
                 <div class="btn-text">Filter</div>
+            </a>
+        </div>
+    </div>
+    <div class="col-sm padded-top">
+        <div class="btn-container">
+            <a href="javascript:void(0);" (click)="removeFilter();" class="btn-primary">
+                <span><i class="material-icons small">clear_all</i></span>
+                <div class="btn-text">Remove</div>
             </a>
         </div>
     </div>
@@ -128,6 +154,28 @@
                             {{item.product.name}}
                         </li>
                     </ul>
+                </div>
+            </div>
+            <div class="flex-grid padded-aside">
+                <div class="col">
+                    <div class="title">
+                        Warehouse
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="title">
+                        Inventory Name
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="title">
+                        Status
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="title">
+                        Item State
+                    </div>
                 </div>
             </div>
             <div class="flex-container row padded-aside">
