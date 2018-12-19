@@ -3,14 +3,40 @@
     <h1>Products</h1>
 </div>
 <div class="flex-grid padded-aside">
-        <h2 >Search by: </h2>
+        <h2 class="padded-top">Search by: </h2>
         <div class="col-md">
-                    <form class="flex-container row  example" action="javascript:void(0);">
-                        <input class="search col-md" type="text" placeholder="Product name" name="search">
-                        <input class="search col-md" type="text" placeholder="Manufacturer" name="search">
-                        <input class="search col-md" type="text" placeholder="Group" name="search">
-                        <button type="submit"><i class="material-icons small">search</i></button>
+            <form class="flex-container row  example" action="javascript:void(0);">
+                <input class="search col-md padded-top" type="text" placeholder="Product name" name="searchByName" [(ngModel)] = "productSearchName" (keyup.enter)="searchProduct();">
+                <div class="col-md">
+                    <div class="col">
+                        <div class="title">
+                            Manufacturer
+                        </div>
+                    </div>
+                    <form class="example" action="javascript:void(0);">
+                        <select required [(ngModel)]="filterValues.manufacturersCat"  name="productGroup">
+                            <option *ngFor="let item of manufacturers" [ngValue]="item">{{item.name}}</option>
+                        </select>
                     </form>
+                </div>
+                <div class="col-md">
+                    <div class="col">
+                        <div class="title">
+                            Product Group
+                        </div>
+                    </div>
+                    <form class="example" action="javascript:void(0);">
+                        <select required [(ngModel)]="filterValues.productsGroupCat"  name="productGroup">
+                            <option *ngFor="let item of productsGroup" [ngValue]="item">{{item.name}}</option>
+                        </select>
+                    </form>
+                </div>
+                <div class="btn-container padded-top">
+                    <a href="javascript:void(0);" (click)="searchProduct();" class="btn-primary">
+                         <span><i class="material-icons small">search</i></span>
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
     

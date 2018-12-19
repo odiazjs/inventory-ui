@@ -51,6 +51,7 @@ export class CatalogDto {
     id: number;
     name: string;
     enabled?: boolean;
+    code?: string;
 }
 
 export class CatalogModel extends CatalogDto {

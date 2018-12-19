@@ -1,22 +1,34 @@
-import { Component, AfterContentInit } from '@angular/core';
+import { Component, AfterContentInit, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { Chart } from 'chart.js';
 import { Observable } from 'rxjs';
 import { startWith, delay } from 'rxjs/operators';
 import { ProductService } from '../../services/product.service';
 import { ProductModel } from '../../models/product.model';
+import { CatalogModel } from 'src/models/order.dto';
+import { CatalogsService, ProductSearchService } from 'src/services/barrel';
 
 @Component({
     selector: 'app-products',
     templateUrl: './products.template.html',
     styleUrls: ['./products.component.scss']
 })
-export class ProductsComponent implements AfterContentInit {
+export class ProductsComponent implements AfterContentInit, OnInit {
     lineChart: Array<any> = [];
     productsList: Array<ProductModel> = []
+    productSearchName: string;
+    productSearchManufacturer: string;
+    productSeachGroup: string;
 
-    constructor(private productService: ProductService) { }
+    manufacturers: CatalogModel[] = [];
+    productsGroup: CatalogModel[] = [];
+    filterValues: any = {};
 
+    constructor(
+        private productService: ProductService,
+        private catalogService: CatalogsService,
+        private productSearchService: ProductSearchService
+        ) { }
 
     getAllProducts() {
         Observable.of().pipe(startWith(null), delay(0)).subscribe(() => {
@@ -28,8 +40,31 @@ export class ProductsComponent implements AfterContentInit {
         })
     }
 
+    ngOnInit(): void {
+        Observable.of().pipe(startWith(null), delay(0)).subscribe(() => {
+            this.catalogService.getManufacturers()
+                .subscribe((result: any) => {
+                    this.manufacturers = [...result]
+                    this.manufacturers.push({code: '', enabled: true, name: 'All', id: 0});
+                })
+        })
+        Observable.of().pipe(startWith(null), delay(0)).subscribe(() => {
+            this.catalogService.getProductsGroups()
+                .subscribe((result: any) => {
+                    this.productsGroup = [...result]
+                    // todo: find a better way to add 'All' to the list
+                    this.productsGroup.push({code: '', enabled: true, name: 'All', id: 0});
+                    this.filterValues = {
+                        manufacturersCat: this.manufacturers[this.manufacturers.length - 1],
+                        productsGroupCat: this.productsGroup[this.productsGroup.length - 1]
+                    }
+                })
+        })
+    }
+
     ngAfterContentInit(): void {
-        //get all products
+
+        // get all products
         this.getAllProducts();
 
         // line chart
@@ -137,5 +172,27 @@ export class ProductsComponent implements AfterContentInit {
             data: speedData,
             options: chartOptions
         });
+    }
+
+    searchProduct() {
+        const dto: any = {}
+        console.log('searching:', this.productSearchName);
+        if (this.filterValues.manufacturersCat.id !== 0 ) {
+            console.log('searching product manufacturer', this.filterValues.manufacturersCat.name);
+            dto.manufacturer = this.filterValues.manufacturersCat.name;
+        }
+        if (this.filterValues.productsGroupCat.id !== 0) {
+            console.log('searching product group', this.filterValues.productsGroupCat.name);
+            dto.group = this.filterValues.productsGroupCat.name;
+        }
+        if (this.productSearchName !== undefined && this.productSearchName !== '') {
+            console.log('searching product name', this.productSearchName);
+            dto.name = this.productSearchName;
+        }
+        this.productSearchService.getList(dto)
+        .subscribe( (result: any) => {
+            this.productsList = [...result]
+        });
+        console.log('dto', dto)
     }
 }
