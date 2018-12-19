@@ -6,6 +6,7 @@ export class ProductModel {
     name: string;
     masterName: string;
     partNumber: string;
+    barcode: string;
     manufacturer: string;
     productGroup: string;
     checked?: boolean;

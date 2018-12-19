@@ -96,6 +96,10 @@ export class InventoryComponent implements OnInit {
 
     }
 
+    removeFilter(){
+        this.getList();
+    }
+
     update() {
         const dto = this.selectedItems.map(item => {
             return {

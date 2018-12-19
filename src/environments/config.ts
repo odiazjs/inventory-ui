@@ -26,7 +26,8 @@ export const configFile = {
             'getAllOrders': 'orders'
         },
         'products': {
-            'getAllProducts': 'products'
+            'getAllProducts': 'products',
+            'getFilteredProducts': 'products?'
         },
         'inventoryItems': {
             'getAllItems': 'inventory_items',
@@ -36,7 +37,9 @@ export const configFile = {
             'getAllWarehouses': 'warehouses',
             'getALlInventories': 'inventories',
             'getAllOnInventoryStatus': 'on-inventory-status',
-            'getAllItemStatus': 'item-status'            
+            'getAllItemStatus': 'item-status',
+            'getAllManufacturer': 'manufacturers',
+            'getAllProductsGroup': 'product-groups'
         }
     }
 };
@@ -50,9 +53,9 @@ const {
     urlConfig: {
         auth: { url, version, loginEndpoint },
         orders: { getAllOrders },
-        products: { getAllProducts },
+        products: { getAllProducts, getFilteredProducts },
         inventoryItems: { getAllItems, getFilteredItems },
-        catalogs: { getAllWarehouses, getALlInventories, getAllOnInventoryStatus,  getAllItemStatus}
+        catalogs: { getAllWarehouses, getALlInventories, getAllOnInventoryStatus,  getAllItemStatus, getAllManufacturer, getAllProductsGroup}
     }
 } = configFile;
 
@@ -60,11 +63,14 @@ export const urlConfig = {
     authUrl: `${protocol}://${baseUrl}/${apiVersion}/${loginEndpoint}`,
     getOrdersUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllOrders}`,
     getProductsUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllProducts}`,
+    getFilteredProductsUrl: `${protocol}://${baseUrl}/${apiVersion}/${getFilteredProducts}`,
     getAllItemsUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllItems}`,
     getFilteredItemsUrl: `${protocol}://${baseUrl}/${apiVersion}/${getFilteredItems}`,
     getCatalogWarehousesUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllWarehouses}`,
     getCatalogInventoriesUrl: `${protocol}://${baseUrl}/${apiVersion}/${getALlInventories}`,
     getCatalogOnInventoryStatusUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllOnInventoryStatus}`,
-    getCatalogAllItemStatusUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllItemStatus}`
+    getCatalogAllItemStatusUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllItemStatus}`,
+    getCatalogManufacturers: `${protocol}://${baseUrl}/${apiVersion}/${getAllManufacturer}`,
+    getCatalogProductsGroup: `${protocol}://${baseUrl}/${apiVersion}/${getAllProductsGroup}`
 };
 
