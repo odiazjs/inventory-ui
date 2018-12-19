@@ -13,7 +13,6 @@ import { Store, Select } from '@ngxs/store';
 import { GetAll } from 'src/ngxs/models/catalogState.model';
 
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { ResourceService } from 'src/services/resource.service';
 
 @Component({
     selector: 'app-new-order',
@@ -63,6 +62,7 @@ export class NewOrderComponent implements OnInit {
     orderDetailMap: Dictionary<ProductOrderDetailModel[]> = {};
 
     availableProductsList: ProductModel[] = [];
+    draggedProductList: ProductModel[] = [];
 
     constructor(
         private store: Store,
@@ -142,7 +142,6 @@ export class NewOrderComponent implements OnInit {
             ).subscribe((eventData) => {
                 if (isEmpty(eventData.value.trim())) return;
                 const { value, message } = eventData;
-                
                 if (this.orderProducts.order.orderType == 2) {
                     this.inventoryItemService.getList()
                         .subscribe((items) => { 
@@ -161,7 +160,7 @@ export class NewOrderComponent implements OnInit {
                                         this.handleProductDict(product);
                                     }
                                     break;
-                                case this.SCAN_EVENT_MACADDRESS: 4
+                                case this.SCAN_EVENT_MACADDRESS:
                                     const qtyCounter = 0;
                                     matches = result.filter(x => x.partNumber === this.selectedProductKey);
                                     const productItem: any = { product: [...matches].shift() };
@@ -177,16 +176,17 @@ export class NewOrderComponent implements OnInit {
         onScan$.remove(onScan$);
     }
 
-    drop(event: CdkDragDrop<string[]>) {
+    drop(event: CdkDragDrop<ProductModel[]>) {
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
+            console.log('Transfering array item ---> ', event)
             transferArrayItem(event.previousContainer.data,
                 event.container.data,
                 event.previousIndex,
                 event.currentIndex);
         }
-        console.log('Data sets ---> ', this.availableProductsList)
+        console.log('Drop Event ---> ', event)
     }
 
     handleProductDict(product: ProductModel) {
