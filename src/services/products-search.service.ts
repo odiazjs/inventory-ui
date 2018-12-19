@@ -23,7 +23,6 @@ export class ProductSearchService extends ResourceService<ProductDto[]> {
         const serializedSnakeCase =  serializeSnakeCase(paramsObject);
         const paramsQueryString = QueryOptions.toQueryString(serializedSnakeCase);
         const queryUrl = `${this.baseUrl}${paramsQueryString}`;
-        console.log(queryUrl);
         return this.httpClient
           .get(`${queryUrl}`)
           .pipe(

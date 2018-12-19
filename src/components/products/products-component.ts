@@ -176,23 +176,18 @@ export class ProductsComponent implements AfterContentInit, OnInit {
 
     searchProduct() {
         const dto: any = {}
-        console.log('searching:', this.productSearchName);
         if (this.filterValues.manufacturersCat.id !== 0 ) {
-            console.log('searching product manufacturer', this.filterValues.manufacturersCat.name);
             dto.manufacturer = this.filterValues.manufacturersCat.name;
         }
         if (this.filterValues.productsGroupCat.id !== 0) {
-            console.log('searching product group', this.filterValues.productsGroupCat.name);
             dto.group = this.filterValues.productsGroupCat.name;
         }
         if (this.productSearchName !== undefined && this.productSearchName !== '') {
-            console.log('searching product name', this.productSearchName);
             dto.name = this.productSearchName;
         }
         this.productSearchService.getList(dto)
         .subscribe( (result: any) => {
             this.productsList = [...result]
         });
-        console.log('dto', dto)
     }
 }
