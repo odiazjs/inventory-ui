@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ResourceService, serializeCase ,serializeSnakeCase,QueryOptions } from './resource.service';
+import { ResourceService, serializeCase, deserializeCase ,QueryOptions } from './resource.service';
 import { HttpWrapper } from '../common/barrel';
 import { HttpResponse } from '@angular/common/http';
 import { urlConfig } from '../environments/config';
@@ -20,7 +20,7 @@ export class InventoryItemFilterService extends ResourceService<InventoryItemDto
         )
     }
     getList(paramsObject: any = {}): Observable<InventoryItemDto[]> {
-        const serializedSnakeCase =  serializeSnakeCase(paramsObject);
+        const serializedSnakeCase =  deserializeCase(paramsObject);
         const paramsQueryString = QueryOptions.toQueryString(serializedSnakeCase);
         const queryUrl = `${this.baseUrl}${paramsQueryString}`;
         return this.httpClient

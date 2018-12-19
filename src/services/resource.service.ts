@@ -18,13 +18,13 @@ export const serializeCase = (obj) => {
   return newobj;
 }
 
-export const serializeSnakeCase = (obj): any => {
+export const deserializeCase = (obj): any => {
   let key, keys = Object.keys(obj);
   let n = keys.length;
   let newobj = {};
   while (n--) {
-    key = keys[n];
-    newobj[toSnakeCase(key)] = obj[key];
+      key = keys[n];
+      newobj[toSnakeCase(key)] = obj[key];
   }
   return newobj;
 }
@@ -54,16 +54,16 @@ export class ResourceService<T> {
         .forEach(key => {
           if (Array.isArray(item[key])) {
             item[key] = [...item[key].map(obj => {
-              return serializeSnakeCase(obj)
+              return deserializeCase(obj)
             })]
           } else if (typeof item[key] === 'object') {
-            item[key] = serializeSnakeCase(item[key])
+            item[key] = deserializeCase(item[key])
           } else {
-            item = serializeSnakeCase(item);
+            item = deserializeCase(item);
           }
         })
     } else {
-      item = serializeSnakeCase(item);
+      item = deserializeCase(item);
     }
     return this.httpClient
       .post<T>(`${this.baseUrl}`, item)
@@ -77,16 +77,16 @@ export class ResourceService<T> {
         .forEach(key => {
           if (Array.isArray(item[key])) {
             item[key] = [...item[key].map(obj => {
-              return serializeSnakeCase(obj)
+              return deserializeCase(obj)
             })]
           } else if (typeof item[key] === 'object') {
-            item[key] = serializeSnakeCase(item[key])
+            item[key] = deserializeCase(item[key])
           } else {
-            item = serializeSnakeCase(item);
+            item = deserializeCase(item);
           }
         })
     } else {
-      item = serializeSnakeCase(item);
+      item = deserializeCase(item);
     }
     const url = id ? `${this.baseUrl}/${id}` : `${this.baseUrl}`
     return this.httpClient
@@ -106,8 +106,8 @@ export class ResourceService<T> {
     return this.httpClient
       .get(`${this.baseUrl}`)
       .pipe(
-        map((list: any[]) => {
-          return list.map(serializeCase)
+        map((list: any) => {
+          return list.results ? list.results.map(serializeCase) : list.map(serializeCase)
         })
       );
   }

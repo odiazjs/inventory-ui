@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ResourceService } from './resource.service';
+import { ResourceService, serializeCase } from './resource.service';
 import { HttpWrapper } from '../common/barrel';
 import { HttpResponse } from '@angular/common/http';
 import { urlConfig } from '../environments/config';
@@ -19,5 +19,7 @@ export class InventoryItemService extends ResourceService<InventoryItemDto[]> {
 
 const inventoryItemFactory: any = (value: InventoryItemModel[]) => {
     console.log('serializer', value)
-    return value.map(item => new InventoryItemModel())
+    let outterMap: any[] = value.map(item => serializeCase(item))
+    outterMap.forEach(item => { item.product = serializeCase(item.product) })
+    return outterMap;
 }
