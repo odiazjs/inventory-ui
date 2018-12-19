@@ -184,10 +184,19 @@ export class ProductsComponent implements AfterContentInit, OnInit {
         }
         if (this.productSearchName !== undefined && this.productSearchName !== '') {
             dto.name = this.productSearchName;
+            this.productSearchService.getList(dto)
+            .subscribe( (result: any) => {
+                this.productsList = [...result]
+            });
         }
-        this.productSearchService.getList(dto)
-        .subscribe( (result: any) => {
-            this.productsList = [...result]
-        });
+    }
+
+    restoreSearch(){
+        this.filterValues = {
+            manufacturersCat: this.manufacturers[this.manufacturers.length - 1],
+            productsGroupCat: this.productsGroup[this.productsGroup.length - 1]
+        }
+        this.productSearchName = '';
+        this.getAllProducts();
     }
 }
