@@ -9,12 +9,12 @@
             </div>
             <div class="col-sm padded-top">
                 <form class="example" action="javascript:void(0);">
-                    <input [(ngModel)]="authStateModel.password" type="password" placeholder="Password" name="password">
+                    <input [(ngModel)]="authStateModel.password" type="password" placeholder="Password" name="password" (keyup.enter)="login();">
                 </form>
             </div>
             <div class="col-xs padded-top">
                 <div class="btn-container">
-                    <a href="javascript:void(0);" (click)="login();" class="btn-primary">
+                    <a href="javascript:void(0);" (click)="login();" (keyup.enter)="login();" class="btn-primary">
                          <span><i class="material-icons small">perm_identity</i></span>
                          <div class="btn-text center">Login</div>
                     </a>
