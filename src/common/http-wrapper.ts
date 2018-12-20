@@ -78,6 +78,8 @@ export class HttpWrapper<T> {
                 }, (error) => {
                     disableRequest();
                     checkUnauthorized(error);
+                    alert(`Error code: ${error.status}\nMessage: ${error.statusText}`);
+                    console.log('error:', error)
                     observer.error(error);
                 })
         })
