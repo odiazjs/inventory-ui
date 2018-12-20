@@ -28,7 +28,14 @@ export class ProductsComponent implements AfterContentInit, OnInit {
         private productService: ProductService,
         private catalogService: CatalogsService,
         private productSearchService: ProductSearchService
-        ) { }
+        ) {
+            this.manufacturers.push({code: '', enabled: true, name: 'All', id: 0});
+            this.productsGroup.push({code: '', enabled: true, name: 'All', id: 0});
+            this.filterValues = {
+                manufacturersCat: this.manufacturers[0],
+                productsGroupCat: this.productsGroup[0]
+            }
+        }
 
     getAllProducts() {
         Observable.of().pipe(startWith(null), delay(0)).subscribe(() => {
@@ -44,22 +51,15 @@ export class ProductsComponent implements AfterContentInit, OnInit {
         Observable.of().pipe(startWith(null), delay(0)).subscribe(() => {
             this.catalogService.getManufacturers()
                 .subscribe((result: any) => {
-                    this.manufacturers = [...result]
-                    this.manufacturers.push({code: '', enabled: true, name: 'All', id: 0});
+                    this.manufacturers.push(...result)
                 })
         })
         Observable.of().pipe(startWith(null), delay(0)).subscribe(() => {
             this.catalogService.getProductsGroups()
                 .subscribe((result: any) => {
-                    this.productsGroup = [...result]
-                    // todo: find a better way to add 'All' to the list
-                    this.productsGroup.push({code: '', enabled: true, name: 'All', id: 0});
-                    this.filterValues = {
-                        manufacturersCat: this.manufacturers[this.manufacturers.length - 1],
-                        productsGroupCat: this.productsGroup[this.productsGroup.length - 1]
-                    }
-                })
-        })
+                    this.productsGroup.push(...result)
+                });
+        });
     }
 
     ngAfterContentInit(): void {
