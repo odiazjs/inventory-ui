@@ -11,6 +11,8 @@ import { ActivatedRoute } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { Store, Select } from '@ngxs/store';
 import { GetAll } from 'src/ngxs/models/catalogState.model';
+import { Navigate } from '@ngxs/router-plugin';
+
 
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
@@ -247,16 +249,28 @@ export class NewOrderComponent implements OnInit {
         }
         if (message === '') {
             return false;
-        }
-        else {
+        } else {
             alert(message)
             return true;
         }
     }
-    
+
+    confirmCompleted(){
+        if (this.orderProducts.order.orderState === 'Completed') {
+            const confirmtation = confirm('If you save  the order as completed, you can\'t edit it later. Are you sure');
+            if (confirmtation) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
     save() {
         const haveError = this.validate();
         if (haveError) {return}
+        const completedConfimation  = this.confirmCompleted();
+        if (!completedConfimation ) {return}
         const productsArray = [];
         this.orderDetailArray.map(item => {
             item.value.forEach(item => {
@@ -297,6 +311,9 @@ export class NewOrderComponent implements OnInit {
                     console.log('saved!', response);
                     alert('Order Saved!');
                 })
+        }
+        if(completedConfimation){
+            this.store.dispatch(new Navigate(['/orders']))
         }
     }
 
