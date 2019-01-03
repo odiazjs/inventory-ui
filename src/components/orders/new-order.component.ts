@@ -32,7 +32,6 @@ export class NewOrderComponent implements OnInit {
     orderStates: string[] = [
         'Draft',
         'Completed',
-        'Closed',
         'Discarded'
     ];
 
