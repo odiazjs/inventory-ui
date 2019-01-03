@@ -10,7 +10,7 @@
         <ng-container *ngFor="let orderType of orderTypes; let i = index">
             <div class="col-xxs">
                 <label class="container">{{orderType.name}}
-                    <input type="radio" name="radio" [checked]="orderProducts.order.orderType.id == orderTypes[i].id"
+                    <input type="radio" name="radio" [checked]="orderTypes[i].id == 1"
                         (change)="switchRadioBtns($event, orderTypes[i])">
                     <span class="checkmark"></span>
                 </label>

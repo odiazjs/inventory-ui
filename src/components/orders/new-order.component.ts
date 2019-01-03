@@ -236,13 +236,15 @@ export class NewOrderComponent implements OnInit {
     }
 
     validate() {
-        console.log(this.orderProducts.order.orderNumber )
         let message = '';
         if (this.orderProducts.order.orderNumber === null) {
-            message += 'Order No. can\'t be empty\n';
+            message += '-Order No. can\'t be empty\n';
         }
         if (this.orderProducts.order.ticketNumber === null) {
-            message += 'Ticket number can\'t be empty\n';
+            message += '- Ticket number can\'t be empty\n';
+        }
+        if (this.orderProducts.order.orderType === null) {
+            message += '- Order Typer must be specified!\n';
         }
         if (message === '') {
             return false;
