@@ -49,6 +49,11 @@ export class OrdersComponent implements AfterContentInit {
 
     validateCanEdit () {
         this.canEdit = this.orderList.find(x => x.checked) !== undefined;
+        // complete orders can't be edited
+        const ord = this.orderList.find(x => x.checked);
+        if (ord.orderState === 'Completed'){
+            this.canEdit = false;
+        }
     }
 
     toggleCheck (order: OrderModel) {
