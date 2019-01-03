@@ -268,11 +268,13 @@ export class NewOrderComponent implements OnInit {
             this.orderService.update(orderDto, params.id)
                 .subscribe(response => {
                     console.log('saved!', response);
+                    alert('Order Saved!');
                 })
         } else {
             this.orderService.create(orderDto)
                 .subscribe(response => {
                     console.log('saved!', response);
+                    alert('Order Saved!');
                 })
         }
     }
