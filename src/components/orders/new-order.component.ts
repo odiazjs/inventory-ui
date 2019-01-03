@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderProductsModel } from '../../models/order.model';
 import { ProductOrderDetailModel, ProductModel } from '../../models/product.model';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, empty } from 'rxjs';
 import { map, debounceTime, distinctUntilChanged, flatMap, startWith, delay, tap } from 'rxjs/operators';
 import { CatalogModel, OrderProductsDto, CatalogDto } from '../../models/order.dto';
 import { ProductService, OrderService, InventoryItemService } from 'src/services/barrel';
@@ -235,7 +235,27 @@ export class NewOrderComponent implements OnInit {
         this.selectedProductKey = key;
     }
 
+    validate() {
+        console.log(this.orderProducts.order.orderNumber )
+        let message = '';
+        if (this.orderProducts.order.orderNumber === null) {
+            message += 'Order No. can\'t be empty\n';
+        }
+        if (this.orderProducts.order.ticketNumber === null) {
+            message += 'Ticket number can\'t be empty\n';
+        }
+        if (message === '') {
+            return false;
+        }
+        else {
+            alert(message)
+            return true;
+        }
+    }
+    
     save() {
+        const haveError = this.validate();
+        if (haveError) {return}
         const productsArray = [];
         this.orderDetailArray.map(item => {
             item.value.forEach(item => {
