@@ -119,7 +119,7 @@
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input [(ngModel)]="scannedSerialNo" (keyup)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_MACADDRESS })'
+                <input [(ngModel)]="scannedSerialNo" (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_MACADDRESS })'
                     class="search" type="text" placeholder="MAC Address" name="mac">
                 <button type="submit"><i class="material-icons small">search</i></button>
             </form>
