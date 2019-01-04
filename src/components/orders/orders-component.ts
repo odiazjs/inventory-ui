@@ -48,11 +48,15 @@ export class OrdersComponent implements AfterContentInit {
     }
 
     validateCanEdit () {
-        this.canEdit = this.orderList.find(x => x.checked) !== undefined;
-        // complete orders can't be edited
-        const ord = this.orderList.find(x => x.checked);
-        if (ord.orderState === 'Completed'){
-            this.canEdit = false;
+        const exist = this.orderList.find(x => x.checked) !== undefined;
+        if (exist){
+            const ord = this.orderList.find(x => x.checked);
+            // only drafts can be edited
+            if (ord.orderState === 'Draft') {
+                this.canEdit = true;
+            } else {
+                this.canEdit = false;
+            }
         }
     }
 

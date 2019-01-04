@@ -25,6 +25,9 @@ export class NewOrderComponent implements OnInit {
 
     readonly SCAN_EVENT_PARTNO = "PART_NO";
     readonly SCAN_EVENT_MACADDRESS = "MAC_ADDRESS";
+    // used to clear 
+    scannedSerialNo = '';
+
 
     orderTypes: CatalogModel[] = [
         { id: 1, name: 'IN', icon: 'input' },
@@ -137,7 +140,7 @@ export class NewOrderComponent implements OnInit {
                     const { event: { target: { value } }, message } = data
                     return { value, message }
                 }),
-                debounceTime(500),
+                debounceTime(600),
                 distinctUntilChanged(),
                 flatMap((eventData) => Observable.of(eventData))
             ).subscribe((eventData) => {
@@ -160,6 +163,10 @@ export class NewOrderComponent implements OnInit {
                                         product = [...matches].shift();
                                         this.handleProductDict(product);
                                     }
+                                    // test
+                                    else {
+                                        alert('Product Not Found!!');
+                                    }
                                     break;
                                 case this.SCAN_EVENT_MACADDRESS:
                                     const qtyCounter = 0;
@@ -167,6 +174,8 @@ export class NewOrderComponent implements OnInit {
                                     const productItem: any = { product: [...matches].shift() };
                                     productItem.serialNumber = value;
                                     this.handleProductItems(qtyCounter, productItem, this.orderProducts.orderDetail)
+                                    // clear the field after the insertion.
+                                    this.scannedSerialNo = '';
                                     break;
 
                             }
@@ -255,7 +264,7 @@ export class NewOrderComponent implements OnInit {
         }
     }
 
-    confirmCompleted(){
+    confirmCompleted() {
         if (this.orderProducts.order.orderState === 'Completed') {
             const confirmtation = confirm('If you save  the order as completed, you can\'t edit it later. Are you sure');
             if (confirmtation) {
@@ -263,6 +272,8 @@ export class NewOrderComponent implements OnInit {
             } else {
                 return false;
             }
+        } else {
+            return true;
         }
     }
 
@@ -312,7 +323,7 @@ export class NewOrderComponent implements OnInit {
                     alert('Order Saved!');
                 })
         }
-        if(completedConfimation){
+        if (completedConfimation && this.orderProducts.order.orderState === 'Completed') {
             this.store.dispatch(new Navigate(['/orders']))
         }
     }
