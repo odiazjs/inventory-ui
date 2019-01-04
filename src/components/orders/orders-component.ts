@@ -48,7 +48,16 @@ export class OrdersComponent implements AfterContentInit {
     }
 
     validateCanEdit () {
-        this.canEdit = this.orderList.find(x => x.checked) !== undefined;
+        const exist = this.orderList.find(x => x.checked) !== undefined;
+        if (exist){
+            const ord = this.orderList.find(x => x.checked);
+            // only drafts can be edited
+            if (ord.orderState === 'Draft') {
+                this.canEdit = true;
+            } else {
+                this.canEdit = false;
+            }
+        }
     }
 
     toggleCheck (order: OrderModel) {

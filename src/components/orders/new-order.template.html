@@ -10,7 +10,7 @@
         <ng-container *ngFor="let orderType of orderTypes; let i = index">
             <div class="col-xxs">
                 <label class="container">{{orderType.name}}
-                    <input type="radio" name="radio" [checked]="orderProducts.order.orderType.id == orderTypes[i].id"
+                    <input type="radio" name="radio" [checked]="orderTypes[i].id == 1"
                         (change)="switchRadioBtns($event, orderTypes[i])">
                     <span class="checkmark"></span>
                 </label>
@@ -119,7 +119,7 @@
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input (keyup)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_MACADDRESS })'
+                <input [(ngModel)]="scannedSerialNo" (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_MACADDRESS })'
                     class="search" type="text" placeholder="MAC Address" name="mac">
                 <button type="submit"><i class="material-icons small">search</i></button>
             </form>

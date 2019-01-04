@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderProductsModel } from '../../models/order.model';
 import { ProductOrderDetailModel, ProductModel } from '../../models/product.model';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, empty } from 'rxjs';
 import { map, debounceTime, distinctUntilChanged, flatMap, startWith, delay, tap } from 'rxjs/operators';
 import { CatalogModel, OrderProductsDto, CatalogDto } from '../../models/order.dto';
 import { ProductService, OrderService, InventoryItemService } from 'src/services/barrel';
@@ -11,6 +11,8 @@ import { ActivatedRoute } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { Store, Select } from '@ngxs/store';
 import { GetAll } from 'src/ngxs/models/catalogState.model';
+import { Navigate } from '@ngxs/router-plugin';
+
 
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
@@ -23,6 +25,9 @@ export class NewOrderComponent implements OnInit {
 
     readonly SCAN_EVENT_PARTNO = "PART_NO";
     readonly SCAN_EVENT_MACADDRESS = "MAC_ADDRESS";
+    // used to clear 
+    scannedSerialNo = '';
+
 
     orderTypes: CatalogModel[] = [
         { id: 1, name: 'IN', icon: 'input' },
@@ -32,7 +37,6 @@ export class NewOrderComponent implements OnInit {
     orderStates: string[] = [
         'Draft',
         'Completed',
-        'Closed',
         'Discarded'
     ];
 
@@ -136,7 +140,7 @@ export class NewOrderComponent implements OnInit {
                     const { event: { target: { value } }, message } = data
                     return { value, message }
                 }),
-                debounceTime(500),
+                debounceTime(600),
                 distinctUntilChanged(),
                 flatMap((eventData) => Observable.of(eventData))
             ).subscribe((eventData) => {
@@ -159,6 +163,10 @@ export class NewOrderComponent implements OnInit {
                                         product = [...matches].shift();
                                         this.handleProductDict(product);
                                     }
+                                    // test
+                                    else {
+                                        alert('Product Not Found!!');
+                                    }
                                     break;
                                 case this.SCAN_EVENT_MACADDRESS:
                                     const qtyCounter = 0;
@@ -166,6 +174,8 @@ export class NewOrderComponent implements OnInit {
                                     const productItem: any = { product: [...matches].shift() };
                                     productItem.serialNumber = value;
                                     this.handleProductItems(qtyCounter, productItem, this.orderProducts.orderDetail)
+                                    // clear the field after the insertion.
+                                    this.scannedSerialNo = '';
                                     break;
 
                             }
@@ -235,7 +245,43 @@ export class NewOrderComponent implements OnInit {
         this.selectedProductKey = key;
     }
 
+    validate() {
+        let message = '';
+        if (this.orderProducts.order.orderNumber === null) {
+            message += '-Order No. can\'t be empty\n';
+        }
+        if (this.orderProducts.order.ticketNumber === null) {
+            message += '- Ticket number can\'t be empty\n';
+        }
+        if (this.orderProducts.order.orderType === null) {
+            message += '- Order Typer must be specified!\n';
+        }
+        if (message === '') {
+            return false;
+        } else {
+            alert(message)
+            return true;
+        }
+    }
+
+    confirmCompleted() {
+        if (this.orderProducts.order.orderState === 'Completed') {
+            const confirmtation = confirm('If you save  the order as completed, you can\'t edit it later. Are you sure');
+            if (confirmtation) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
     save() {
+        const haveError = this.validate();
+        if (haveError) {return}
+        const completedConfimation  = this.confirmCompleted();
+        if (!completedConfimation ) {return}
         const productsArray = [];
         this.orderDetailArray.map(item => {
             item.value.forEach(item => {
@@ -268,12 +314,17 @@ export class NewOrderComponent implements OnInit {
             this.orderService.update(orderDto, params.id)
                 .subscribe(response => {
                     console.log('saved!', response);
+                    alert('Order Saved!');
                 })
         } else {
             this.orderService.create(orderDto)
                 .subscribe(response => {
                     console.log('saved!', response);
+                    alert('Order Saved!');
                 })
+        }
+        if (completedConfimation && this.orderProducts.order.orderState === 'Completed') {
+            this.store.dispatch(new Navigate(['/orders']))
         }
     }
 
