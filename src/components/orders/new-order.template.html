@@ -1,4 +1,11 @@
 <div class="new-order">
+    <div *ngIf="showError" ng-class="{'fade':doFade}" class="alert alert-danger">
+        <strong>Error:</strong> <div class="line-breaker">{{alertMessage}}</div> 
+    </div>
+    
+    <div *ngIf="showSuccess" ng-class="{'fade':doFade}" class="alert alert-succes">
+            <strong> {{alertMessage}} </strong> 
+        </div>
     <div class="flex-grid padded-aside">
         <div class="col">
             <div class="title">

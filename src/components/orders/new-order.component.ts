@@ -25,9 +25,13 @@ export class NewOrderComponent implements OnInit {
 
     readonly SCAN_EVENT_PARTNO = "PART_NO";
     readonly SCAN_EVENT_MACADDRESS = "MAC_ADDRESS";
-    // used to clear 
+    // used to clear
     scannedSerialNo = '';
-
+    // alerts
+    showError: = false;
+    doFade = false;
+    alertMessage: string;
+    showSuccess = false;
 
     orderTypes: CatalogModel[] = [
         { id: 1, name: 'IN', icon: 'input' },
@@ -165,7 +169,7 @@ export class NewOrderComponent implements OnInit {
                                     }
                                     // test
                                     else {
-                                        alert('Product Not Found!!');
+                                        this.ShowAlert('Product Not Found!!',0)
                                     }
                                     break;
                                 case this.SCAN_EVENT_MACADDRESS:
@@ -248,18 +252,15 @@ export class NewOrderComponent implements OnInit {
     validate() {
         let message = '';
         if (this.orderProducts.order.orderNumber === null) {
-            message += '-Order No. can\'t be empty\n';
+            message += '- Order No. can\'t be empty\n';
         }
         if (this.orderProducts.order.ticketNumber === null) {
             message += '- Ticket number can\'t be empty\n';
         }
-        if (this.orderProducts.order.orderType === null) {
-            message += '- Order Typer must be specified!\n';
-        }
         if (message === '') {
             return false;
         } else {
-            alert(message)
+            this.ShowAlert(message, 0);
             return true;
         }
     }
@@ -314,13 +315,13 @@ export class NewOrderComponent implements OnInit {
             this.orderService.update(orderDto, params.id)
                 .subscribe(response => {
                     console.log('saved!', response);
-                    alert('Order Saved!');
+                    this.ShowAlert('order Saved', 1);
                 })
         } else {
             this.orderService.create(orderDto)
                 .subscribe(response => {
                     console.log('saved!', response);
-                    alert('Order Saved!');
+                    this.ShowAlert('order Saved', 1);
                 })
         }
         if (completedConfimation && this.orderProducts.order.orderState === 'Completed') {
@@ -331,5 +332,24 @@ export class NewOrderComponent implements OnInit {
     deleteProduct(item: any) {
         this.orderDetailArray = [...this.orderDetailArray.filter((x) => x.key !== item.key)];
         this.orderDetailMap[item.key] !== undefined ? delete this.orderDetailMap[item.key] : false;
+    }
+
+    ShowAlert(messageToShow: string, type: number) {
+        console.log('test', messageToShow)
+        if (type === 0){
+            this.showError = true;
+            this.alertMessage = messageToShow;
+            setTimeout(function() {
+              this.showError = false;
+            }.bind(this), 1500);
+        }
+        else if (type === 1){
+            this.showSuccess = true;
+            this.alertMessage = messageToShow;
+            setTimeout(function() {
+              this.showSuccess = false;
+            }.bind(this), 1500);
+        }
+
     }
 }
