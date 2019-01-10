@@ -22,13 +22,14 @@
                 </div>
                 <div class="col">
                     <div class="flex-container col info">
-                        <div class="col name">User </div>
-                        <div class="col job-title">BI - Software Developer</div>
+                        <div class="col name">{{(authService.getUserInfo() | async)?.jti}} </div>
+                        <div class="col job-title">{{(authService.getUserInfo() | async)?.user_id}} - Software Developer</div>
                     </div>
                 </div>
                 <div class="col-xs">
                     <div class="arrow-dwn">
-                        <i class="material-icons dark small">arrow_drop_down</i>
+                        <i (click)="logout()"
+                            class="material-icons dark small">arrow_drop_down</i>
                     </div>
                 </div>
             </div>

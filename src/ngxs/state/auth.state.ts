@@ -3,6 +3,7 @@ import { StateContext, Action, Selector, State } from "@ngxs/store";
 import { AuthService } from "src/services/auth.service";
 import { tap } from "rxjs/operators";
 import { Router } from "@angular/router";
+import { Observable } from "rxjs";
 
 @State<AuthStateModel>({
     name: 'auth'
@@ -28,9 +29,14 @@ export class AuthState {
 
     @Action(Logout)
     logout({ setState }: StateContext<AuthStateModel>) {
-        return this.authService.logout().pipe(tap(() => {
-            setState({ token: null, username: null, password: null });
-        }))
+        return Observable.of([]).pipe(
+            tap(() => {
+                setState({ token: null, username: null, password: null });
+            }),
+            tap(() => {
+                return this.authService.logout()
+            })
+        )
     }
 
 }
