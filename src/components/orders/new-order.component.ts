@@ -28,8 +28,7 @@ export class NewOrderComponent implements OnInit {
     // used to clear
     scannedSerialNo = '';
     // alerts
-    showError: = false;
-    doFade = false;
+    showError = false;
     alertMessage: string;
     showSuccess = false;
 
@@ -58,7 +57,7 @@ export class NewOrderComponent implements OnInit {
             orderState: this.orderStates[0],
             orderDate: new Date().toLocaleDateString('en-US'),
             ticketNumber: null,
-            notes: "some notes."
+            notes: 'some notes.'
         },
         orderDetail: {} as any
     };
@@ -142,9 +141,13 @@ export class NewOrderComponent implements OnInit {
             this.onScanSubscription.pipe(
                 map((data: any) => {
                     const { event: { target: { value } }, message } = data
+                    console.log(event)
+                    console.log({value, message})
+                    console.log(data)
+
                     return { value, message }
                 }),
-                debounceTime(600),
+                // debounceTime(600), no longer needed
                 distinctUntilChanged(),
                 flatMap((eventData) => Observable.of(eventData))
             ).subscribe((eventData) => {
@@ -164,12 +167,11 @@ export class NewOrderComponent implements OnInit {
                                 case this.SCAN_EVENT_PARTNO:
                                     matches = result.filter(x => x.partNumber === value);
                                     if (matches.length) {
+                                        this.showError = false;
                                         product = [...matches].shift();
                                         this.handleProductDict(product);
-                                    }
-                                    // test
-                                    else {
-                                        this.ShowAlert('Product Not Found!!',0)
+                                    } else {
+                                        this.ShowAlert('Product Not Found!!', 2)
                                     }
                                     break;
                                 case this.SCAN_EVENT_MACADDRESS:
@@ -181,13 +183,19 @@ export class NewOrderComponent implements OnInit {
                                     // clear the field after the insertion.
                                     this.scannedSerialNo = '';
                                     break;
-
                             }
                         });
                 }
             });
 
         onScan$.remove(onScan$);
+    }
+
+    Removeitem(productKey: string, serialNumber: string) {
+        const item = this.orderDetailArray.find(x => x.key === productKey).value.find(y => y.serialNumber === serialNumber)
+        const values = this.orderDetailArray.find(x => x.key === productKey).value
+        const index = values.indexOf(item)
+        values.splice(index, 1)
     }
 
     drop(event: CdkDragDrop<ProductModel[]>) {
@@ -254,13 +262,11 @@ export class NewOrderComponent implements OnInit {
         if (this.orderProducts.order.orderNumber === null) {
             message += '- Order No. can\'t be empty\n';
         }
-        if (this.orderProducts.order.ticketNumber === null) {
-            message += '- Ticket number can\'t be empty\n';
-        }
         if (message === '') {
+            this.showError = false;
             return false;
         } else {
-            this.ShowAlert(message, 0);
+            this.ShowAlert(message, 2);
             return true;
         }
     }
@@ -315,7 +321,7 @@ export class NewOrderComponent implements OnInit {
             this.orderService.update(orderDto, params.id)
                 .subscribe(response => {
                     console.log('saved!', response);
-                    this.ShowAlert('order Saved', 1);
+                    this.ShowAlert('Order Saved!', 1);
                 })
         } else {
             this.orderService.create(orderDto)
@@ -342,13 +348,16 @@ export class NewOrderComponent implements OnInit {
             setTimeout(function() {
               this.showError = false;
             }.bind(this), 1500);
-        }
-        else if (type === 1){
+        } else if (type === 1) {
             this.showSuccess = true;
             this.alertMessage = messageToShow;
             setTimeout(function() {
               this.showSuccess = false;
             }.bind(this), 1500);
+        } // used to keep the error message on the display
+        else if (type === 2) {
+            this.showError = true;
+            this.alertMessage = messageToShow;
         }
 
     }

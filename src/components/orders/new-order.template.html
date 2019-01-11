@@ -1,9 +1,9 @@
 <div class="new-order">
-    <div *ngIf="showError" ng-class="{'fade':doFade}" class="alert alert-danger">
+    <div *ngIf="showError" class="alert alert-danger">
         <strong>Error:</strong> <div class="line-breaker">{{alertMessage}}</div> 
     </div>
     
-    <div *ngIf="showSuccess" ng-class="{'fade':doFade}" class="alert alert-succes">
+    <div *ngIf="showSuccess" class="alert alert-succes">
             <strong> {{alertMessage}} </strong> 
         </div>
     <div class="flex-grid padded-aside">
@@ -119,16 +119,16 @@
     <div class="flex-grid padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input (keyup)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })' class="search"
+                <input (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })' class="search"
                     type="text" placeholder="Search.." name="search">
                 <button type="submit"><i class="material-icons small">search</i></button>
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input [(ngModel)]="scannedSerialNo" (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_MACADDRESS })'
+                <input #testinput [(ngModel)]="scannedSerialNo" (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_MACADDRESS })'
                     class="search" type="text" placeholder="MAC Address" name="mac">
-                <button type="submit"><i class="material-icons small">search</i></button>
+                <button  type="submit"><i class="material-icons small">search</i></button>
             </form>
         </div>
         <div class="col-sm">
@@ -175,6 +175,7 @@
                     <div class="Rtable-cell date-cell column-heading">Inventory</div>
                     <div class="Rtable-cell date-cell column-heading">Inventory Status</div>
                     <div class="Rtable-cell date-cell column-heading">Item Status</div>
+                    <div class="Rtable-cell small-cell column-heading">Delete</div>
                 </div>
 
                 <ng-container *ngFor="let orderDetail of orderDetailArray">
@@ -203,6 +204,10 @@
                             <div class="Rtable-cell date-cell">
                                 <div class="Rtable-cell--heading">Item Status</div>
                                 <div class="Rtable-cell--content title-content">{{item.itemStatusCat.name}}</div>
+                            </div>
+                            <div class="Rtable-cell small-cell">
+                                    <div class="Rtable-cell--heading">Delete</div>
+                                    <div class="Rtable-cell--content"><i (click)="Removeitem(item.partNumber, item.serialNumber)" class="material-icons">close</i></div>
                             </div>
                         </div>
                     </ng-container>
