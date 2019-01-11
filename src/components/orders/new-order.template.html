@@ -206,8 +206,12 @@
                                 <div class="Rtable-cell--content title-content">{{item.itemStatusCat.name}}</div>
                             </div>
                             <div class="Rtable-cell small-cell">
-                                    <div class="Rtable-cell--heading">Delete</div>
-                                    <div class="Rtable-cell--content"><i (click)="Removeitem(item.partNumber, item.serialNumber)" class="material-icons">close</i></div>
+                                <div class="Rtable-cell--heading">Delete</div>
+                                <div class="Rtable-cell--content">
+                                    <a href="javascript:void(0);" (click)="Removeitem(item.partNumber, item.serialNumber)" class="btn-container">
+                                        <span><i class="material-icons small">close</i></span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </ng-container>
