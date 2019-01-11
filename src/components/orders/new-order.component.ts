@@ -31,6 +31,7 @@ export class NewOrderComponent implements OnInit {
     showError = false;
     alertMessage: string;
     showSuccess = false;
+    productList: any;
 
     orderTypes: CatalogModel[] = [
         { id: 1, name: 'IN', icon: 'input' },
@@ -80,6 +81,8 @@ export class NewOrderComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        this.productService.getList()
+                        .subscribe((products) => {this.productList = products}
 
         const initCatalogues = (catalogDictionary) => {
             this.warehouses = catalogDictionary['Warehouses'];
@@ -141,13 +144,8 @@ export class NewOrderComponent implements OnInit {
             this.onScanSubscription.pipe(
                 map((data: any) => {
                     const { event: { target: { value } }, message } = data
-                    console.log(event)
-                    console.log({value, message})
-                    console.log(data)
-
                     return { value, message }
                 }),
-                // debounceTime(600), no longer needed
                 distinctUntilChanged(),
                 flatMap((eventData) => Observable.of(eventData))
             ).subscribe((eventData) => {
@@ -161,8 +159,9 @@ export class NewOrderComponent implements OnInit {
                 } else {
                     this.productService.getList()
                         .subscribe((products) => {
+                            this.productList = [...products]
                             let matches = [];
-                            const result: any[] = products;
+                            const result: any[] = this.productList;
                             switch (message) {
                                 case this.SCAN_EVENT_PARTNO:
                                     matches = result.filter(x => x.partNumber === value);
@@ -191,11 +190,25 @@ export class NewOrderComponent implements OnInit {
         onScan$.remove(onScan$);
     }
 
-    Removeitem(productKey: string, serialNumber: string) {
+
+
+    removeitem(productKey: string, serialNumber: string) {
         const item = this.orderDetailArray.find(x => x.key === productKey).value.find(y => y.serialNumber === serialNumber)
         const values = this.orderDetailArray.find(x => x.key === productKey).value
         const index = values.indexOf(item)
         values.splice(index, 1)
+    }
+
+    addItem(value: string) {
+        let matches = [];
+        const result: any[] = this.productList;
+        const qtyCounter = 0;
+        matches = result.filter(x => x.partNumber === this.selectedProductKey);
+        const productItem: any = { product: [...matches].shift() };
+        productItem.serialNumber = value;
+        this.handleProductItems(qtyCounter, productItem, this.orderProducts.orderDetail)
+        // clear the field after the insertion.
+        this.scannedSerialNo = '';
     }
 
     drop(event: CdkDragDrop<ProductModel[]>) {
@@ -341,7 +354,6 @@ export class NewOrderComponent implements OnInit {
     }
 
     ShowAlert(messageToShow: string, type: number) {
-        console.log('test', messageToShow)
         if (type === 0){
             this.showError = true;
             this.alertMessage = messageToShow;
