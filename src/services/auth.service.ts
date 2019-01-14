@@ -48,6 +48,5 @@ export class AuthService extends ResourceService<any> {
 }
 
 const authServiceFactory = (dto: JwtInfoDto) => {
-    console.log('auth - serializer', dto);
     return new AuthStateModel(dto);
 }
