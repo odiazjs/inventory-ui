@@ -20,6 +20,15 @@
                 </div>
             </div>
             <div class="col-xs">
+                    <div class="btn-container">
+                        <a (click)="viewOrder()" href="javascript:void(0);" [class.disabled]="!canView" class="btn-secondary">
+                             <span class="left">
+                                <i class="material-icons small">remove_red_eye</i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            <div class="col-xs">
                 <div class="btn-container">
                     <a href="javascript:void(0);" class="btn-secondary">
                          <span class="left">

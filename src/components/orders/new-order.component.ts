@@ -32,6 +32,7 @@ export class NewOrderComponent implements OnInit {
     alertMessage: string;
     showSuccess = false;
     productList: any;
+    canSave: boolean = true;
 
     orderTypes: CatalogModel[] = [
         { id: 1, name: 'IN', icon: 'input' },
@@ -134,6 +135,12 @@ export class NewOrderComponent implements OnInit {
                                     }
                                     this.handleProductItems(qtyCounter + 1, item, cataloguesConfig);
                                 })
+                            // disable save button if is not a draft and show a message
+                            console.log('orderstate', this.orderProducts.order.orderState)
+                                if (result.order.orderState !== 'Draft') {
+                                this.canSave = false;
+                                this.ShowAlert('Only view, any change made to this order won\'t be saved', 3);
+                                 }
                             })
                     }
                 })
@@ -369,6 +376,10 @@ export class NewOrderComponent implements OnInit {
         } // used to keep the error message on the display
         else if (type === 2) {
             this.showError = true;
+            this.alertMessage = messageToShow;
+        }
+        else if (type === 3) {
+            this.showSuccess = true;
             this.alertMessage = messageToShow;
         }
 

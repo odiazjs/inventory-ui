@@ -22,6 +22,7 @@ export class OrdersComponent implements AfterContentInit {
     orderList: Array<OrderModel> = [];
 
     canEdit: boolean = false;
+    canView: boolean = false;
 
     constructor(
         private store: Store,
@@ -47,6 +48,11 @@ export class OrdersComponent implements AfterContentInit {
         this.store.dispatch(new Navigate(['/orders/', id]))
     }
 
+    viewOrder() {
+        const { id } = this.orderList.find(x => x.checked)
+        this.store.dispatch(new Navigate(['/orders/', id]))
+    }
+
     validateCanEdit () {
         const exist = this.orderList.find(x => x.checked) !== undefined;
         if (exist){
@@ -54,8 +60,10 @@ export class OrdersComponent implements AfterContentInit {
             // only drafts can be edited
             if (ord.orderState === 'Draft') {
                 this.canEdit = true;
+                this.canView = false;
             } else {
                 this.canEdit = false;
+                this.canView = true
             }
         }
     }

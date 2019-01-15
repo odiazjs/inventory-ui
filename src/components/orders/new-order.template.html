@@ -144,7 +144,7 @@
         </div>
         <div class="col-xs">
             <div class="btn-container">
-                <a href="javascript:void(0);" (click)="save();" class="btn-primary">
+                <a href="javascript:void(0);" (click)="save()" [class.disabled]="!canSave"  class="btn-primary">
                      <span><i class="material-icons small">save</i></span>
                      <div class="btn-text">Save</div>
                 </a>
@@ -210,7 +210,7 @@
                                 <div class="Rtable-cell--heading">Delete</div>
                                 <div class="Rtable-cell--content">
                                     <a href="javascript:void(0);" (click)="removeitem(item.partNumber, item.serialNumber)" class="btn-container">
-                                        <span><i class="material-icons small">close</i></span>
+                                        <span><i class="material-icons small">delete_forever</i></span>
                                     </a>
                                 </div>
                             </div>
