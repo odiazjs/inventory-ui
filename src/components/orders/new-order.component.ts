@@ -25,9 +25,14 @@ export class NewOrderComponent implements OnInit {
 
     readonly SCAN_EVENT_PARTNO = "PART_NO";
     readonly SCAN_EVENT_MACADDRESS = "MAC_ADDRESS";
-    // used to clear 
+    // used to clear
     scannedSerialNo = '';
-
+    // alerts
+    showError = false;
+    alertMessage: string;
+    showSuccess = false;
+    productList: any;
+    canSave: boolean = true;
 
     orderTypes: CatalogModel[] = [
         { id: 1, name: 'IN', icon: 'input' },
@@ -54,7 +59,7 @@ export class NewOrderComponent implements OnInit {
             orderState: this.orderStates[0],
             orderDate: new Date().toLocaleDateString('en-US'),
             ticketNumber: null,
-            notes: "some notes."
+            notes: 'some notes.'
         },
         orderDetail: {} as any
     };
@@ -77,6 +82,8 @@ export class NewOrderComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        this.productService.getList()
+                        .subscribe((products) => {this.productList = products}
 
         const initCatalogues = (catalogDictionary) => {
             this.warehouses = catalogDictionary['Warehouses'];
@@ -128,6 +135,12 @@ export class NewOrderComponent implements OnInit {
                                     }
                                     this.handleProductItems(qtyCounter + 1, item, cataloguesConfig);
                                 })
+                            // disable save button if is not a draft and show a message
+                            console.log('orderstate', this.orderProducts.order.orderState)
+                                if (result.order.orderState !== 'Draft') {
+                                this.canSave = false;
+                                this.ShowAlert('Only view, any change made to this order won\'t be saved', 3);
+                                 }
                             })
                     }
                 })
@@ -140,7 +153,6 @@ export class NewOrderComponent implements OnInit {
                     const { event: { target: { value } }, message } = data
                     return { value, message }
                 }),
-                debounceTime(600),
                 distinctUntilChanged(),
                 flatMap((eventData) => Observable.of(eventData))
             ).subscribe((eventData) => {
@@ -154,18 +166,18 @@ export class NewOrderComponent implements OnInit {
                 } else {
                     this.productService.getList()
                         .subscribe((products) => {
+                            this.productList = [...products]
                             let matches = [];
-                            const result: any[] = products;
+                            const result: any[] = this.productList;
                             switch (message) {
                                 case this.SCAN_EVENT_PARTNO:
                                     matches = result.filter(x => x.partNumber === value);
                                     if (matches.length) {
+                                        this.showError = false;
                                         product = [...matches].shift();
                                         this.handleProductDict(product);
-                                    }
-                                    // test
-                                    else {
-                                        alert('Product Not Found!!');
+                                    } else {
+                                        this.ShowAlert('Product Not Found!!', 2)
                                     }
                                     break;
                                 case this.SCAN_EVENT_MACADDRESS:
@@ -177,13 +189,36 @@ export class NewOrderComponent implements OnInit {
                                     // clear the field after the insertion.
                                     this.scannedSerialNo = '';
                                     break;
-
                             }
                         });
                 }
             });
 
         onScan$.remove(onScan$);
+    }
+
+
+
+    removeitem(productKey: string, serialNumber: string) {
+        const item = this.orderDetailArray.find(x => x.key === productKey).value.find(y => y.serialNumber === serialNumber)
+        const values = this.orderDetailArray.find(x => x.key === productKey).value
+        const index = values.indexOf(item)
+        const newValues = values.slice(0, index).concat(values.slice(index + 1))
+        this.orderDetailArray.find(x => x.key === productKey).value = [...newValues]
+ 
+
+    }
+
+    addItem(value: string) {
+        let matches = [];
+        const result: any[] = this.productList;
+        const qtyCounter = 0;
+        matches = result.filter(x => x.partNumber === this.selectedProductKey);
+        const productItem: any = { product: [...matches].shift() };
+        productItem.serialNumber = value;
+        this.handleProductItems(qtyCounter, productItem, this.orderProducts.orderDetail)
+        // clear the field after the insertion.
+        this.scannedSerialNo = '';
     }
 
     drop(event: CdkDragDrop<ProductModel[]>) {
@@ -248,18 +283,13 @@ export class NewOrderComponent implements OnInit {
     validate() {
         let message = '';
         if (this.orderProducts.order.orderNumber === null) {
-            message += '-Order No. can\'t be empty\n';
-        }
-        if (this.orderProducts.order.ticketNumber === null) {
-            message += '- Ticket number can\'t be empty\n';
-        }
-        if (this.orderProducts.order.orderType === null) {
-            message += '- Order Typer must be specified!\n';
+            message += '- Order No. can\'t be empty\n';
         }
         if (message === '') {
+            this.showError = false;
             return false;
         } else {
-            alert(message)
+            this.ShowAlert(message, 2);
             return true;
         }
     }
@@ -314,13 +344,13 @@ export class NewOrderComponent implements OnInit {
             this.orderService.update(orderDto, params.id)
                 .subscribe(response => {
                     console.log('saved!', response);
-                    alert('Order Saved!');
+                    this.ShowAlert('Order Saved!', 1);
                 })
         } else {
             this.orderService.create(orderDto)
                 .subscribe(response => {
                     console.log('saved!', response);
-                    alert('Order Saved!');
+                    this.ShowAlert('order Saved', 1);
                 })
         }
         if (completedConfimation && this.orderProducts.order.orderState === 'Completed') {
@@ -331,5 +361,30 @@ export class NewOrderComponent implements OnInit {
     deleteProduct(item: any) {
         this.orderDetailArray = [...this.orderDetailArray.filter((x) => x.key !== item.key)];
         this.orderDetailMap[item.key] !== undefined ? delete this.orderDetailMap[item.key] : false;
+    }
+
+    ShowAlert(messageToShow: string, type: number) {
+        if (type === 0){
+            this.showError = true;
+            this.alertMessage = messageToShow;
+            setTimeout(function() {
+              this.showError = false;
+            }.bind(this), 1500);
+        } else if (type === 1) {
+            this.showSuccess = true;
+            this.alertMessage = messageToShow;
+            setTimeout(function() {
+              this.showSuccess = false;
+            }.bind(this), 1500);
+        } // used to keep the error message on the display
+        else if (type === 2) {
+            this.showError = true;
+            this.alertMessage = messageToShow;
+        }
+        else if (type === 3) {
+            this.showSuccess = true;
+            this.alertMessage = messageToShow;
+        }
+
     }
 }

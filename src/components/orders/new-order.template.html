@@ -1,4 +1,11 @@
 <div class="new-order">
+    <div *ngIf="showError" class="alert alert-danger">
+        <strong>Error:</strong> <div class="line-breaker">{{alertMessage}}</div> 
+    </div>
+    
+    <div *ngIf="showSuccess" class="alert alert-succes">
+            <strong> {{alertMessage}} </strong> 
+        </div>
     <div class="flex-grid padded-aside">
         <div class="col">
             <div class="title">
@@ -112,16 +119,17 @@
     <div class="flex-grid padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input (keyup)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })' class="search"
+                <input (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })' class="search"
                     type="text" placeholder="Search.." name="search">
                 <button type="submit"><i class="material-icons small">search</i></button>
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input [(ngModel)]="scannedSerialNo" (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_MACADDRESS })'
+                <!-- <input #testinput [(ngModel)]="scannedSerialNo" (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_MACADDRESS })' -->
+                <input #testinput [(ngModel)]="scannedSerialNo" (keyup.enter)='addItem(testinput.value)'
                     class="search" type="text" placeholder="MAC Address" name="mac">
-                <button type="submit"><i class="material-icons small">search</i></button>
+                <button  type="submit"><i class="material-icons small">search</i></button>
             </form>
         </div>
         <div class="col-sm">
@@ -136,7 +144,7 @@
         </div>
         <div class="col-xs">
             <div class="btn-container">
-                <a href="javascript:void(0);" (click)="save();" class="btn-primary">
+                <a href="javascript:void(0);" (click)="save()" [class.disabled]="!canSave"  class="btn-primary">
                      <span><i class="material-icons small">save</i></span>
                      <div class="btn-text">Save</div>
                 </a>
@@ -168,6 +176,7 @@
                     <div class="Rtable-cell date-cell column-heading">Inventory</div>
                     <div class="Rtable-cell date-cell column-heading">Inventory Status</div>
                     <div class="Rtable-cell date-cell column-heading">Item Status</div>
+                    <div class="Rtable-cell small-cell column-heading">Delete</div>
                 </div>
 
                 <ng-container *ngFor="let orderDetail of orderDetailArray">
@@ -196,6 +205,14 @@
                             <div class="Rtable-cell date-cell">
                                 <div class="Rtable-cell--heading">Item Status</div>
                                 <div class="Rtable-cell--content title-content">{{item.itemStatusCat.name}}</div>
+                            </div>
+                            <div class="Rtable-cell small-cell">
+                                <div class="Rtable-cell--heading">Delete</div>
+                                <div class="Rtable-cell--content">
+                                    <a href="javascript:void(0);" (click)="removeitem(item.partNumber, item.serialNumber)" class="btn-container">
+                                        <span><i class="material-icons small">delete_forever</i></span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </ng-container>
