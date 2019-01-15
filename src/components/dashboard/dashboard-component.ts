@@ -1,6 +1,4 @@
-import { Component, OnInit, NgZone, AfterViewInit } from '@angular/core';
-
-import * as moment from 'moment';
+import { Component, OnInit, NgZone } from '@angular/core';
 import Chart from 'chart.js';
 
 @Component({
