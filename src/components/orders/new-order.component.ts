@@ -203,7 +203,10 @@ export class NewOrderComponent implements OnInit {
         const item = this.orderDetailArray.find(x => x.key === productKey).value.find(y => y.serialNumber === serialNumber)
         const values = this.orderDetailArray.find(x => x.key === productKey).value
         const index = values.indexOf(item)
-        values.splice(index, 1)
+        const newValues = values.slice(0, index).concat(values.slice(index + 1))
+        this.orderDetailArray.find(x => x.key === productKey).value = [...newValues]
+ 
+
     }
 
     addItem(value: string) {
