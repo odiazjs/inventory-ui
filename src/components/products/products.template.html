@@ -2,7 +2,7 @@
 <div class="flex-container row padded-aside">
     <h1>Products</h1>
 </div>
-<div class="flex-grid padded-aside">
+<div class="flex-grid padded-aside filter-fixed">
         <h2 class="padded-top-two">Search by: </h2>
         <div class="col-md">
             <form class="flex-container row  example" action="javascript:void(0);">
@@ -63,11 +63,11 @@
     </div>
     
     <!-- ORDER DATA TABLE -->
-    <div class="flex-container row padded-aside">
+    <div class="flex-container row padded-aside ">
         <div class="wrapper">
             <div class="Rtable Rtable--5cols Rtable--collapse">
-                <div class="Rtable-row Rtable-row--head">
-                    <div class="Rtable-cell small-cell column-heading">Select</div>
+                <div class="Rtable-row Rtable-row--head headers-fixed">
+                    <!-- <div class="Rtable-cell small-cell column-heading">Select</div> -->
                     <div class="Rtable-cell topic-cell column-heading">Name</div> 
                     <div class="Rtable-cell date-cell column-heading">Manufacturer</div>                    
                     <div class="Rtable-cell date-cell column-heading">Product Group</div>                                        
@@ -81,7 +81,7 @@
                 </div>
     
                 <div class="Rtable-row" *ngFor="let product of productsList">
-                    <div class="Rtable-cell small-cell">
+                    <!-- <div class="Rtable-cell small-cell">
                         <div class="Rtable-cell--heading">Select</div>
                         <div class="Rtable-cell--content date-content"><span class="row-title">
                                 <label class="container">
@@ -90,7 +90,7 @@
                                 </label>
                             </span>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="Rtable-cell topic-cell">
                         <div class="Rtable-cell--heading">Name</div>
                         <div class="Rtable-cell--content title-content">{{product.name}}</div>
