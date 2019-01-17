@@ -83,7 +83,7 @@ export class NewOrderComponent implements OnInit {
 
     ngOnInit(): void {
         this.productService.getList()
-                        .subscribe((products) => {this.productList = products}
+                        .subscribe((products) => {this.productList = products});
 
         const initCatalogues = (catalogDictionary) => {
             this.warehouses = catalogDictionary['Warehouses'];
