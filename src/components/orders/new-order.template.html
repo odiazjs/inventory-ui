@@ -1,11 +1,7 @@
 <div class="new-order">
-    <div *ngIf="showError" class="alert alert-danger">
-        <strong>Error:</strong> <div class="line-breaker">{{alertMessage}}</div> 
+    <div *ngIf="showMessage" class="alert" [ngClass]="{'alert-info': showInfo === true} " [ngClass]="{'alert-danger': showError === true} " [ngClass]="{'alert-success': showSuccess === true}">
+        <strong *ngIf="showError">Error:</strong> <div class="line-breaker">{{alertMessage}}</div> 
     </div>
-    
-    <div *ngIf="showSuccess" class="alert alert-succes">
-            <strong> {{alertMessage}} </strong> 
-        </div>
     <div class="flex-grid padded-aside">
         <div class="col">
             <div class="title">

@@ -31,6 +31,8 @@ export class NewOrderComponent implements OnInit {
     showError = false;
     alertMessage: string;
     showSuccess = false;
+    showInfo = false;
+    showMessage = false;
     productList: any;
     canSave: boolean = true;
 
@@ -173,7 +175,7 @@ export class NewOrderComponent implements OnInit {
                                 case this.SCAN_EVENT_PARTNO:
                                     matches = result.filter(x => x.partNumber === value);
                                     if (matches.length) {
-                                        this.showError = false;
+                                        this.showMessage = false;
                                         product = [...matches].shift();
                                         this.handleProductDict(product);
                                     } else {
@@ -366,23 +368,29 @@ export class NewOrderComponent implements OnInit {
     ShowAlert(messageToShow: string, type: number) {
         if (type === 0){
             this.showError = true;
+            this.showMessage = true
             this.alertMessage = messageToShow;
             setTimeout(function() {
-              this.showError = false;
-            }.bind(this), 1500);
+              this.showMessage = false;
+              this.showError = false
+            }.bind(this), 2500);
         } else if (type === 1) {
-            this.showSuccess = true;
+            this.showInfo = true;
+            this.showMessage = true
             this.alertMessage = messageToShow;
             setTimeout(function() {
-              this.showSuccess = false;
-            }.bind(this), 1500);
+              this.indexOf = false;
+              this.showMessage = false;
+            }.bind(this), 5000);
         } // used to keep the error message on the display
         else if (type === 2) {
+            this.showMessage = true;
             this.showError = true;
             this.alertMessage = messageToShow;
         }
         else if (type === 3) {
-            this.showSuccess = true;
+            this.showMessage = true;
+            this.showInfo = true;
             this.alertMessage = messageToShow;
         }
 
