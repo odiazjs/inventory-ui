@@ -208,6 +208,7 @@ export class NewOrderComponent implements OnInit {
         const values = this.orderDetailArray.find(x => x.key === productKey).value
         const index = values.indexOf(item)
         const newValues = values.slice(0, index).concat(values.slice(index + 1))
+        this.orderDetailMap[item.partNumber] = [...newValues]
         this.orderDetailArray.find(x => x.key === productKey).value = [...newValues]
  
 
