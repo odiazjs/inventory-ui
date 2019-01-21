@@ -33,18 +33,18 @@
     <div class="flex-container row padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input [(ngModel)]="orderProducts.order.orderNumber" type="text" placeholder="Order No." name="search">
+                <input [readonly]="!canSave" [(ngModel)]="orderProducts.order.orderNumber" type="text" placeholder="Order No." name="search">
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input [ngModel]="orderProducts.order.orderDate | date:'yyyy-MM-dd'" (ngModelChange)="orderProducts.order.orderDate = $event"
+                <input [readonly]="!canSave" [ngModel]="orderProducts.order.orderDate | date:'yyyy-MM-dd'" (ngModelChange)="orderProducts.order.orderDate = $event"
                     type="date" name="orderdate" />
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input type="text" [(ngModel)]="orderProducts.order.ticketNumber" placeholder="Ticket No." name="ticketno">
+                <input [readonly]="!canSave" type="text" [(ngModel)]="orderProducts.order.ticketNumber" placeholder="Ticket No." name="ticketno">
             </form>
         </div>
         <div class="col-sm">
@@ -76,28 +76,28 @@
     <div class="flex-container row padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <select required [(ngModel)]="orderProducts.orderDetail.warehouseCat" name="warehouse">
-                    <option *ngFor="let item of warehouses" [ngValue]="item">{{item.name}}</option>
+                <select [disabled]="!canSave" required [(ngModel)]="orderProducts.orderDetail.warehouseCat" name="warehouse">
+                    <option  *ngFor="let item of warehouses" [ngValue]="item">{{item.name}}</option>
                 </select>
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <select required [(ngModel)]="orderProducts.orderDetail.inventoryCat" name="inventory">
+                <select [disabled]="!canSave" required [(ngModel)]="orderProducts.orderDetail.inventoryCat" name="inventory">
                     <option *ngFor="let item of inventories" [ngValue]="item">{{item.name}}</option>
                 </select>
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <select required [(ngModel)]="orderProducts.orderDetail.onInventoryStatusCat" name="oninvstatus">
+                <select [disabled]="!canSave" required [(ngModel)]="orderProducts.orderDetail.onInventoryStatusCat" name="oninvstatus">
                     <option *ngFor="let item of inventoryStatuses" [ngValue]="item">{{item.name}}</option>
                 </select>
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <select required [(ngModel)]="orderProducts.orderDetail.itemStatusCat" name="itemstatus">
+                <select [disabled]="!canSave" required [(ngModel)]="orderProducts.orderDetail.itemStatusCat" name="itemstatus">
                     <option *ngFor="let item of itemStatuses" [ngValue]="item">{{item.name}}</option>
                 </select>
             </form>
@@ -115,7 +115,7 @@
     <div class="flex-grid padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input [(ngModel)]="scannedPartNo" (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })' class="search"
+                <input [readonly]="!canSave" [(ngModel)]="scannedPartNo" (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })' class="search"
                     type="text" placeholder="Search.." name="Search">
                 <button type="submit"><i class="material-icons small">search</i></button>
             </form>
@@ -123,7 +123,7 @@
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
                 <!-- <input #testinput [(ngModel)]="scannedSerialNo" (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_MACADDRESS })' -->
-                <input #testinput [(ngModel)]="scannedSerialNo" [disabled]="!scannedPartNo"  (keyup.enter)='addItem(testinput.value)'
+                <input [readonly]="!canSave" #testinput [(ngModel)]="scannedSerialNo" [disabled]="!scannedPartNo"  (keyup.enter)='addItem(testinput.value)'
                     class="search" type="text" placeholder="MAC Address" name="mac">
                 <button  type="submit"><i class="material-icons small">search</i></button>
             </form>
@@ -133,7 +133,7 @@
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <select required [(ngModel)]="orderProducts.order.orderState" name="orderstate">
+                <select [disabled]="!canSave" required [(ngModel)]="orderProducts.order.orderState" name="orderstate">
                     <option *ngFor="let state of orderStates" [ngValue]="state">Save as {{state}}</option>
                 </select>
             </form>
@@ -205,7 +205,7 @@
                             <div class="Rtable-cell small-cell">
                                 <div class="Rtable-cell--heading">Delete</div>
                                 <div class="Rtable-cell--content">
-                                    <a href="javascript:void(0);" (click)="removeitem(item.partNumber, item.serialNumber)" class="btn-container">
+                                    <a  href="javascript:void(0);" [class.disabled]="!canSave" (click)="removeitem(item.partNumber, item.serialNumber)" class="btn-container">
                                         <span><i class="material-icons small">delete_forever</i></span>
                                     </a>
                                 </div>
