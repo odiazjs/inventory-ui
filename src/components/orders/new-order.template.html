@@ -115,7 +115,7 @@
     <div class="flex-grid padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })' class="search"
+                <input [(ngModel)]="scannedPartNo" (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })' class="search"
                     type="text" placeholder="Search.." name="search">
                 <button type="submit"><i class="material-icons small">search</i></button>
             </form>

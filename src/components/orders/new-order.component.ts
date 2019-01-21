@@ -27,6 +27,8 @@ export class NewOrderComponent implements OnInit {
     readonly SCAN_EVENT_MACADDRESS = "MAC_ADDRESS";
     // used to clear
     scannedSerialNo = '';
+    // use to validate part no. value
+    scannedPartNo = '';
     // alerts
     showError = false;
     alertMessage: string;
@@ -160,7 +162,7 @@ export class NewOrderComponent implements OnInit {
             ).subscribe((eventData) => {
                 if (isEmpty(eventData.value.trim())) return;
                 const { value, message } = eventData;
-                if (this.orderProducts.order.orderType == 2) {
+                if (this.orderProducts.order.orderType === 2) {
                     this.inventoryItemService.getList()
                         .subscribe((items) => { 
                             this.availableProductsList = [...items] as any;
@@ -241,8 +243,9 @@ export class NewOrderComponent implements OnInit {
         if (!this.orderDetailMap[partNumber]) {
             this.orderDetailMap[partNumber] = [];
         }
+
         this.selectedProductKey = product.partNumber;
-        this.orderDetailMap[product.partNumber] = new Array();
+        // this.orderDetailMap[product.partNumber] = new Array();
         this.orderDetailArray = [...KeysPipe.pipe(this.orderDetailMap)];
         console.log('model...', this.orderDetailArray);
     }
@@ -280,6 +283,7 @@ export class NewOrderComponent implements OnInit {
 
     toggleProductKey(key: string) {
         this.selectedProductKey = key;
+        this.scannedPartNo = this.selectedProductKey;
     }
 
     validate() {
