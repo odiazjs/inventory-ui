@@ -60,6 +60,11 @@ export class CatalogsService extends ResourceService <CatalogModel[]> {
     return this.getList();
   }
 
+  getOrderSubTypes () {
+    this.baseUrl = urlConfig.getCatalogOrderSubTypes;
+    return this.getList();
+  }
+
   getList(paramsObject: any = {}): Observable<CatalogDto[]> {
   return this.httpClient
     .get(`${this.baseUrl}`)

@@ -22,8 +22,15 @@ export class CatalogState {
         const getInventories$ = this.catalogueService.getInventories();
         const getInventoryStatus$ = this.catalogueService.getInventoryStatus();
         const getItemStatus$ = this.catalogueService.getItemStatus();
+        const getOrderSubTypes$ = this.catalogueService.getOrderSubTypes();
 
-        const getAllCatalogues$ = forkJoin([getWarehouses$, getInventories$, getInventoryStatus$, getItemStatus$])
+        const getAllCatalogues$ = forkJoin([
+            getWarehouses$, 
+            getInventories$, 
+            getInventoryStatus$, 
+            getItemStatus$,
+            getOrderSubTypes$
+        ])
             .pipe(
                 tap(result => {
                     const catalogDictionary: Dictionary<CatalogDto[]> = {};
@@ -31,6 +38,7 @@ export class CatalogState {
                     catalogDictionary['Inventories'] = result[1];
                     catalogDictionary['InventoryStatus'] = result[2];
                     catalogDictionary['ItemStatus'] = result[3];
+                    catalogDictionary['OrderSubTypes'] = result[4];
                     patchState(catalogDictionary);
                 })
             )

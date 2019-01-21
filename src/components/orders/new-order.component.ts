@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderProductsModel } from '../../models/order.model';
 import { ProductOrderDetailModel, ProductModel } from '../../models/product.model';
-import { Subject, Observable, empty } from 'rxjs';
-import { map, debounceTime, distinctUntilChanged, flatMap, startWith, delay, tap } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
+import { map, distinctUntilChanged, flatMap, startWith, delay, tap } from 'rxjs/operators';
 import { CatalogModel, OrderProductsDto, CatalogDto } from '../../models/order.dto';
 import { ProductService, OrderService, InventoryItemService } from 'src/services/barrel';
 import { Dictionary } from 'src/components/types';
@@ -35,8 +35,8 @@ export class NewOrderComponent implements OnInit {
     canSave: boolean = true;
 
     orderTypes: CatalogModel[] = [
-        { id: 1, name: 'IN', icon: 'input' },
-        { id: 2, name: 'OUT', icon: 'input' }
+        { id: 1, name: 'In', icon: 'input' },
+        { id: 2, name: 'Out', icon: 'input' }
     ];
 
     orderStates: string[] = [
@@ -51,11 +51,13 @@ export class NewOrderComponent implements OnInit {
     inventories: CatalogModel[] = [];
     inventoryStatuses: CatalogModel[] = [];
     itemStatuses: CatalogModel[] = [];
+    orderSubTypes: CatalogModel[] = [];
 
     orderProducts: OrderProductsModel = {
         order: {
             orderNumber: null,
-            orderType: this.orderTypes[0].id,
+            orderType: 1,
+            orderDirection: this.orderTypes[0].name,
             orderState: this.orderStates[0],
             orderDate: new Date().toLocaleDateString('en-US'),
             ticketNumber: null,
@@ -73,6 +75,30 @@ export class NewOrderComponent implements OnInit {
     availableProductsList: ProductModel[] = [];
     draggedProductList: ProductModel[] = [];
 
+    filterOrderSubTypes = () => {
+        return [...this.orderSubTypes.filter(x => x.orderDirection == this.orderProducts.order.orderDirection)];
+    }
+
+    initCatalogues = (catalogDictionary: any) => {
+
+        this.warehouses = catalogDictionary['Warehouses'];
+        this.inventories = catalogDictionary['Inventories'];
+        this.inventoryStatuses = catalogDictionary['InventoryStatus'];
+        this.itemStatuses = catalogDictionary['ItemStatus'];
+        this.orderSubTypes = catalogDictionary['OrderSubTypes'];
+
+        this.orderSubTypes = this.filterOrderSubTypes();
+        this.orderProducts.order.orderType = this.orderSubTypes[0].id;
+        this.orderProducts.order.orderDirection = this.orderSubTypes[0].name;
+
+        this.orderProducts.orderDetail = {
+            warehouseCat: this.warehouses[0],
+            inventoryCat: this.inventories[0],
+            onInventoryStatusCat: this.inventoryStatuses[0],
+            itemStatusCat: this.itemStatuses[0]
+        }
+    }
+
     constructor(
         private store: Store,
         public productService: ProductService,
@@ -83,20 +109,7 @@ export class NewOrderComponent implements OnInit {
 
     ngOnInit(): void {
         this.productService.getList()
-                        .subscribe((products) => {this.productList = products});
-
-        const initCatalogues = (catalogDictionary) => {
-            this.warehouses = catalogDictionary['Warehouses'];
-            this.inventories = catalogDictionary['Inventories'];
-            this.inventoryStatuses = catalogDictionary['InventoryStatus'];
-            this.itemStatuses = catalogDictionary['ItemStatus'];
-            this.orderProducts.orderDetail = {
-                warehouseCat: this.warehouses[0],
-                inventoryCat: this.inventories[0],
-                onInventoryStatusCat: this.inventoryStatuses[0],
-                itemStatusCat: this.itemStatuses[0]
-            }
-        }
+            .subscribe((products) => { this.productList = products });
 
         Observable.of()
             .pipe(
@@ -107,10 +120,10 @@ export class NewOrderComponent implements OnInit {
                         if (isEmpty(catalogDictionary)) {
                             this.store.dispatch(new GetAll())
                                 .subscribe(result => {
-                                    initCatalogues(result.catalogs)
+                                    this.initCatalogues(result.catalogs)
                                 })
                         } else {
-                            initCatalogues(catalogDictionary);
+                            this.initCatalogues(catalogDictionary);
                         }
                     });
                 }),
@@ -135,12 +148,12 @@ export class NewOrderComponent implements OnInit {
                                     }
                                     this.handleProductItems(qtyCounter + 1, item, cataloguesConfig);
                                 })
-                            // disable save button if is not a draft and show a message
-                            console.log('orderstate', this.orderProducts.order.orderState)
+                                // disable save button if is not a draft and show a message
+                                console.log('orderstate', this.orderProducts.order.orderState)
                                 if (result.order.orderState !== 'Draft') {
-                                this.canSave = false;
-                                this.ShowAlert('Only view, any change made to this order won\'t be saved', 3);
-                                 }
+                                    this.canSave = false;
+                                    this.ShowAlert('Only view, any change made to this order won\'t be saved', 3);
+                                }
                             })
                     }
                 })
@@ -158,9 +171,9 @@ export class NewOrderComponent implements OnInit {
             ).subscribe((eventData) => {
                 if (isEmpty(eventData.value.trim())) return;
                 const { value, message } = eventData;
-                if (this.orderProducts.order.orderType == 2) {
+                if (this.orderProducts.order.orderDirection == "Out") {
                     this.inventoryItemService.getList()
-                        .subscribe((items) => { 
+                        .subscribe((items) => {
                             this.availableProductsList = [...items] as any;
                         });
                 } else {
@@ -205,7 +218,7 @@ export class NewOrderComponent implements OnInit {
         const index = values.indexOf(item)
         const newValues = values.slice(0, index).concat(values.slice(index + 1))
         this.orderDetailArray.find(x => x.key === productKey).value = [...newValues]
- 
+
 
     }
 
@@ -272,8 +285,10 @@ export class NewOrderComponent implements OnInit {
     }
 
     switchRadioBtns(event, newValue) {
-        this.orderProducts.order.orderType = newValue.id;
-        console.log('new value...', this.orderProducts);
+        this.orderProducts.order.orderDirection = newValue.id;
+        this.catalogs$.subscribe(catalogDictionary => {
+            this.initCatalogues(catalogDictionary);
+        })
     }
 
     toggleProductKey(key: string) {
@@ -282,9 +297,6 @@ export class NewOrderComponent implements OnInit {
 
     validate() {
         let message = '';
-        if (this.orderProducts.order.orderNumber === null) {
-            message += '- Order No. can\'t be empty\n';
-        }
         if (message === '') {
             this.showError = false;
             return false;
@@ -309,9 +321,9 @@ export class NewOrderComponent implements OnInit {
 
     save() {
         const haveError = this.validate();
-        if (haveError) {return}
-        const completedConfimation  = this.confirmCompleted();
-        if (!completedConfimation ) {return}
+        if (haveError) { return }
+        const completedConfimation = this.confirmCompleted();
+        if (!completedConfimation) { return }
         const productsArray = [];
         this.orderDetailArray.map(item => {
             item.value.forEach(item => {
@@ -319,7 +331,6 @@ export class NewOrderComponent implements OnInit {
                 const { itemStatusCat, onInventoryStatusCat, inventoryCat, warehouseCat } = this.orderProducts.orderDetail;
                 let payload = {
                     id,
-                    order: this.orderProducts.order.id,
                     product,
                     serialNumber,
                     itemStatus: itemStatusCat.id,
@@ -364,17 +375,17 @@ export class NewOrderComponent implements OnInit {
     }
 
     ShowAlert(messageToShow: string, type: number) {
-        if (type === 0){
+        if (type === 0) {
             this.showError = true;
             this.alertMessage = messageToShow;
-            setTimeout(function() {
-              this.showError = false;
+            setTimeout(function () {
+                this.showError = false;
             }.bind(this), 1500);
         } else if (type === 1) {
             this.showSuccess = true;
             this.alertMessage = messageToShow;
-            setTimeout(function() {
-              this.showSuccess = false;
+            setTimeout(function () {
+                this.showSuccess = false;
             }.bind(this), 1500);
         } // used to keep the error message on the display
         else if (type === 2) {

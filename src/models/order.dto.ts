@@ -16,6 +16,7 @@ export class OrderDto {
     id?: number;
     orderNumber: string;
     orderType: number;
+    orderDirection: string;
     orderDate: string;
     createdBy?: CreatedBy;
     orderState: string;
@@ -33,6 +34,7 @@ export class OrderDetailDto {
     onInventoryStatus?: number;
     inventory?: number;
     warehouse?: number;
+    orderSubtype?: number;
     quantity?: number;
     price?: number;
     assignedUser?: number;
@@ -52,8 +54,10 @@ export class CatalogDto {
     name: string;
     enabled?: boolean;
     code?: string;
+    order_direction?: string;
 }
 
 export class CatalogModel extends CatalogDto {
     icon?: string;
+    orderDirection?: string;
 }

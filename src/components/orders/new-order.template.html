@@ -23,7 +23,7 @@
                 </label>
             </div>
             <div class="col-xxs">
-                <i [ngClass]="{'invert': orderType.name == 'IN'}" class="material-icons small">{{orderType.icon}}</i>
+                <i [ngClass]="{'invert': orderType.name == 'In'}" class="material-icons small">{{orderType.icon}}</i>
             </div>
         </ng-container>
     </div>
@@ -37,7 +37,9 @@
     <div class="flex-container row padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input [(ngModel)]="orderProducts.order.orderNumber" type="text" placeholder="Order No." name="search">
+                <select required [(ngModel)]="orderProducts.order.orderType" name="ordersubtype">
+                    <option *ngFor="let item of orderSubTypes" [ngValue]="item.id">{{item.name}}</option>
+                </select>
             </form>
         </div>
         <div class="col-sm">
@@ -152,7 +154,7 @@
         </div>
     </div>
 
-    <div class="tabs-container padded-aside" *ngIf="orderProducts.order.orderType == 1">
+    <div class="tabs-container padded-aside" *ngIf="orderProducts.order.orderDirection == 'In'">
         <div class="flex-container row">
             <div class="col-xs" *ngFor="let item of orderDetailArray">
                 <div class="tab" [ngClass]="{'tabSelected': selectedProductKey === item.key}" (click)="toggleProductKey(item.key)">
@@ -167,7 +169,7 @@
     </div>
 
         <!-- Product Items on Order In -->
-        <div class="wrapper padded-aside" *ngIf="orderProducts.order.orderType == 1">
+        <div class="wrapper padded-aside" *ngIf="orderProducts.order.orderDirection == 'In'">
             <div class="Rtable Rtable--5cols Rtable--collapse">
                 <div class="Rtable-row Rtable-row--head">
                     <div class="Rtable-cell small-cell column-heading">Serial no</div>
@@ -221,7 +223,7 @@
         </div>
 
 
-        <div class="flex-container row padded-aside" *ngIf="orderProducts.order.orderType == 2">
+        <div class="flex-container row padded-aside" *ngIf="orderProducts.order.orderDirection == 'Out'">
             <div class="example-container">
                 <h2>All Products</h2>
                 <div
