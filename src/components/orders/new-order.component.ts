@@ -214,6 +214,11 @@ export class NewOrderComponent implements OnInit {
     }
 
     addItem(value: string) {
+        // check if the serialNumber already exist
+        if (this.orderDetailArray.find(x => x.key === this.selectedProductKey).value.find(y => y.serialNumber === value)){
+            this.ShowAlert('This item already exist on this order', 0);
+            return
+        }
         let matches = [];
         const result: any[] = this.productList;
         const qtyCounter = 0;
@@ -241,6 +246,7 @@ export class NewOrderComponent implements OnInit {
     handleProductDict(product: ProductModel) {
         const { partNumber } = product;
         if (!this.orderDetailMap[partNumber]) {
+            this.scannedSerialNo = ''
             this.orderDetailMap[partNumber] = [];
         }
 
@@ -284,6 +290,7 @@ export class NewOrderComponent implements OnInit {
     toggleProductKey(key: string) {
         this.selectedProductKey = key;
         this.scannedPartNo = this.selectedProductKey;
+        this.scannedSerialNo = '';
     }
 
     validate() {
@@ -377,7 +384,7 @@ export class NewOrderComponent implements OnInit {
             setTimeout(function() {
               this.showMessage = false;
               this.showError = false
-            }.bind(this), 2500);
+            }.bind(this), 4500);
         } else if (type === 1) {
             this.showInfo = true;
             this.showMessage = true
