@@ -9,7 +9,7 @@
             </div>
         </div>
     </div>
-    <div class="flex-container row padded-aside">
+    <div [class.disabled]="!canSave" class="flex-container row padded-aside">
         <ng-container *ngFor="let orderType of orderTypes; let i = index">
             <div class="col-xxs">
                 <label class="container">{{orderType.name}}
@@ -30,21 +30,21 @@
             </div>
         </div>
     </div>
-    <div class="flex-container row padded-aside">
+    <div [class.disabled]="!canSave" class="flex-container row padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input [readonly]="!canSave" [(ngModel)]="orderProducts.order.orderNumber" type="text" placeholder="Order No." name="search">
+                <input [(ngModel)]="orderProducts.order.orderNumber" type="text" placeholder="Order No." name="search">
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input [readonly]="!canSave" [ngModel]="orderProducts.order.orderDate | date:'yyyy-MM-dd'" (ngModelChange)="orderProducts.order.orderDate = $event"
+                <input [ngModel]="orderProducts.order.orderDate | date:'yyyy-MM-dd'" (ngModelChange)="orderProducts.order.orderDate = $event"
                     type="date" name="orderdate" />
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input [readonly]="!canSave" type="text" [(ngModel)]="orderProducts.order.ticketNumber" placeholder="Ticket No." name="ticketno">
+                <input type="text" [(ngModel)]="orderProducts.order.ticketNumber" placeholder="Ticket No." name="ticketno">
             </form>
         </div>
         <div class="col-sm">
@@ -73,31 +73,31 @@
             </div>
         </div>
     </div>
-    <div class="flex-container row padded-aside">
+    <div [class.disabled]="!canSave" class="flex-container row padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <select [disabled]="!canSave" required [(ngModel)]="orderProducts.orderDetail.warehouseCat" name="warehouse">
+                <select required [(ngModel)]="orderProducts.orderDetail.warehouseCat" name="warehouse">
                     <option  *ngFor="let item of warehouses" [ngValue]="item">{{item.name}}</option>
                 </select>
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <select [disabled]="!canSave" required [(ngModel)]="orderProducts.orderDetail.inventoryCat" name="inventory">
+                <select required [(ngModel)]="orderProducts.orderDetail.inventoryCat" name="inventory">
                     <option *ngFor="let item of inventories" [ngValue]="item">{{item.name}}</option>
                 </select>
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <select [disabled]="!canSave" required [(ngModel)]="orderProducts.orderDetail.onInventoryStatusCat" name="oninvstatus">
+                <select required [(ngModel)]="orderProducts.orderDetail.onInventoryStatusCat" name="oninvstatus">
                     <option *ngFor="let item of inventoryStatuses" [ngValue]="item">{{item.name}}</option>
                 </select>
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <select [disabled]="!canSave" required [(ngModel)]="orderProducts.orderDetail.itemStatusCat" name="itemstatus">
+                <select required [(ngModel)]="orderProducts.orderDetail.itemStatusCat" name="itemstatus">
                     <option *ngFor="let item of itemStatuses" [ngValue]="item">{{item.name}}</option>
                 </select>
             </form>
