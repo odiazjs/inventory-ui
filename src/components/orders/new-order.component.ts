@@ -220,6 +220,10 @@ export class NewOrderComponent implements OnInit {
             this.ShowAlert('This item already exist on this order', 0);
             return
         }
+        if (value === null || value === ''){
+            this.ShowAlert('MAC Address can\'t be empty', 0);
+            return
+        }
         let matches = [];
         const result: any[] = this.productList;
         const qtyCounter = 0;
