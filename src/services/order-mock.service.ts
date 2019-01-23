@@ -14,8 +14,7 @@ export class OrderMockService {
         orderNumber: "100001",
         orderDate: "2017-05-05",
         orderState: "Completed",
-        orderDirection: 'In',
-        orderType: 1,
+        orderType: {id: 1, name: 'Buy'},
         ticketNumber: "10000001"
       },
       {
@@ -25,8 +24,7 @@ export class OrderMockService {
         orderNumber: "100001",
         orderDate: "2017-05-05",
         orderState: "Completed",
-        orderDirection: 'In',
-        orderType: 1,
+        orderType: {id: 1, name: 'Buy'},
         ticketNumber: "10000002"
       },
       {
@@ -36,8 +34,7 @@ export class OrderMockService {
         orderNumber: "100001",
         orderDate: "2017-05-05",
         orderState: "Completed",
-        orderDirection: 'In',
-        orderType: 1,
+        orderType: {id: 1, name: 'Buy'},
         ticketNumber: "10000003"
       },
       {
@@ -47,8 +44,7 @@ export class OrderMockService {
         orderNumber: "100001",
         orderDate: "2017-05-05",
         orderState: "Completed",
-        orderDirection: 'In',
-        orderType: 1,
+        orderType: {id: 1, name: 'Buy'},
         ticketNumber: "10000004"
       }
     ];

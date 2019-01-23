@@ -15,8 +15,7 @@ export class CreatedBy {
 export class OrderDto {
     id?: number;
     orderNumber: string;
-    orderType: number;
-    orderDirection: string;
+    orderType: CatalogDto;
     orderDate: string;
     createdBy?: CreatedBy;
     orderState: string;
@@ -54,6 +53,7 @@ export class CatalogDto {
     name: string;
     enabled?: boolean;
     code?: string;
+    orderDirection?: string;
     order_direction?: string;
 }
 

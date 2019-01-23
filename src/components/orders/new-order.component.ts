@@ -56,8 +56,7 @@ export class NewOrderComponent implements OnInit {
     orderProducts: OrderProductsModel = {
         order: {
             orderNumber: null,
-            orderType: 1,
-            orderDirection: this.orderTypes[0].name,
+            orderType: this.orderTypes[0],
             orderState: this.orderStates[0],
             orderDate: new Date().toLocaleDateString('en-US'),
             ticketNumber: null,
@@ -76,27 +75,39 @@ export class NewOrderComponent implements OnInit {
     draggedProductList: ProductModel[] = [];
 
     filterOrderSubTypes = () => {
-        return [...this.orderSubTypes.filter(x => x.orderDirection == this.orderProducts.order.orderDirection)];
+        this.orderSubTypes = 
+            [...this.orderSubTypes.filter(x => x.orderDirection == this.orderProducts.order.orderType.orderDirection)];
+        this.orderProducts.order.orderType = Object.assign(new Object(), this.orderSubTypes[0]);
     }
 
-    initCatalogues = (catalogDictionary: any) => {
+    initCatalogues = () => {
 
-        this.warehouses = catalogDictionary['Warehouses'];
-        this.inventories = catalogDictionary['Inventories'];
-        this.inventoryStatuses = catalogDictionary['InventoryStatus'];
-        this.itemStatuses = catalogDictionary['ItemStatus'];
-        this.orderSubTypes = catalogDictionary['OrderSubTypes'];
+        const fillCatalogues = (catalogDictionary) => {
 
-        this.orderSubTypes = this.filterOrderSubTypes();
-        this.orderProducts.order.orderType = this.orderSubTypes[0].id;
-        this.orderProducts.order.orderDirection = this.orderSubTypes[0].name;
+            this.warehouses = catalogDictionary['Warehouses'];
+            this.inventories = catalogDictionary['Inventories'];
+            this.inventoryStatuses = catalogDictionary['InventoryStatus'];
+            this.itemStatuses = catalogDictionary['ItemStatus'];
+            this.orderSubTypes = catalogDictionary['OrderSubTypes'];
 
-        this.orderProducts.orderDetail = {
-            warehouseCat: this.warehouses[0],
-            inventoryCat: this.inventories[0],
-            onInventoryStatusCat: this.inventoryStatuses[0],
-            itemStatusCat: this.itemStatuses[0]
+            this.orderProducts.orderDetail = {
+                warehouseCat: this.warehouses[0],
+                inventoryCat: this.inventories[0],
+                onInventoryStatusCat: this.inventoryStatuses[0],
+                itemStatusCat: this.itemStatuses[0]
+            }
         }
+
+        this.catalogs$.subscribe(catalogDictionary => {
+            if (isEmpty(catalogDictionary)) {
+                this.store.dispatch(new GetAll())
+                    .subscribe(result => {
+                        fillCatalogues(result.catalogs);
+                    })
+            } else {
+                fillCatalogues(catalogDictionary);
+            }
+        });
     }
 
     constructor(
@@ -116,16 +127,7 @@ export class NewOrderComponent implements OnInit {
                 startWith(null),
                 delay(0),
                 tap(() => {
-                    this.catalogs$.subscribe(catalogDictionary => {
-                        if (isEmpty(catalogDictionary)) {
-                            this.store.dispatch(new GetAll())
-                                .subscribe(result => {
-                                    this.initCatalogues(result.catalogs)
-                                })
-                        } else {
-                            this.initCatalogues(catalogDictionary);
-                        }
-                    });
+                    this.initCatalogues();
                 }),
                 tap(() => {
                     // check if its an order update
@@ -133,7 +135,6 @@ export class NewOrderComponent implements OnInit {
                     if (params.id) {
                         this.orderService.getById(params.id)
                             .subscribe(result => {
-                                console.log('get order by id', result);
                                 this.orderProducts.order = result.order;
                                 result.products.forEach(item => {
                                     this.handleProductDict(item.product as any);
@@ -148,13 +149,18 @@ export class NewOrderComponent implements OnInit {
                                     }
                                     this.handleProductItems(qtyCounter + 1, item, cataloguesConfig);
                                 })
+                                // filter order subtypes
+                                this.initCatalogues();
+                                this.filterOrderSubTypes();
                                 // disable save button if is not a draft and show a message
-                                console.log('orderstate', this.orderProducts.order.orderState)
                                 if (result.order.orderState !== 'Draft') {
                                     this.canSave = false;
                                     this.ShowAlert('Only view, any change made to this order won\'t be saved', 3);
                                 }
                             })
+                    } else {
+                        this.initCatalogues();
+                        this.filterOrderSubTypes();
                     }
                 })
             ).subscribe();
@@ -171,7 +177,7 @@ export class NewOrderComponent implements OnInit {
             ).subscribe((eventData) => {
                 if (isEmpty(eventData.value.trim())) return;
                 const { value, message } = eventData;
-                if (this.orderProducts.order.orderDirection == "Out") {
+                if (this.orderProducts.order.orderType.orderDirection == "Out") {
                     this.inventoryItemService.getList()
                         .subscribe((items) => {
                             this.availableProductsList = [...items] as any;
@@ -285,10 +291,10 @@ export class NewOrderComponent implements OnInit {
     }
 
     switchRadioBtns(event, newValue) {
-        this.orderProducts.order.orderDirection = newValue.id;
-        this.catalogs$.subscribe(catalogDictionary => {
-            this.initCatalogues(catalogDictionary);
-        })
+        this.orderProducts.order.orderType.id = newValue.id;
+        this.orderProducts.order.orderType.orderDirection = newValue.name;
+        this.initCatalogues();
+        this.filterOrderSubTypes();
     }
 
     toggleProductKey(key: string) {
@@ -325,6 +331,7 @@ export class NewOrderComponent implements OnInit {
         const completedConfimation = this.confirmCompleted();
         if (!completedConfimation) { return }
         const productsArray = [];
+        const params = this.activatedRoute.snapshot.params;
         this.orderDetailArray.map(item => {
             item.value.forEach(item => {
                 const { id, serialNumber, product, quantity, price } = item;
@@ -348,10 +355,10 @@ export class NewOrderComponent implements OnInit {
             })
         })
         this.orderProducts.order.orderDate = new Date().toISOString();
-        const orderDto = new OrderProductsDto(this.orderProducts.order, productsArray)
-        console.log('saving...', orderDto);
-        const params = this.activatedRoute.snapshot.params;
+        const orderDto: any = new OrderProductsDto(this.orderProducts.order, productsArray);
+        orderDto.order.orderType = this.orderProducts.order.orderType.id;
         if (params.id) {
+            delete orderDto.order.id;
             this.orderService.update(orderDto, params.id)
                 .subscribe(response => {
                     console.log('saved!', response);
