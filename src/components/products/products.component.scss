@@ -9,3 +9,19 @@
 .padded-left{
     margin-left: 5px;
 }
+
+
+.filter-fixed{
+  background-color: #eeeeee;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 3.5rem;
+  z-index: 3;
+}
+
+.headers-fixed{
+    position: -webkit-sticky;
+    position: sticky;
+    top: 9rem;
+    z-index: 3;
+  }

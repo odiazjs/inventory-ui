@@ -27,10 +27,14 @@ export class NewOrderComponent implements OnInit {
     readonly SCAN_EVENT_MACADDRESS = "MAC_ADDRESS";
     // used to clear
     scannedSerialNo = '';
+    // use to validate part no. value
+    scannedPartNo = '';
     // alerts
     showError = false;
     alertMessage: string;
     showSuccess = false;
+    showInfo = false;
+    showMessage = false;
     productList: any;
     canSave: boolean = true;
 
@@ -158,7 +162,7 @@ export class NewOrderComponent implements OnInit {
             ).subscribe((eventData) => {
                 if (isEmpty(eventData.value.trim())) return;
                 const { value, message } = eventData;
-                if (this.orderProducts.order.orderType == 2) {
+                if (this.orderProducts.order.orderType === 2) {
                     this.inventoryItemService.getList()
                         .subscribe((items) => { 
                             this.availableProductsList = [...items] as any;
@@ -173,7 +177,7 @@ export class NewOrderComponent implements OnInit {
                                 case this.SCAN_EVENT_PARTNO:
                                     matches = result.filter(x => x.partNumber === value);
                                     if (matches.length) {
-                                        this.showError = false;
+                                        this.showMessage = false;
                                         product = [...matches].shift();
                                         this.handleProductDict(product);
                                     } else {
@@ -204,12 +208,22 @@ export class NewOrderComponent implements OnInit {
         const values = this.orderDetailArray.find(x => x.key === productKey).value
         const index = values.indexOf(item)
         const newValues = values.slice(0, index).concat(values.slice(index + 1))
+        this.orderDetailMap[item.partNumber] = [...newValues]
         this.orderDetailArray.find(x => x.key === productKey).value = [...newValues]
  
 
     }
 
     addItem(value: string) {
+        // check if the serialNumber already exist
+        if (this.orderDetailArray.find(x => x.key === this.selectedProductKey).value.find(y => y.serialNumber === value)){
+            this.ShowAlert('This item already exist on this order', 0);
+            return
+        }
+        if (value === null || value === ''){
+            this.ShowAlert('MAC Address can\'t be empty', 0);
+            return
+        }
         let matches = [];
         const result: any[] = this.productList;
         const qtyCounter = 0;
@@ -237,10 +251,12 @@ export class NewOrderComponent implements OnInit {
     handleProductDict(product: ProductModel) {
         const { partNumber } = product;
         if (!this.orderDetailMap[partNumber]) {
+            this.scannedSerialNo = ''
             this.orderDetailMap[partNumber] = [];
         }
+
         this.selectedProductKey = product.partNumber;
-        this.orderDetailMap[product.partNumber] = new Array();
+        // this.orderDetailMap[product.partNumber] = new Array();
         this.orderDetailArray = [...KeysPipe.pipe(this.orderDetailMap)];
         console.log('model...', this.orderDetailArray);
     }
@@ -278,6 +294,8 @@ export class NewOrderComponent implements OnInit {
 
     toggleProductKey(key: string) {
         this.selectedProductKey = key;
+        this.scannedPartNo = this.selectedProductKey;
+        this.scannedSerialNo = '';
     }
 
     validate() {
@@ -366,23 +384,29 @@ export class NewOrderComponent implements OnInit {
     ShowAlert(messageToShow: string, type: number) {
         if (type === 0){
             this.showError = true;
+            this.showMessage = true
             this.alertMessage = messageToShow;
             setTimeout(function() {
-              this.showError = false;
-            }.bind(this), 1500);
+              this.showMessage = false;
+              this.showError = false
+            }.bind(this), 4500);
         } else if (type === 1) {
-            this.showSuccess = true;
+            this.showInfo = true;
+            this.showMessage = true
             this.alertMessage = messageToShow;
             setTimeout(function() {
-              this.showSuccess = false;
-            }.bind(this), 1500);
+              this.indexOf = false;
+              this.showMessage = false;
+            }.bind(this), 5000);
         } // used to keep the error message on the display
         else if (type === 2) {
+            this.showMessage = true;
             this.showError = true;
             this.alertMessage = messageToShow;
         }
         else if (type === 3) {
-            this.showSuccess = true;
+            this.showMessage = true;
+            this.showInfo = true;
             this.alertMessage = messageToShow;
         }
 

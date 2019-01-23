@@ -95,7 +95,7 @@
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
   }
 
-//   errors
+//   Alerts
 .alert{
     padding:8px 35px 8px 14px;
     margin-bottom:20px;
@@ -112,10 +112,16 @@
     border-color:#d6e9c6
 }
 
+.alert-info{
+    color:#ffffff;
+    background-color:#4fa9d3;
+    border-color:#87a1ae
+}
+
 .alert-danger,.alert-error{
     color:#b94a48;
     background-color:#f2dede;
-    border-color:#eed3d7
+    border-color:#eed3d7;
 }
 
 .fade{
@@ -129,6 +135,11 @@
 .line-breaker {
     white-space: pre-line;
   }
+
+.disabled{
+    pointer-events:none;
+
+}
 
 
 
