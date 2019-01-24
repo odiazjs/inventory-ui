@@ -181,11 +181,8 @@ export class NewOrderComponent implements OnInit {
             ).subscribe((eventData) => {
                 if (isEmpty(eventData.value.trim())) return;
                 const { value, message } = eventData;
-<<<<<<< HEAD
+
                 if (this.orderProducts.order.orderType.orderDirection == "Out") {
-=======
-                if (this.orderProducts.order.orderType === 2) {
->>>>>>> develop
                     this.inventoryItemService.getList()
                         .subscribe((items) => {
                             this.availableProductsList = [...items] as any;
@@ -271,7 +268,7 @@ export class NewOrderComponent implements OnInit {
         console.log('Drop Event ---> ', event)
     }
 
-    handleProductDict(product: ProductModel) {
+    handleProductDict (product: ProductModel) {
         const { partNumber } = product;
         if (!this.orderDetailMap[partNumber]) {
             this.scannedSerialNo = ''
@@ -284,7 +281,7 @@ export class NewOrderComponent implements OnInit {
         console.log('model...', this.orderDetailArray);
     }
 
-    handleProductItems(qtyCounter, item, orderDetail) {
+    handleProductItems (qtyCounter, item, orderDetail) {
         const { order, serialNumber, product: { partNumber, id, name, avgPrice } } = item;
         const {
             warehouseCat,
