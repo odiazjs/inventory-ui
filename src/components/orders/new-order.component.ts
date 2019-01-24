@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { OrderProductsModel } from '../../models/order.model';
+import { OrderProductsModel, OrderDetailModel } from '../../models/order.model';
 import { ProductOrderDetailModel, ProductModel } from '../../models/product.model';
 import { Subject, Observable } from 'rxjs';
 import { map, distinctUntilChanged, flatMap, startWith, delay, tap } from 'rxjs/operators';
@@ -39,8 +39,8 @@ export class NewOrderComponent implements OnInit {
     canSave: boolean = true;
 
     orderTypes: CatalogModel[] = [
-        { id: 1, name: 'In', icon: 'input' },
-        { id: 2, name: 'Out', icon: 'input' }
+        { id: 1, name: 'Buy', orderDirection: 'In', icon: 'input' },
+        { id: 2, name: 'Sell', orderDirection: 'Out', icon: 'input' }
     ];
 
     orderStates: string[] = [
@@ -79,12 +79,15 @@ export class NewOrderComponent implements OnInit {
     draggedProductList: ProductModel[] = [];
 
     filterOrderSubTypes = () => {
+        const params = this.activatedRoute.snapshot.params;
         this.orderSubTypes = 
-            [...this.orderSubTypes.filter(x => x.orderDirection == this.orderProducts.order.orderType.orderDirection)];
-        this.orderProducts.order.orderType = Object.assign(new Object(), this.orderSubTypes[0]);
+                [...this.orderSubTypes.filter(x => x.orderDirection == this.orderProducts.order.orderType.orderDirection)]
+        if (!params.id) {
+            this.orderProducts.order.orderType = Object.assign(new Object(), this.orderSubTypes[0]);
+        }
     }
 
-    initCatalogues = () => {
+    initCatalogues = (catalogsConfig: OrderDetailModel = null) => {
 
         const fillCatalogues = (catalogDictionary) => {
 
@@ -94,11 +97,15 @@ export class NewOrderComponent implements OnInit {
             this.itemStatuses = catalogDictionary['ItemStatus'];
             this.orderSubTypes = catalogDictionary['OrderSubTypes'];
 
-            this.orderProducts.orderDetail = {
-                warehouseCat: this.warehouses[0],
-                inventoryCat: this.inventories[0],
-                onInventoryStatusCat: this.inventoryStatuses[0],
-                itemStatusCat: this.itemStatuses[0]
+            if (!catalogsConfig){
+                this.orderProducts.orderDetail = {
+                    warehouseCat: this.warehouses[0],
+                    inventoryCat: this.inventories[0],
+                    onInventoryStatusCat: this.inventoryStatuses[0],
+                    itemStatusCat: this.itemStatuses[0]
+                }
+            } else {
+                this.orderProducts.orderDetail = catalogsConfig;
             }
         }
 
@@ -132,9 +139,11 @@ export class NewOrderComponent implements OnInit {
                 delay(0),
                 tap(() => {
                     this.initCatalogues();
+                    this.filterOrderSubTypes();
                 }),
                 tap(() => {
                     // check if its an order update
+                    let cataloguesConfig: OrderDetailModel;
                     const params = this.activatedRoute.snapshot.params;
                     if (params.id) {
                         this.orderService.getById(params.id)
@@ -145,7 +154,7 @@ export class NewOrderComponent implements OnInit {
                                 })
                                 result.products.forEach(item => {
                                     const qtyCounter = 0;
-                                    const cataloguesConfig = {
+                                    cataloguesConfig = {
                                         warehouseCat: this.warehouses.find(x => x.id === item.warehouse),
                                         inventoryCat: this.inventories.find(x => x.id === item.inventory),
                                         onInventoryStatusCat: this.inventoryStatuses.find(x => x.id === item.onInventoryStatus),
@@ -154,7 +163,7 @@ export class NewOrderComponent implements OnInit {
                                     this.handleProductItems(qtyCounter + 1, item, cataloguesConfig);
                                 })
                                 // filter order subtypes
-                                this.initCatalogues();
+                                this.initCatalogues(cataloguesConfig);
                                 this.filterOrderSubTypes();
                                 // disable save button if is not a draft and show a message
                                 if (result.order.orderState !== 'Draft') {
@@ -162,9 +171,6 @@ export class NewOrderComponent implements OnInit {
                                     this.ShowAlert('Only view, any change made to this order won\'t be saved', 3);
                                 }
                             })
-                    } else {
-                        this.initCatalogues();
-                        this.filterOrderSubTypes();
                     }
                 })
             ).subscribe();
@@ -309,8 +315,8 @@ export class NewOrderComponent implements OnInit {
 
     switchRadioBtns(event, newValue) {
         this.orderProducts.order.orderType.id = newValue.id;
-        this.orderProducts.order.orderType.orderDirection = newValue.name;
-        this.initCatalogues();
+        this.orderProducts.order.orderType.orderDirection = newValue.orderDirection;
+        this.initCatalogues(this.orderProducts.orderDetail);
         this.filterOrderSubTypes();
     }
 

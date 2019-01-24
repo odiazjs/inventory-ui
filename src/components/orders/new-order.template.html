@@ -12,14 +12,14 @@
     <div [class.disabled]="!canSave" class="flex-container row padded-aside">
         <ng-container *ngFor="let orderType of orderTypes; let i = index">
             <div class="col-xxs">
-                <label class="container">{{orderType.name}}
+                <label class="container">{{orderType.orderDirection}}
                     <input type="radio" name="radio" [checked]="orderTypes[i].id == 1"
                         (change)="switchRadioBtns($event, orderTypes[i])">
                     <span class="checkmark"></span>
                 </label>
             </div>
             <div class="col-xxs">
-                <i [ngClass]="{'invert': orderType.name == 'In'}" class="material-icons small">{{orderType.icon}}</i>
+                <i [ngClass]="{'invert': orderType.orderDirection == 'In'}" class="material-icons small">{{orderType.icon}}</i>
             </div>
         </ng-container>
     </div>
