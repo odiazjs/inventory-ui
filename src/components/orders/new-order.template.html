@@ -1,11 +1,7 @@
 <div class="new-order">
-    <div *ngIf="showError" class="alert alert-danger">
-        <strong>Error:</strong> <div class="line-breaker">{{alertMessage}}</div> 
+    <div *ngIf="showMessage" class="alert" [ngClass]="{'alert-info': showInfo === true} " [ngClass]="{'alert-danger': showError === true} " [ngClass]="{'alert-success': showSuccess === true}">
+        <strong *ngIf="showError">Error:</strong> <div class="line-breaker">{{alertMessage}}</div> 
     </div>
-    
-    <div *ngIf="showSuccess" class="alert alert-succes">
-            <strong> {{alertMessage}} </strong> 
-        </div>
     <div class="flex-grid padded-aside">
         <div class="col">
             <div class="title">
@@ -13,7 +9,7 @@
             </div>
         </div>
     </div>
-    <div class="flex-container row padded-aside">
+    <div [class.disabled]="!canSave" class="flex-container row padded-aside">
         <ng-container *ngFor="let orderType of orderTypes; let i = index">
             <div class="col-xxs">
                 <label class="container">{{orderType.name}}
@@ -34,7 +30,7 @@
             </div>
         </div>
     </div>
-    <div class="flex-container row padded-aside">
+    <div [class.disabled]="!canSave" class="flex-container row padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
                 <select required [(ngModel)]="orderProducts.order.orderType.id" name="ordersubtype">
@@ -79,11 +75,11 @@
             </div>
         </div>
     </div>
-    <div class="flex-container row padded-aside">
+    <div [class.disabled]="!canSave" class="flex-container row padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
                 <select required [(ngModel)]="orderProducts.orderDetail.warehouseCat" name="warehouse">
-                    <option *ngFor="let item of warehouses" [ngValue]="item">{{item.name}}</option>
+                    <option  *ngFor="let item of warehouses" [ngValue]="item">{{item.name}}</option>
                 </select>
             </form>
         </div>
@@ -121,15 +117,15 @@
     <div class="flex-grid padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })' class="search"
-                    type="text" placeholder="Search.." name="search">
+                <input [readonly]="!canSave" [(ngModel)]="scannedPartNo" (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })' class="search"
+                    type="text" placeholder="Search.." name="Search">
                 <button type="submit"><i class="material-icons small">search</i></button>
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
                 <!-- <input #testinput [(ngModel)]="scannedSerialNo" (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_MACADDRESS })' -->
-                <input #testinput [(ngModel)]="scannedSerialNo" (keyup.enter)='addItem(testinput.value)'
+                <input [readonly]="!canSave" #testinput [(ngModel)]="scannedSerialNo" [disabled]="!scannedPartNo"  (keyup.enter)='addItem(testinput.value)'
                     class="search" type="text" placeholder="MAC Address" name="mac">
                 <button  type="submit"><i class="material-icons small">search</i></button>
             </form>
@@ -139,7 +135,7 @@
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <select required [(ngModel)]="orderProducts.order.orderState" name="orderstate">
+                <select [disabled]="!canSave" required [(ngModel)]="orderProducts.order.orderState" name="orderstate">
                     <option *ngFor="let state of orderStates" [ngValue]="state">Save as {{state}}</option>
                 </select>
             </form>
@@ -211,7 +207,7 @@
                             <div class="Rtable-cell small-cell">
                                 <div class="Rtable-cell--heading">Delete</div>
                                 <div class="Rtable-cell--content">
-                                    <a href="javascript:void(0);" (click)="removeitem(item.partNumber, item.serialNumber)" class="btn-container">
+                                    <a  href="javascript:void(0);" [class.disabled]="!canSave" (click)="removeitem(item.partNumber, item.serialNumber)" class="btn-container">
                                         <span><i class="material-icons small">delete_forever</i></span>
                                     </a>
                                 </div>
