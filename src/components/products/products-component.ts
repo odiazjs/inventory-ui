@@ -41,7 +41,7 @@ export class ProductsComponent implements AfterContentInit, OnInit {
         Observable.of().pipe(startWith(null), delay(0)).subscribe(() => {
             this.productService.getList()
                 .subscribe((result: any) => {
-                    console.log('products -----> ', result);
+                    // console.log('products -----> ', result);
                     this.productsList = [...result]
                 })
         })

@@ -116,7 +116,7 @@
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
                 <input [readonly]="!canSave" [(ngModel)]="scannedPartNo" (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })' class="search"
-                    type="text" placeholder="Search.." name="Search">
+                    type="text" placeholder="EAN or Part Number" name="Search">
                 <button type="submit"><i class="material-icons small">search</i></button>
             </form>
         </div>
