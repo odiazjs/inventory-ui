@@ -39,7 +39,8 @@ export const configFile = {
             'getAllOnInventoryStatus': 'on-inventory-status',
             'getAllItemStatus': 'item-status',
             'getAllManufacturer': 'manufacturers',
-            'getAllProductsGroup': 'product-groups'
+            'getAllProductsGroup': 'product-groups',
+            'getAllOrderSubTypes': 'order-type'
         }
     }
 };
@@ -55,7 +56,15 @@ const {
         orders: { getAllOrders },
         products: { getAllProducts, getFilteredProducts },
         inventoryItems: { getAllItems, getFilteredItems },
-        catalogs: { getAllWarehouses, getALlInventories, getAllOnInventoryStatus,  getAllItemStatus, getAllManufacturer, getAllProductsGroup}
+        catalogs: { 
+            getAllWarehouses, 
+            getALlInventories, 
+            getAllOnInventoryStatus,  
+            getAllItemStatus, 
+            getAllManufacturer, 
+            getAllProductsGroup,
+            getAllOrderSubTypes
+        }
     }
 } = configFile;
 
@@ -71,6 +80,7 @@ export const urlConfig = {
     getCatalogOnInventoryStatusUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllOnInventoryStatus}`,
     getCatalogAllItemStatusUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllItemStatus}`,
     getCatalogManufacturers: `${protocol}://${baseUrl}/${apiVersion}/${getAllManufacturer}`,
-    getCatalogProductsGroup: `${protocol}://${baseUrl}/${apiVersion}/${getAllProductsGroup}`
+    getCatalogProductsGroup: `${protocol}://${baseUrl}/${apiVersion}/${getAllProductsGroup}`,
+    getCatalogOrderSubTypes: `${protocol}://${baseUrl}/${apiVersion}/${getAllOrderSubTypes}`
 };
 

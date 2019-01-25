@@ -31,5 +31,8 @@ const orderServiceFactory = (value: { order: OrderDto, products: OrderDetailMode
             return serializedItem;
         })
     }
+    if (result.order.orderType){
+        result.order.orderType = serializeCase(result.order.orderType)
+    }
     return new OrderProductsDto(result.order, result.products);
 }
