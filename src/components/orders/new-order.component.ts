@@ -350,7 +350,8 @@ export class NewOrderComponent implements OnInit {
         }
     }
 
-    save() {
+    save(ev: Event) {
+        ev.preventDefault();
         const haveError = this.validate();
         if (haveError) { return }
         const completedConfimation = this.confirmCompleted();
@@ -380,19 +381,19 @@ export class NewOrderComponent implements OnInit {
             })
         })
         this.orderProducts.order.orderDate = new Date().toISOString();
-        const orderDto: any = new OrderProductsDto(this.orderProducts.order, productsArray);
+        let orderDto: any = new OrderProductsDto(Object.assign({}, this.orderProducts.order), productsArray);
         orderDto.order.orderType = this.orderProducts.order.orderType.id;
         if (params.id) {
             delete orderDto.order.id;
             this.orderService.update(orderDto, params.id)
                 .subscribe(response => {
-                    console.log('saved!', response);
+                    console.log('saved --- ', response);
                     this.ShowAlert('Order Saved!', 1);
                 })
         } else {
             this.orderService.create(orderDto)
                 .subscribe(response => {
-                    console.log('saved!', response);
+                    console.log('saved order dto ---> ', this.orderProducts);
                     this.ShowAlert('order Saved', 1);
                 })
         }
