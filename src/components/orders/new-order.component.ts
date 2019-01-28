@@ -395,10 +395,10 @@ export class NewOrderComponent implements OnInit {
                 .subscribe(response => {
                     console.log('saved order dto ---> ', this.orderProducts);
                     this.ShowAlert('order Saved', 1);
+                    setTimeout(() => {
+                        this.store.dispatch(new Navigate(['/orders']))
+                    }, 2000)
                 })
-        }
-        if (completedConfimation && this.orderProducts.order.orderState === 'Completed') {
-            this.store.dispatch(new Navigate(['/orders']))
         }
     }
 
@@ -412,10 +412,10 @@ export class NewOrderComponent implements OnInit {
             this.showError = true;
             this.showMessage = true
             this.alertMessage = messageToShow;
-            setTimeout(function() {
+            setTimeout(() => {
               this.showMessage = false;
               this.showError = false
-            }.bind(this), 4500);
+            }, 4500);
         } else if (type === 1) {
             this.showInfo = true;
             this.showMessage = true
