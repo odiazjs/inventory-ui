@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthStateModel, Login } from 'src/ngxs/models/authState.model';
-import { Actions, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 
 @Component({
     selector: 'app-login',
@@ -13,7 +13,6 @@ export class LoginComponent implements OnInit {
 
     constructor(
         private store: Store,
-        private actions: Actions
     ) { }
 
     ngOnInit(): void {
