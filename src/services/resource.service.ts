@@ -44,7 +44,7 @@ export class ResourceService<T> {
   constructor(
     public httpClient: HttpWrapper<HttpResponse<T>>,
     public baseUrl: string,
-    private serializer: (value: any, serializeDirection: string) => any
+    private serializer: (value: any, serializeDirection?: string) => any
   ) {
   }
 
@@ -67,7 +67,9 @@ export class ResourceService<T> {
     }
     return this.httpClient
       .post<T>(`${this.baseUrl}`, item)
-      .pipe();
+      .pipe(
+        map(item => this.serializer(item))
+      );
   }
   update(item: any, id?: number | string): Observable<T> {
     if (typeof item === 'object') {

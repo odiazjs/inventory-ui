@@ -10,13 +10,13 @@ export const configFile = {
     'protocol': 'http',
     'scheme': 'Bearer',
     'api': {
-        'baseUrl': 'localhost:8000/api',
+        'baseUrl': '10.1.16.20:8000/api',
         'apiVersion': 'v1'
     },
     'urlConfig': {
         'auth': {
             'version': 'v1',
-            'url': 'localhost:8000/api',
+            'url': '10.1.16.20:8000/api',
             'signup': 'signup',
             'loginEndpoint': 'auth/token',
             'logoutEndpoint': 'auth/logout',
@@ -56,12 +56,12 @@ const {
         orders: { getAllOrders },
         products: { getAllProducts, getFilteredProducts },
         inventoryItems: { getAllItems, getFilteredItems },
-        catalogs: { 
-            getAllWarehouses, 
-            getALlInventories, 
-            getAllOnInventoryStatus,  
-            getAllItemStatus, 
-            getAllManufacturer, 
+        catalogs: {
+            getAllWarehouses,
+            getALlInventories,
+            getAllOnInventoryStatus,
+            getAllItemStatus,
+            getAllManufacturer,
             getAllProductsGroup,
             getAllOrderSubTypes
         }

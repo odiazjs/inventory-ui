@@ -80,7 +80,7 @@ export class NewOrderComponent implements OnInit {
 
     filterOrderSubTypes = () => {
         const params = this.activatedRoute.snapshot.params;
-        this.orderSubTypes = 
+        this.orderSubTypes =
                 [...this.orderSubTypes.filter(x => x.orderDirection == this.orderProducts.order.orderType.orderDirection)]
         if (!params.id) {
             this.orderProducts.order.orderType = Object.assign(new Object(), this.orderSubTypes[0]);
@@ -360,10 +360,11 @@ export class NewOrderComponent implements OnInit {
         const params = this.activatedRoute.snapshot.params;
         this.orderDetailArray.map(item => {
             item.value.forEach(item => {
-                const { id, serialNumber, product, quantity, price } = item;
+                const { id, order, serialNumber, product, quantity, price } = item;
                 const { itemStatusCat, onInventoryStatusCat, inventoryCat, warehouseCat } = this.orderProducts.orderDetail;
                 let payload = {
                     id,
+                    order,
                     product,
                     serialNumber,
                     itemStatus: itemStatusCat.id,
@@ -384,7 +385,6 @@ export class NewOrderComponent implements OnInit {
         let orderDto: any = new OrderProductsDto(Object.assign({}, this.orderProducts.order), productsArray);
         orderDto.order.orderType = this.orderProducts.order.orderType.id;
         if (params.id) {
-            delete orderDto.order.id;
             this.orderService.update(orderDto, params.id)
                 .subscribe(response => {
                     console.log('saved --- ', response);
@@ -397,7 +397,7 @@ export class NewOrderComponent implements OnInit {
                     this.ShowAlert('order Saved', 1);
                     setTimeout(() => {
                         this.store.dispatch(new Navigate(['/orders']))
-                    }, 2000)
+                    }, 3500)
                 })
         }
     }
