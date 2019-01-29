@@ -64,7 +64,7 @@ export class NewOrderComponent implements OnInit {
             orderState: this.orderStates[0],
             orderDate: new Date().toLocaleDateString('en-US'),
             ticketNumber: null,
-            notes: 'some notes.'
+            notes: ''
         },
         orderDetail: {} as any
     };
@@ -328,6 +328,12 @@ export class NewOrderComponent implements OnInit {
 
     validate() {
         let message = '';
+        const inputDate = new Date(this.orderProducts.order.orderDate)
+        const actualDate = new Date()
+        if (inputDate > actualDate){
+            message = '-  Invalid date, must be today or before';
+        }
+
         if (message === '') {
             this.showError = false;
             return false;
@@ -379,7 +385,8 @@ export class NewOrderComponent implements OnInit {
                 productsArray.push(payload)
             })
         })
-        this.orderProducts.order.orderDate = new Date().toISOString();
+        // Todo: this don't save the date from selected by the user
+        this.orderProducts.order.orderDate = new Date(this.orderProducts.order.orderDate).toISOString();
         const orderDto: any = new OrderProductsDto(this.orderProducts.order, productsArray);
         orderDto.order.orderType = this.orderProducts.order.orderType.id;
         if (params.id) {

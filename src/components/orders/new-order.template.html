@@ -105,7 +105,12 @@
             </form>
         </div>
     </div>
-
+    <div [class.disabled]="!canSave" class="padded-aside flex-container">
+        <textarea  class="search col" type="text" placeholder="Order notes..."
+        [(ngModel)]="orderProducts.order.notes"
+        ></textarea>
+    </div>
+    
     <!-- Products list -->
     <div class="flex-grid padded-aside">
         <div class="col">
@@ -114,7 +119,7 @@
             </div>
         </div>
     </div>
-    <div class="flex-grid padded-aside">
+    <div class="flex-grid padded-aside filter-fixed">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
                 <input [readonly]="!canSave" [(ngModel)]="scannedPartNo" (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })' class="search"
@@ -151,6 +156,7 @@
         </div>
     </div>
 
+
     <div class="tabs-container padded-aside" *ngIf="orderProducts.order.orderType.orderDirection == 'In'">
         <div class="flex-container row">
             <div class="col-xs" *ngFor="let item of orderDetailArray">
@@ -168,7 +174,7 @@
         <!-- Product Items on Order In -->
         <div class="wrapper padded-aside" *ngIf="orderProducts.order.orderType.orderDirection == 'In'">
             <div class="Rtable Rtable--5cols Rtable--collapse">
-                <div class="Rtable-row Rtable-row--head">
+                <div class="Rtable-row Rtable-row--head headers-fixed">
                     <div class="Rtable-cell small-cell column-heading">Serial no</div>
                     <div class="Rtable-cell topic-cell column-heading">Name</div>
                     <div class="Rtable-cell date-cell column-heading">Warehouse</div>
