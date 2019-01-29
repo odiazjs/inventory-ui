@@ -67,9 +67,7 @@ export class ResourceService<T> {
     }
     return this.httpClient
       .post<T>(`${this.baseUrl}`, item)
-      .pipe(
-        map(item => { return this.serializer(item, this.DESERIALIZE_CASE) })
-      );
+      .pipe();
   }
   update(item: any, id?: number | string): Observable<T> {
     if (typeof item === 'object') {

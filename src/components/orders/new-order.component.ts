@@ -356,7 +356,8 @@ export class NewOrderComponent implements OnInit {
         }
     }
 
-    save() {
+    save(ev: Event) {
+        ev.preventDefault();
         const haveError = this.validate();
         if (haveError) { return }
         const completedConfimation = this.confirmCompleted();
@@ -385,26 +386,31 @@ export class NewOrderComponent implements OnInit {
                 productsArray.push(payload)
             })
         })
+<<<<<<< HEAD
         // Todo: this don't save the date from selected by the user
         this.orderProducts.order.orderDate = new Date(this.orderProducts.order.orderDate).toISOString();
         const orderDto: any = new OrderProductsDto(this.orderProducts.order, productsArray);
+=======
+        this.orderProducts.order.orderDate = new Date().toISOString();
+        let orderDto: any = new OrderProductsDto(Object.assign({}, this.orderProducts.order), productsArray);
+>>>>>>> 72655f3e3fcdfa941e65b85b73324bad53e47d8f
         orderDto.order.orderType = this.orderProducts.order.orderType.id;
         if (params.id) {
             delete orderDto.order.id;
             this.orderService.update(orderDto, params.id)
                 .subscribe(response => {
-                    console.log('saved!', response);
+                    console.log('saved --- ', response);
                     this.ShowAlert('Order Saved!', 1);
                 })
         } else {
             this.orderService.create(orderDto)
                 .subscribe(response => {
-                    console.log('saved!', response);
+                    console.log('saved order dto ---> ', this.orderProducts);
                     this.ShowAlert('order Saved', 1);
+                    setTimeout(() => {
+                        this.store.dispatch(new Navigate(['/orders']))
+                    }, 2000)
                 })
-        }
-        if (completedConfimation && this.orderProducts.order.orderState === 'Completed') {
-            this.store.dispatch(new Navigate(['/orders']))
         }
     }
 
@@ -418,10 +424,10 @@ export class NewOrderComponent implements OnInit {
             this.showError = true;
             this.showMessage = true
             this.alertMessage = messageToShow;
-            setTimeout(function() {
+            setTimeout(() => {
               this.showMessage = false;
               this.showError = false
-            }.bind(this), 4500);
+            }, 4500);
         } else if (type === 1) {
             this.showInfo = true;
             this.showMessage = true

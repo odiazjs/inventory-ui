@@ -29,6 +29,7 @@
     "chart.js": "^2.7.2",
     "core-js": "^2.5.4",
     "lodash": "^4.17.11",
+    "node-sass": "^4.11.0",
     "rxjs": "~6.2.0",
     "to-camel-case": "^1.0.0",
     "to-snake-case": "^1.0.0",
