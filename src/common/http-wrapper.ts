@@ -13,7 +13,7 @@ import { Store } from '@ngxs/store';
 
 @Injectable()
 export class HttpWrapper<T> {
-    isInRequest: boolean = false
+    isInRequest: boolean = false;
     constructor(
         private http: HttpClient,
         private router: Router,
