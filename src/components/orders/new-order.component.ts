@@ -387,14 +387,9 @@ export class NewOrderComponent implements OnInit {
                 productsArray.push(payload)
             })
         })
-<<<<<<< HEAD
         // Todo: this don't save the date from selected by the user
         this.orderProducts.order.orderDate = new Date(this.orderProducts.order.orderDate).toISOString();
         const orderDto: any = new OrderProductsDto(this.orderProducts.order, productsArray);
-=======
-        this.orderProducts.order.orderDate = new Date().toISOString();
-        let orderDto: any = new OrderProductsDto(Object.assign({}, this.orderProducts.order), productsArray);
->>>>>>> 72655f3e3fcdfa941e65b85b73324bad53e47d8f
         orderDto.order.orderType = this.orderProducts.order.orderType.id;
         if (params.id) {
             this.orderService.update(orderDto, params.id)
