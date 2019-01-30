@@ -10,3 +10,4 @@ export * from './inventory-item.service';
 export * from './catalog.service';
 export * from './inventory-item-filter.service';
 export * from './products-search.service';
+export * from './inventory-item-history.service'

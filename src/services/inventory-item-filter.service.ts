@@ -19,7 +19,7 @@ export class InventoryItemFilterService extends ResourceService<InventoryItemDto
             inventoryItemFactory
         )
     }
-    getList(paramsObject: any = {}): Observable<InventoryItemDto[]> {
+    getList(paramsObject: any): Observable<InventoryItemDto[]> {
         const serializedSnakeCase =  deserializeCase(paramsObject);
         const paramsQueryString = QueryOptions.toQueryString(serializedSnakeCase);
         const queryUrl = `${this.baseUrl}${paramsQueryString}`;
@@ -27,7 +27,7 @@ export class InventoryItemFilterService extends ResourceService<InventoryItemDto
           .get(`${queryUrl}`)
           .pipe(
             map((list: any[]) => {
-                return list.map(serializeCase)
+                return list['results'].map(serializeCase)
               })
           );
         }

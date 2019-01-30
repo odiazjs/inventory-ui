@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { startWith, delay, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { InventoryItemService, InventoryItemFilterService } from 'src/services/barrel';
+import { InventoryItemService, InventoryItemFilterService, InventoryItemHistoryService } from 'src/services/barrel';
 import { InventoryItemModel } from 'src/models/inventoryItem.model';
 import { Dictionary } from '../types';
 import { CatalogDto, CatalogModel } from 'src/models/order.dto';
@@ -16,6 +16,8 @@ import { GetAll } from 'src/ngxs/models/catalogState.model';
 export class InventoryComponent implements OnInit {
 
     modalShown: boolean = false;
+    historyShow = false;
+    itemHistory: InventoryItemModel[] = [];
     itemsList: InventoryItemModel[] = [];
     selectedItems: InventoryItemModel[] = [];
 
@@ -37,7 +39,8 @@ export class InventoryComponent implements OnInit {
     constructor(
         private store: Store,
         private inventoryItemService: InventoryItemService,
-        private inventoryITemFilterService: InventoryItemFilterService ) { }
+        private inventoryITemFilterService: InventoryItemFilterService,
+        private inventoryitemHistoryService: InventoryItemHistoryService  ) { }
 
     ngOnInit(): void {
         Observable.of()
@@ -79,7 +82,17 @@ export class InventoryComponent implements OnInit {
 
     showModal() {
         this.selectedItems = this.itemsList.filter(x => x.checked);
+        console.log(this.selectedItems)
         return this.modalShown = !this.modalShown;
+    }
+
+    showHistory(id: string){
+        const itemSelected = this.itemsList.filter( x => x.id === Number(id))
+        console.log('inv item id', itemSelected);
+        this.inventoryitemHistoryService.getList(id).subscribe( (result: any) => {
+            this.itemHistory = [...result];
+        })
+        console.log('inventory Hisotry', this.itemHistory);
     }
 
     filterItems() {
