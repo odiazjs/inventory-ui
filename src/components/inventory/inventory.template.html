@@ -94,6 +94,7 @@
                 <div class="Rtable-cell small-cell column-heading">Inventory</div>
                 <div class="Rtable-cell date-cell column-heading">Inventory Status</div>
                 <div class="Rtable-cell date-cell column-heading">Item Status</div>
+                <div class="Rtable-cell small-cell column-heading">History</div>
             </div>
 
             <div class="Rtable-row" *ngFor="let item of itemsList">
@@ -135,6 +136,14 @@
                 <div class="Rtable-cell date-cell">
                     <div class="Rtable-cell--heading">Item Status</div>
                     <div class="Rtable-cell--content title-content">{{item.itemStatus.name}}</div>
+                </div>
+                <div class="Rtable-cell small-cell">
+                    <div class="Rtable-cell--heading">History</div>
+                    <div class="Rtable-cell--content">
+                        <a  href="javascript:void(0);"  class="btn-container">
+                            <span><i class="material-icons small">history</i></span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
