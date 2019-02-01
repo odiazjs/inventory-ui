@@ -25,7 +25,6 @@ export class InventoryItemHistoryService extends ResourceService<InventoryItemDt
       .get(`${queryUrl}`)
       .pipe(
         map((list: any[]) => {
-            console.log('list',list);
             return list['results'].map(serializeCase)
           })
       );

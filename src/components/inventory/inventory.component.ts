@@ -17,6 +17,8 @@ export class InventoryComponent implements OnInit {
 
     modalShown: boolean = false;
     historyShow = false;
+    historyItemName: string;
+    historyItemSerialNo: string;
     itemHistory: InventoryItemModel[] = [];
     itemsList: InventoryItemModel[] = [];
     selectedItems: InventoryItemModel[] = [];
@@ -86,13 +88,17 @@ export class InventoryComponent implements OnInit {
         return this.modalShown = !this.modalShown;
     }
 
-    showHistory(id: string){
+    showHistory(id: string) {
         const itemSelected = this.itemsList.filter( x => x.id === Number(id))
-        console.log('inv item id', itemSelected);
         this.inventoryitemHistoryService.getList(id).subscribe( (result: any) => {
             this.itemHistory = [...result];
+            this.itemHistory.push(itemSelected[0])
+        }, (error) => {
+            this.itemHistory.push(itemSelected[0]);
         })
-        console.log('inventory Hisotry', this.itemHistory);
+        this.historyItemName = itemSelected[0].product.name;
+        this.historyItemSerialNo = itemSelected[0].serialNumber;
+        this.historyShow = !this.historyShow;
     }
 
     filterItems() {

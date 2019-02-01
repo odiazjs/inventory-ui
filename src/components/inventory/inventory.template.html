@@ -159,12 +159,12 @@
                 <div class="flex-container row padded-aside">
                     <div class="col">
                         <div class="title">
-                            Item {{item.name}}
+                            Item: {{historyItemName}}
                         </div>
                     </div>
                     <div class="col">
                         <div class="title">
-                            Serial No. {{item.serialNumber}}
+                            Serial No.: {{historyItemSerialNo}}
                         </div>
                     </div>
                 </div>
@@ -180,11 +180,11 @@
                                     <div class="Rtable-cell date-cell column-heading">Item Status</div>
                                 </div>
                     
-                                <div class="Rtable-row" *ngFor="let item of itemsList">
+                                <div class="Rtable-row" *ngFor="let item of itemHistory">
                 
                                     <div class="Rtable-cell date-cell">
                                         <div class="Rtable-cell--heading">Updated</div>
-                                        <div class="Rtable-cell--content title-content">01-19-2019</div>
+                                        <div class="Rtable-cell--content title-content">{{item.updatedIn}}</div>
                                     </div>
                                     <div class="Rtable-cell small-cell">
                                         <div class="Rtable-cell--heading">Price</div>
@@ -214,7 +214,7 @@
                     <div class="col">&nbsp;</div>
                     <div class="col-md">
                         <div class="btn-container">
-                            <a href="javascript:void(0);" (click)="showModal();" class="btn-primary center">
+                            <a href="javascript:void(0);" (click)="historyShow = false; itemHistory = []" class="btn-primary center">
                                 <div class="btn-text">Close</div>
                             </a>
                         </div>
