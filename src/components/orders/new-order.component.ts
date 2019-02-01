@@ -80,10 +80,14 @@ export class NewOrderComponent implements OnInit {
 
     filterOrderSubTypes = () => {
         const params = this.activatedRoute.snapshot.params;
+        const markAs = (this.orderProducts.order.orderType.orderDirection === 'In') ? 'INPUT' : 'OUTPUT'
         this.orderSubTypes =
-                [...this.orderSubTypes.filter(x => x.orderDirection == this.orderProducts.order.orderType.orderDirection)]
+                [...this.orderSubTypes.filter(x => x.orderDirection == this.orderProducts.order.orderType.orderDirection)];
+        this.inventoryStatuses = [...this.inventoryStatuses.filter(x => x.markAs === markAs)]
         if (!params.id) {
             this.orderProducts.order.orderType = Object.assign(new Object(), this.orderSubTypes[0]);
+            // not sure why this not select the right property
+            this.orderProducts.orderDetail.onInventoryStatusCat = Object.assign(new Object(), this.inventoryStatuses[0]);
         }
     }
 
