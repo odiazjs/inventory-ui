@@ -1,9 +1,8 @@
-<!-- ORDER CONTROLS -->
 <div class="flex-container row padded-aside">
-    <h2>Filter Inventory Item</h2>
+    <h1>Inventory Item</h1>
 </div>
 <div class="flex-container row padded-aside">
-    <div class="col-xs">
+    <div class="col-xs padded-top">
         <div class="btn-container" (click)="showModal();">
             <a href="javascript:void(0);" class="btn-secondary">
                  <span class="left">
@@ -12,39 +11,71 @@
             </a>
         </div>
     </div>
-    <div class="col">
+    
+    <div class="col padded-top">
         <form class="example" action="javascript:void(0);">
             <input class="search" type="text" placeholder="Product SKU or Name" name="search">
             <button type="submit"><i class="material-icons small">search</i></button>
         </form>
     </div>
-    <div class="col-md">
+    
+    <div class="col-sm">
+        <div class="title">
+            Warehouse
+        </div>
         <form class="example" action="javascript:void(0);">
-            <select name="orderstate">
-                <option value="volvo">Warehouse A</option>
-                <option value="Manufacturer">Manufacturer</option>
+            <select required [(ngModel)]="filterValues.warehouseCat"  name="warehouse" >
+                <option *ngFor="let item of warehouses" [ngValue]="item">{{item.name}}</option>
             </select>
         </form>
     </div>
     <div class="col-md">
+        <div class="title">
+            Inventory Name
+        </div>
         <form class="example" action="javascript:void(0);">
-            <select name="orderstate">
-                <option>Item Status</option>
-            </select>
-        </form>
-    </div>
-    <div class="col-md">
-        <form class="example" action="javascript:void(0);">
-            <select name="orderstate">
-                <option>Inventory</option>
+            <select required [(ngModel)]="filterValues.inventoryCat" name="inventory">
+                <option *ngFor="let item of inventories" [ngValue]="item">{{item.name}}</option>
             </select>
         </form>
     </div>
     <div class="col-sm">
+        <div class="col">
+            <div class="title">
+                Status
+            </div>
+        </div>
+        <form class="example" action="javascript:void(0);">
+            <select required [(ngModel)]="filterValues.onInventoryStatusCat"  name="oninvstatus">
+                <option *ngFor="let item of inventoryStatuses" [ngValue]="item">{{item.name}}</option>
+            </select>
+        </form>
+    </div>
+    <div class="col-sm">
+        <div class="col">
+            <div class="title">
+                Item Status
+            </div>
+        </div>
+        <form class="example" action="javascript:void(0);">
+            <select required [(ngModel)]="filterValues.itemStatusCat"  name="itemstatus">
+                <option *ngFor="let item of itemStatuses" [ngValue]="item">{{item.name}}</option>
+            </select>
+        </form>
+    </div>
+    <div class="col-sm padded-top">
         <div class="btn-container">
-            <a href="javascript:void(0);" (click)="newOrder();" class="btn-primary">
-                <span><i class="material-icons small">save</i></span>
+            <a href="javascript:void(0);" (click)="filterItems();" class="btn-primary">
+                <span><i class="material-icons small">filter_list</i></span>
                 <div class="btn-text">Filter</div>
+            </a>
+        </div>
+    </div>
+    <div class="col-sm padded-top">
+        <div class="btn-container">
+            <a href="javascript:void(0);" (click)="removeFilter();" class="btn-primary">
+                <span><i class="material-icons small">clear_all</i></span>
+                <div class="btn-text">Remove</div>
             </a>
         </div>
     </div>
@@ -56,64 +87,63 @@
         <div class="Rtable Rtable--5cols Rtable--collapse">
             <div class="Rtable-row Rtable-row--head">
                 <div class="Rtable-cell small-cell column-heading">Select</div>
-                <div class="Rtable-cell date-cell column-heading">Barcode</div>
-                <div class="Rtable-cell small-cell column-heading">Product</div>
-                <div class="Rtable-cell small-cell column-heading">Serial No.</div>
-                <div class="Rtable-cell small-cell column-heading">Qty</div>
+                <div class="Rtable-cell date-cell column-heading">Serial No.</div>
+                <div class="Rtable-cell topic-cell column-heading">Product Name</div>
                 <div class="Rtable-cell small-cell column-heading">Price</div>
                 <div class="Rtable-cell date-cell column-heading">Warehouse</div>
                 <div class="Rtable-cell small-cell column-heading">Inventory</div>
                 <div class="Rtable-cell date-cell column-heading">Inventory Status</div>
                 <div class="Rtable-cell date-cell column-heading">Item Status</div>
+                <div class="Rtable-cell small-cell column-heading">History</div>
             </div>
 
-            <div class="Rtable-row" *ngFor="let item of productsList">
+            <div class="Rtable-row" *ngFor="let item of itemsList">
 
                 <div class="Rtable-cell small-cell">
                     <div class="Rtable-cell--heading">Select</div>
                     <div class="Rtable-cell--content date-content"><span class="row-title">
                             <label class="container">
-                                <input type="checkbox">
+                                <input (change)="toggleCheck(item)" type="checkbox" [checked]="item.checked">
                                 <span class="checkmark"></span>
                             </label>
                         </span>
                     </div>
                 </div>
                 <div class="Rtable-cell date-cell">
-                    <div class="Rtable-cell--heading">Barcode</div>
-                    <div class="Rtable-cell--content date-content">07350053850019</div>
+                    <div class="Rtable-cell--heading">Serial No</div>
+                    <div class="Rtable-cell--content date-content">{{item.serialNumber}}</div>
                 </div>
-                <div class="Rtable-cell small-cell">
-                    <div class="Rtable-cell--heading">Product</div>
-                    <div class="Rtable-cell--content title-content">{{item.id}}</div>
-                </div>
-                <div class="Rtable-cell small-cell">
-                    <div class="Rtable-cell--heading">Serial No.</div>
-                    <div class="Rtable-cell--content title-content">000000101</div>
-                </div>
-                <div class="Rtable-cell small-cell">
-                    <div class="Rtable-cell--heading">Qty</div>
-                    <div class="Rtable-cell--content title-content">1</div>
+                <div class="Rtable-cell topic-cell">
+                    <div class="Rtable-cell--heading">Product Name</div>
+                    <div class="Rtable-cell--content title-content">{{item.product.name}}</div>
                 </div>
                 <div class="Rtable-cell small-cell">
                     <div class="Rtable-cell--heading">Price</div>
-                    <div class="Rtable-cell--content title-content">{{item.avgPrice}}</div>
+                    <div class="Rtable-cell--content title-content">{{item.price}}</div>
                 </div>
                 <div class="Rtable-cell date-cell">
                     <div class="Rtable-cell--heading">Warehouse</div>
-                    <div class="Rtable-cell--content title-content">Warehouse A</div>
+                    <div class="Rtable-cell--content title-content">{{item.warehouse.name}}</div>
                 </div>
                 <div class="Rtable-cell small-cell">
                     <div class="Rtable-cell--heading">Inventory</div>
-                    <div class="Rtable-cell--content title-content">Jive New</div>
+                    <div class="Rtable-cell--content title-content">{{item.inventory.name}}</div>
                 </div>
                 <div class="Rtable-cell date-cell">
                     <div class="Rtable-cell--heading">Inventory Status</div>
-                    <div class="Rtable-cell--content title-content">On Hand</div>
+                    <div class="Rtable-cell--content title-content">{{item.onInventoryStatus.name}}</div>
                 </div>
                 <div class="Rtable-cell date-cell">
                     <div class="Rtable-cell--heading">Item Status</div>
-                    <div class="Rtable-cell--content title-content">New</div>
+                    <div class="Rtable-cell--content title-content">{{item.itemStatus.name}}</div>
+                </div>
+                <div class="Rtable-cell small-cell">
+                    <div class="Rtable-cell--heading">History</div>
+                    <div class="Rtable-cell--content">
+                        <a  href="javascript:void(0);"  class="btn-container">
+                            <span><i class="material-icons small">history</i></span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -127,57 +157,78 @@
                 <h2 class="center">On Inventory Item</h2>
             </div>
             <div class="flex-container row padded-aside">
-                <h2 class="center">Product: -Product Name- Quantity: 1 Manufacturer -Manufacturer Name- Product Group: -Group Name- </h2>
-            </div>
-            <div class="flex-container row padded-aside">
-                <div class="col-md">
-                    <form class="example" action="javascript:void(0);">
-                        <select name="orderstate">
-                            <option>Warehouse</option>
-                        </select>
-                    </form>
-                </div>
-                <div class="col-md">
-                    <form class="example" action="javascript:void(0);">
-                        <select name="orderstate">
-                            <option>Inventory</option>
-                        </select>
-                    </form>
-                </div>
-                <div class="col-md">
-                    <form class="example" action="javascript:void(0);">
-                        <select name="orderstate">
-                            <option>On-hand</option>
-                        </select>
-                    </form>
-                </div>
-                <div class="col-md">
-                    <form class="example" action="javascript:void(0);">
-                        <select name="orderstate">
-                            <option>New</option>
-                        </select>
-                    </form>
+                <div class="list">
+                    <ul class="nostyle">
+                        <li class="nostyle" *ngFor="let item of selectedItems">
+                            {{item.product.name}}
+                        </li>
+                    </ul>
                 </div>
             </div>
+            <div class="flex-grid padded-aside">
+                <div class="col">
+                    <div class="title">
+                        Warehouse
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="title">
+                        Inventory Name
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="title">
+                        Status
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="title">
+                        Item State
+                    </div>
+                </div>
+            </div>
             <div class="flex-container row padded-aside">
-                <div class="col-md">
+                <div class="col-sm">
                     <form class="example" action="javascript:void(0);">
-                        <select name="orderstate">
-                            <option>Assigned To</option>
+                        <select required [(ngModel)]="configValues.warehouseCat" name="warehouse">
+                            <option *ngFor="let item of warehouses" [ngValue]="item">{{item.name}}</option>
                         </select>
                     </form>
                 </div>
+                <div class="col-sm">
+                    <form class="example" action="javascript:void(0);">
+                        <select required [(ngModel)]="configValues.inventoryCat" name="inventory">
+                            <option *ngFor="let item of inventories" [ngValue]="item">{{item.name}}</option>
+                        </select>
+                    </form>
+                </div>
+                <div class="col-sm">
+                    <form class="example" action="javascript:void(0);">
+                        <select required [(ngModel)]="configValues.onInventoryStatusCat" name="oninvstatus">
+                            <option *ngFor="let item of inventoryStatuses" [ngValue]="item">{{item.name}}</option>
+                        </select>
+                    </form>
+                </div>
+                <div class="col-sm">
+                    <form class="example" action="javascript:void(0);">
+                        <select required [(ngModel)]="configValues.itemStatusCat" name="itemstatus">
+                            <option *ngFor="let item of itemStatuses" [ngValue]="item">{{item.name}}</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+            <!-- <div class="flex-container row padded-aside">
                 <div class="col-md">
                     <form class="example" action="javascript:void(0);">
                         <input class="search" type="text" placeholder="MAC Address / Serial No." name="mac">
                     </form>
                 </div>
-            </div>
+            </div> -->
             <div class="flex-container row padded-aside">
                 <div class="col">&nbsp;</div>
                 <div class="col-md">
                     <div class="btn-container">
-                        <a href="javascript:void(0);" (click)="showModal();" class="btn-primary center">
+                        <a href="javascript:void(0);" (click)="update();" class="btn-primary center">
                             <div class="btn-text">Save</div>
                         </a>
                     </div>

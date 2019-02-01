@@ -1,15 +1,8 @@
-export default class ProductDto {
-    id?: number;
-    name?: string;
-    serialNumber: string;
-    barcode?: string;
-    partNumber?: string;
-    inputs?: number;
-    outputs?: number;
-    totalItems?: number;
-    createdDate?: Date;
-    minPrice?: number;
-    maxPrice?: number;
-    avgPrice?: number;
-    lastRecordedPrice?: number;
+export class ProductDto {
+    id: number;
+    name: string;
+    master_name: string;
+    part_number: string;
+    manufacturer: string;
+    product_group: string;
 }

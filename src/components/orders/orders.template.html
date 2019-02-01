@@ -1,11 +1,11 @@
 <!-- ORDER CONTROLS -->
-<div class="flex-grid padded-aside">
+<div class="flex-grid padded-aside filter-fixed">
     <div class="col-md">
         <div class="flex-grid">
             <div class="col-sm">
                 <div class="btn-container">
                     <a href="javascript:void(0);" (click)="newOrder();" class="btn-primary">
-                        <span><i class="material-icons small">save</i></span>
+                        <span><i class="material-icons small">add_circle_outline</i></span>
                         <div class="btn-text">New Order(s)</div>
                     </a>
                 </div>
@@ -19,6 +19,15 @@
                     </a>
                 </div>
             </div>
+            <div class="col-xs">
+                    <div class="btn-container">
+                        <a (click)="viewOrder()" href="javascript:void(0);" [class.disabled]="!canView" class="btn-secondary">
+                             <span class="left">
+                                <i class="material-icons small">remove_red_eye</i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
             <div class="col-xs">
                 <div class="btn-container">
                     <a href="javascript:void(0);" class="btn-secondary">
@@ -66,7 +75,7 @@
 <div class="flex-container row padded-aside">
     <div class="wrapper">
         <div class="Rtable Rtable--5cols Rtable--collapse">
-            <div class="Rtable-row Rtable-row--head">
+            <div class="Rtable-row Rtable-row--head headers-fixed">
                 <div class="Rtable-cell small-cell column-heading">Checkbox</div>
                 <div class="Rtable-cell small-cell column-heading">Order No.</div>
                 <div class="Rtable-cell small-cell column-heading">Ticket No.</div>
@@ -74,7 +83,7 @@
                 <div class="Rtable-cell date-cell column-heading">Order Type</div>
                 <div class="Rtable-cell date-cell column-heading">Date</div>
                 <div class="Rtable-cell date-cell column-heading">Status</div>
-                <div class="Rtable-cell date-cell column-heading">Select</div>
+                <!-- <div class="Rtable-cell date-cell column-heading">Select</div> -->
             </div>
 
             <div class="Rtable-row" *ngFor="let order of orderList">
@@ -115,10 +124,10 @@
                     <div class="Rtable-cell--heading">Status</div>
                     <div class="Rtable-cell--content title-content">{{order.orderState}}</div>
                 </div>
-                <div class="Rtable-cell date-cell">
+                <!-- <div class="Rtable-cell date-cell">
                     <div class="Rtable-cell--heading">Select</div>
                     <div class="Rtable-cell--content title-content">Checked</div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

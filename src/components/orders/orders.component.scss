@@ -1,0 +1,14 @@
+.filter-fixed{
+    background-color: #eeeeee;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 3.5rem;
+    z-index: 3;
+  }
+  
+  .headers-fixed{
+      position: -webkit-sticky;
+      position: sticky;
+      top: 7.3rem;
+      z-index: 3;
+    }

@@ -1,47 +1,47 @@
 <!-- ORDER CONTROLS -->
-<div class="flex-grid padded-aside">
+<div class="flex-container row padded-aside">
+    <h1>Products</h1>
+</div>
+<div class="flex-grid padded-aside filter-fixed">
+        <h2 class="padded-top-two">Search by: </h2>
         <div class="col-md">
-            <div class="flex-grid">
-                <div class="col-sm">
-                    <div class="btn-container">
-                        <a href="javascript:void(0);" (click)="newProduct();" class="btn-primary">
-                            <span><i class="material-icons small">save</i></span>
-                            <div class="btn-text">New Product(s)</div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-xs">
-                    <div class="btn-container">
-                        <a href="javascript:void(0);" class="btn-secondary">
-                             <span class="left">
-                                <i class="material-icons small">edit</i>
-                            </span>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-xs">
-                    <div class="btn-container">
-                        <a href="javascript:void(0);" class="btn-secondary">
-                             <span class="left">
-                                <i class="material-icons small">delete</i>
-                            </span>
-                        </a>
-                    </div>
-                </div>
+            <form class="flex-container row  example" action="javascript:void(0);">
+                <input class="search col-md padded-top padded-left" type="text" placeholder="Product name" name="searchByName" [(ngModel)] = "productSearchName" (keyup.enter)="searchProduct();">
                 <div class="col-md">
+                    <div class="col">
+                        <div class="title">
+                            Manufacturer
+                        </div>
+                    </div>
                     <form class="example" action="javascript:void(0);">
-                        <input class="search" type="text" placeholder="Search.." name="search">
-                        <button type="submit"><i class="material-icons small">search</i></button>
+                        <select required [(ngModel)]="filterValues.manufacturersCat"  name="productGroup">
+                            <option *ngFor="let item of manufacturers" [ngValue]="item">{{item.name}}</option>
+                        </select>
                     </form>
                 </div>
-            </div>
-        </div>
-        <div class="col-md">
-            <div class="flex-grid">
-                <div class="col-sm">
-    
+                <div class="col-md">
+                    <div class="col">
+                        <div class="title">
+                            Product Group
+                        </div>
+                    </div>
+                    <form class="example" action="javascript:void(0);">
+                        <select required [(ngModel)]="filterValues.productsGroupCat"  name="productGroup">
+                            <option *ngFor="let item of productsGroup" [ngValue]="item">{{item.name}}</option>
+                        </select>
+                    </form>
                 </div>
-            </div>
+                <div class="btn-container padded-top">
+                    <a href="javascript:void(0);" (click)="searchProduct();" class="btn-primary">
+                         <span><i class="material-icons small">search</i></span>
+                    </a>
+                </div>
+                <div class="btn-container padded-top padded-left">
+                    <a href="javascript:void(0);" (click)="restoreSearch();" class="btn-primary">
+                         <span><i class="material-icons small">clear</i></span>
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
     
@@ -63,14 +63,17 @@
     </div>
     
     <!-- ORDER DATA TABLE -->
-    <div class="flex-container row padded-aside">
+    <div class="flex-container row padded-aside ">
         <div class="wrapper">
             <div class="Rtable Rtable--5cols Rtable--collapse">
-                <div class="Rtable-row Rtable-row--head">
-                    <div class="Rtable-cell small-cell column-heading">Select</div>
-                    <div class="Rtable-cell date-cell column-heading">Barcode</div>
+                <div class="Rtable-row Rtable-row--head headers-fixed">
+                    <!-- <div class="Rtable-cell small-cell column-heading">Select</div> -->
+                    <div class="Rtable-cell topic-cell column-heading">Name</div> 
+                    <div class="Rtable-cell date-cell column-heading">Manufacturer</div>                    
+                    <div class="Rtable-cell date-cell column-heading">Product Group</div>                                        
+                    <div class="Rtable-cell date-cell column-heading">Part Number</div>
+                    <div class="Rtable-cell date-cell column-heading">Barcode</div>                    
                     <div class="Rtable-cell date-cell column-heading">Total Items</div>
-                    <div class="Rtable-cell date-cell column-heading">Created Date</div>
                     <div class="Rtable-cell date-cell column-heading">Min Price</div>
                     <div class="Rtable-cell date-cell column-heading">Max Price</div>
                     <div class="Rtable-cell date-cell column-heading">Avg Price</div>
@@ -78,7 +81,7 @@
                 </div>
     
                 <div class="Rtable-row" *ngFor="let product of productsList">
-                    <div class="Rtable-cell small-cell">
+                    <!-- <div class="Rtable-cell small-cell">
                         <div class="Rtable-cell--heading">Select</div>
                         <div class="Rtable-cell--content date-content"><span class="row-title">
                                 <label class="container">
@@ -87,21 +90,30 @@
                                 </label>
                             </span>
                         </div>
+                    </div> -->
+                    <div class="Rtable-cell topic-cell">
+                        <div class="Rtable-cell--heading">Name</div>
+                        <div class="Rtable-cell--content title-content">{{product.name}}</div>
+                    </div>
+                    <div class="Rtable-cell date-cell">
+                            <div class="Rtable-cell--heading">Manufacturer</div>
+                            <div class="Rtable-cell--content title-content">{{product.manufacturer}}</div>
+                    </div>
+                    <div class="Rtable-cell date-cell">
+                            <div class="Rtable-cell--heading">Product Group</div>
+                            <div class="Rtable-cell--content title-content">{{product.productGroup}}</div>
+                    </div>
+                    <div class="Rtable-cell date-cell">
+                        <div class="Rtable-cell--heading">Part Number</div>
+                        <div class="Rtable-cell--content title-content">{{product.partNumber}}</div>
                     </div>
                     <div class="Rtable-cell date-cell">
                         <div class="Rtable-cell--heading">Barcode</div>
-                        <div class="Rtable-cell--content date-content">
-                            <span class="row-title">{{product.barcode}}</span>
-                            <!-- <br />6:00 pm(CDT) -->
-                        </div>
+                        <div class="Rtable-cell--content title-content">{{product.barcode}}</div>
                     </div>
                     <div class="Rtable-cell date-cell">
                         <div class="Rtable-cell--heading">Total Items</div>
                         <div class="Rtable-cell--content title-content">{{product.totalItems}}</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Created Date</div>
-                        <div class="Rtable-cell--content title-content">{{product.createdDate | formatDate}}</div>
                     </div>
                     <div class="Rtable-cell date-cell">
                         <div class="Rtable-cell--heading">Min Price</div>

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuService } from '../../services/barrel';
-import { Select } from '@ngxs/store';
+import { MenuService, AuthService, ParsedJwtInfo } from '../../services/barrel';
+import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { parseUrl } from 'src/common/url';
+import { Logout, JwtInfoDto } from 'src/ngxs/models/authState.model';
+import { tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-navbar',
@@ -12,11 +14,16 @@ import { parseUrl } from 'src/common/url';
 export class NavbarComponent implements OnInit {
 
     title: string;
+    userInfo: ParsedJwtInfo;
 
     @Select(state => state.router)
     routeState$: Observable<any>;
 
-    constructor(private menuService: MenuService) { }
+    constructor(
+        private store: Store,
+        private menuService: MenuService,
+        public authService: AuthService
+    ) { }
     ngOnInit(): void {
         this.routeState$.subscribe(routerState => {
             if (routerState.state) {
@@ -24,5 +31,15 @@ export class NavbarComponent implements OnInit {
                 this.title = this.menuService.items.filter(item => item.routeUrl === stateUrl).pop().label;
             }
         });
+        this.authService.getUserInfo()
+            .pipe(
+                tap((userInfo) => {
+                    this.userInfo = Object.assign({}, userInfo);
+                })
+            ).subscribe();
+    }
+
+    logout () {
+        this.store.dispatch(new Logout());
     }
 }

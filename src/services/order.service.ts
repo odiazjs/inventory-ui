@@ -1,39 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ResourceService } from './resource.service';
+import { ResourceService, serializeCase, deserializeCase } from './resource.service';
 import { OrderDetailModel } from '../models/order.model';
 import { HttpWrapper } from '../common/barrel';
 import { HttpResponse } from '@angular/common/http';
 import { urlConfig } from '../environments/config';
 import { OrderDto, OrderProductsDto } from 'src/models/order.dto';
 
-declare var require;
-const toCamelCase = require('to-camel-case');
-const toSnakeCase = require('to-snake-case');
-
 const SERIALIZE_CASE = 'SERIALIZE';
-const DESERIALIZE_CASE = 'DESERIALIZE';
-
-const serializeCase = (obj) => {
-    let key, keys = Object.keys(obj);
-    let n = keys.length;
-    let newobj = {};
-    while (n--) {
-        key = keys[n];
-        newobj[toCamelCase(key)] = obj[key];
-    }
-    return newobj;
-}
-
-const deserializeCase = (obj) => {
-    let key, keys = Object.keys(obj);
-    let n = keys.length;
-    let newobj = {};
-    while (n--) {
-        key = keys[n];
-        newobj[toSnakeCase(key)] = obj[key];
-    }
-    return newobj;
-}
 
 @Injectable()
 export class OrderService extends ResourceService<OrderProductsDto> {
@@ -57,6 +30,9 @@ const orderServiceFactory = (value: { order: OrderDto, products: OrderDetailMode
             }
             return serializedItem;
         })
+    }
+    if (result.order.orderType){
+        result.order.orderType = serializeCase(result.order.orderType)
     }
     return new OrderProductsDto(result.order, result.products);
 }

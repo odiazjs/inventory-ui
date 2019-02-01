@@ -1,6 +1,6 @@
 {
   "name": "inventory-ui",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --port 4200",
@@ -13,6 +13,7 @@
   "dependencies": {
     "@amcharts/amcharts4": "^4.0.0-beta.55",
     "@angular/animations": "^6.1.0",
+    "@angular/cdk": "^7.1.1",
     "@angular/common": "^6.1.0",
     "@angular/compiler": "^6.1.0",
     "@angular/core": "^6.1.0",
@@ -22,11 +23,13 @@
     "@angular/platform-browser-dynamic": "^6.1.0",
     "@angular/router": "^6.1.0",
     "@ngxs/router-plugin": "^3.2.0",
+    "@ngxs/storage-plugin": "^3.3.4",
     "@ngxs/store": "^3.2.0",
     "@types/lodash": "^4.14.118",
     "chart.js": "^2.7.2",
     "core-js": "^2.5.4",
     "lodash": "^4.17.11",
+    "node-sass": "^4.11.0",
     "rxjs": "~6.2.0",
     "to-camel-case": "^1.0.0",
     "to-snake-case": "^1.0.0",

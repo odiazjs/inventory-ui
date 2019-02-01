@@ -1,4 +1,4 @@
-import ProductDto from "./product.dto";
+import { ProductDto } from "./product.dto";
 
 export class OrderType {
     id: number;
@@ -15,7 +15,7 @@ export class CreatedBy {
 export class OrderDto {
     id?: number;
     orderNumber: string;
-    orderType: number;
+    orderType: CatalogDto;
     orderDate: string;
     createdBy?: CreatedBy;
     orderState: string;
@@ -33,6 +33,7 @@ export class OrderDetailDto {
     onInventoryStatus?: number;
     inventory?: number;
     warehouse?: number;
+    orderSubtype?: number;
     quantity?: number;
     price?: number;
     assignedUser?: number;
@@ -47,13 +48,16 @@ export class OrderProductsDto {
     }
 }
 
-export class Catalog {
+export class CatalogDto {
     id: number;
     name: string;
     enabled?: boolean;
+    code?: string;
+    orderDirection?: string;
     order_direction?: string;
 }
 
-export class CatalogModel extends Catalog {
+export class CatalogModel extends CatalogDto {
     icon?: string;
+    orderDirection?: string;
 }
