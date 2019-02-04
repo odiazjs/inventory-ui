@@ -37,6 +37,8 @@ export class NewOrderComponent implements OnInit {
     showMessage = false;
     productList: any;
     canSave: boolean = true;
+    showCompleteConfirmation = false;
+    saveEvent: Event;
 
     orderTypes: CatalogModel[] = [
         { id: 1, name: 'Buy', orderDirection: 'In', icon: 'input' },
@@ -347,16 +349,12 @@ export class NewOrderComponent implements OnInit {
         }
     }
 
-    confirmCompleted() {
+    saveCompleteConfirmtation(ev: Event) {
+        this.saveEvent = ev;
         if (this.orderProducts.order.orderState === 'Completed') {
-            const confirmtation = confirm('If you save  the order as completed, you can\'t edit it later. Are you sure');
-            if (confirmtation) {
-                return true;
-            } else {
-                return false;
-            }
+            this.showCompleteConfirmation = true;
         } else {
-            return true;
+            this.save(ev);
         }
     }
 
@@ -364,8 +362,6 @@ export class NewOrderComponent implements OnInit {
         ev.preventDefault();
         const haveError = this.validate();
         if (haveError) { return }
-        const completedConfimation = this.confirmCompleted();
-        if (!completedConfimation) { return }
         const productsArray = [];
         const params = this.activatedRoute.snapshot.params;
         this.orderDetailArray.map(item => {
