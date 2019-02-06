@@ -89,7 +89,7 @@ export class NewOrderComponent implements OnInit {
         if (!params.id) {
             this.orderProducts.order.orderType = Object.assign(new Object(), this.orderSubTypes[0]);
             // not sure why this not select the right property
-            this.orderProducts.orderDetail.onInventoryStatusCat = Object.assign(new Object(), this.inventoryStatuses[0]);
+            this.orderProducts.orderDetail.onInventoryStatusCat = this.inventoryStatuses[0]
         }
     }
 
