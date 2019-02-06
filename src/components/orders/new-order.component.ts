@@ -36,6 +36,8 @@ export class NewOrderComponent implements OnInit, AfterViewInit {
     showInfo = false;
     showMessage = false;
     productList: any;
+    showCompleteConfirmation = false;
+    saveEvent: Event;
 
     orderTypes: CatalogModel[] = [
         { id: 1, name: 'Buy', orderDirection: 'In', icon: 'input' },
@@ -83,8 +85,16 @@ export class NewOrderComponent implements OnInit, AfterViewInit {
     draggedProductList: ProductOrderDetailModel[] = [];
 
     filterOrderSubTypes = () => {
+        const params = this.activatedRoute.snapshot.params;
+        const markAs = (this.orderProducts.order.orderType.orderDirection === 'In') ? 'INPUT' : 'OUTPUT'
         this.orderSubTypes =
-            [...this.orderSubTypes.filter(x => x.orderDirection == this.orderProducts.order.orderType.orderDirection)]
+                [...this.orderSubTypes.filter(x => x.orderDirection == this.orderProducts.order.orderType.orderDirection)];
+        this.inventoryStatuses = [...this.inventoryStatuses.filter(x => x.markAs === markAs)]
+        if (!params.id) {
+            this.orderProducts.order.orderType = Object.assign(new Object(), this.orderSubTypes[0]);
+            // not sure why this not select the right property
+            this.orderProducts.orderDetail.onInventoryStatusCat = this.inventoryStatuses[0]
+        }
     }
 
     initCatalogues = (catalogsConfig: OrderDetailModel = null) => {
@@ -94,7 +104,7 @@ export class NewOrderComponent implements OnInit, AfterViewInit {
             this.warehouses = catalogDictionary['Warehouses'];
             this.inventories = catalogDictionary['Inventories'];
             this.inventoryStatuses = catalogDictionary['InventoryStatus'];
-            this.itemStatuses = catalogDictionary['keyStatus'];
+            this.itemStatuses = catalogDictionary['ItemStatus'];
             this.orderSubTypes = catalogDictionary['OrderSubTypes'];
 
             if (!catalogsConfig) {
@@ -381,16 +391,12 @@ export class NewOrderComponent implements OnInit, AfterViewInit {
         }
     }
 
-    confirmCompleted() {
+    saveCompleteConfirmtation(ev: Event) {
+        this.saveEvent = ev;
         if (this.orderProducts.order.orderState === 'Completed') {
-            const confirmtation = confirm('If you save  the order as completed, you can\'t edit it later. Are you sure');
-            if (confirmtation) {
-                return true;
-            } else {
-                return false;
-            }
+            this.showCompleteConfirmation = true;
         } else {
-            return true;
+            this.save();
         }
     }
 
@@ -399,8 +405,6 @@ export class NewOrderComponent implements OnInit, AfterViewInit {
         ev.preventDefault();
         const haveError = this.validate();
         if (haveError) { return }
-        const completedConfimation = this.confirmCompleted();
-        if (!completedConfimation) { return }
 
         const params = this.activatedRoute.snapshot.params;
         const id = params.id;

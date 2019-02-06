@@ -141,4 +141,57 @@
 
 }
 
+textarea {
+    padding: 10px;
+    font-size: 17px;
+    border: 0px solid #ddd;
+    float: left;
+    background: white;
+    font-family: 'Titillium Web';
+}
+
+.filter-fixed {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 3.5rem;
+    z-index: 2;
+  }
+
+.headers-fixed{
+    position: -webkit-sticky;
+    position: sticky;
+    top: 7.3rem;
+    z-index: 2;
+  }
+
+.modal-container {
+    .content {
+        height: fit-content;
+        width: fit-content;
+        background: whitesmoke;
+        position: fixed;
+        top: 10px;
+        right: 0;
+        bottom: 0;
+        left: 25%;
+        z-index: 4;
+        .inner {
+            margin: 20px;
+        }
+    }
+    .last-results {
+        margin: 10px;
+        .result-item {
+            text-align: -webkit-center;
+        }
+    }
+    .result-container {
+        overflow-y: auto;
+        height: 200px;
+    }
+}
+
+H2{
+    font-size: 24px;
+}
 

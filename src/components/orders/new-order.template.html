@@ -4,6 +4,47 @@
         <strong *ngIf="showError">Error:</strong>
         <div class="line-breaker">{{alertMessage}}</div>
     </div>
+
+    <!--Inventory History Modal-->
+    <div class="modal-container" *ngIf="showCompleteConfirmation">
+        <div class="content">
+            <div class="inner">
+                <div class="flex-container row padded-aside">
+                    <h2 class="center">Confirm save</h2>
+                </div>
+                <div class="flex-container row padded-aside">
+                    <div class="col">
+                        <div class="title center">
+                            If you save the order as completed, you can't edit it later. Are you sure?' </div>
+                    </div>
+                </div>
+                <div class="flex-container row padded-aside">
+                    <div class="col">&nbsp;</div>
+                    <div class="col-md">
+                        <div class="btn-container">
+                            <a href="javascript:void(0);" (click)="showCompleteConfirmation = false;save(this.saveEvent);"
+                                class="btn-primary center">
+                                <div class="btn-text">Save</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <div class="btn-container">
+                            <a href="javascript:void(0);" (click)="showCompleteConfirmation = false;" class="btn-primary center">
+                                <div class="btn-text">Cancel</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col">&nbsp;</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop"></div>
+    </div>
+    <!--end of modal-->
+
+
+
     <div class="flex-grid padded-aside">
         <div class="col">
             <div class="title">
@@ -148,8 +189,11 @@
         <div class="col-xs">
             <div class="btn-container">
                 <a href="javascript:void(0);" (click)="save($event)" [class.disabled]="!canSave()" class="btn-primary">
-                     <span><i class="material-icons small">save</i></span>
-                     <div class="btn-text">Save</div>
+                    <a href="javascript:void(0);" (click)="saveCompleteConfirmtation($event)" [class.disabled]="!canSave"
+                        class="btn-primary">
+                         <span><i class="material-icons small">save</i></span>
+                         <div class="btn-text">Save</div>
+                    </a>
                 </a>
             </div>
         </div>
@@ -222,9 +266,10 @@
                     </div>
                 </ng-container>
             </ng-container>
+
+
         </div>
     </div>
-
 
     <div class="flex-container row padded-aside" *ngIf="orderProducts.order.orderType.orderDirection == 'Out'">
         <div class="example-container">

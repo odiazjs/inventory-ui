@@ -60,6 +60,7 @@ export class CatalogDto {
     code?: string;
     orderDirection?: string;
     order_direction?: string;
+    markAs?: string;
 }
 
 export class CatalogModel extends CatalogDto {
