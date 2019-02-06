@@ -41,7 +41,7 @@
 /* Drag and Drop */
 
 .example-container {
-    width: 400px;
+    width: 640px;
     max-width: 100%;
     margin: 0 25px 25px 0;
     display: inline-block;
@@ -51,15 +51,15 @@
   .example-list {
     border: solid 1px #ccc;
     min-height: 60px;
+    max-height: 400px;
     background: white;
     border-radius: 4px;
-    overflow: hidden;
+    overflow: auto;
     display: block;
   }
   
   .example-box {
     padding: 20px 10px;
-    border-bottom: solid 1px #ccc;
     color: rgba(0, 0, 0, 0.87);
     display: flex;
     flex-direction: row;
@@ -141,7 +141,7 @@
 
 }
 
-textarea{
+textarea {
     padding: 10px;
     font-size: 17px;
     border: 0px solid #ddd;
@@ -150,8 +150,7 @@ textarea{
     font-family: 'Titillium Web';
 }
 
-.filter-fixed{
-    background-color: #eeeeee;
+.filter-fixed {
     position: -webkit-sticky;
     position: sticky;
     top: 3.5rem;
@@ -195,5 +194,4 @@ textarea{
 H2{
     font-size: 24px;
 }
-
 

@@ -6,7 +6,7 @@ import { ProductDto } from "../models/product.dto";
 @Injectable()
 export class ProductMockService {
     getList<T>(): Observable<any[]> {
-        const productList: ProductDto[] = [
+        const productList: any[] = [
             {
                 "id": 1,
                 "name": "Cisco Expansion for 8851/8861",

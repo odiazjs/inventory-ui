@@ -15,7 +15,7 @@ body {
     -ms-text-size-adjust: none;
     font: normal normal 18px/25px $font-family, sans-serif;
     color: $font-color-dark;
-    background-color: $bg-color;
+    background-color: var(--bg-color);
     margin: 0;
     padding: 0;
 }
@@ -69,27 +69,25 @@ button:focus {outline:none;}
 .btn-container {
     margin-left: 0px;
     a.btn-primary {
-        background-color: darkcyan;
+        background-color: $btn-primary;
         height: 46px;
         display: block;
-        padding: 0.4em;
+        padding: 0em;
         margin-left: 0em;
         border-radius: 0em;
+        border: 1px solid #eee;
         box-sizing: border-box;
         text-decoration: none;
         font-weight: 400;
-        color: #FFFFFF;
+        color: $btn-font-color;
         position: relative;
         transition: border-width 0.2s ease, transform 0.2s ease, margin-bottom 0.2s ease;
         margin-bottom: 6px;
         .add-new {
             padding-right: 0.2em;
-            /* margin-bottom: 15px; */
             top: 3;
-            /* margin-right: 0.2em; */
             vertical-align: sub;
             font-size: 36px;
-            /* float: left; */
         }
         .btn-text {
             font-size: 16px;
@@ -100,12 +98,13 @@ button:focus {outline:none;}
         }
     }
     a.btn-secondary {
-        background-color: white;
+        background-color: $btn-secondary;
         height: 46px;
         display: block;
         padding: 0.4em;
         margin-left: 0em;
         border-radius: 0em;
+        border: 1px solid #eee;
         box-sizing: border-box;
         text-decoration: none;
         font-weight: 400;
@@ -113,7 +112,7 @@ button:focus {outline:none;}
         position: relative;
         transition: border-width 0.2s ease, transform 0.2s ease, margin-bottom 0.2s ease;
         margin-bottom: 6px;
-        .add-new{
+        .add-new {
             padding-right: 0.2em;
             top: 3;
             vertical-align: sub;
@@ -129,12 +128,12 @@ button:focus {outline:none;}
     }
 
     a.btn-primary span i, i.material-icons {
-        padding: 4px;
+        padding: 8px 0px 0px 4px;
         color: snow;
     }
 
     a.btn-primary i, a.btn-secondary i, i.material-icons {
-        padding: 4px;
+        padding: 8px 0px 0px 4px;
         color: darkgray;
     }
 }
@@ -147,6 +146,31 @@ a.btn-primary:active {
 a.btn-secondary:active {
     transform:translateY(2px);
     //box-shadow:inset 0 0.6em 2em -0.3em rgba(0,0,0,0.15),inset 0 0 0em 0.05em rgba(255,255,255,0.12);
+}
+
+.filter-fixed {
+    background-color: white;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 3.5rem;
+    z-index: 3;
+  }
+
+.headers-fixed {
+    background-color: white;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 7.3rem;
+    z-index: 3;
+}
+
+textarea{
+    padding: 10px;
+    font-size: 17px;
+    border: 1px solid #ddd;
+    float: left;
+    background: white;
+    font-family: 'Titillium Web';
 }
 
 // search input group
@@ -176,13 +200,15 @@ a.btn-secondary:active {
     float: left;
     height: 46px;
     width: 100%;
-    background: white;
+    background: #eee;
     font-family: 'Titillium Web';
   }
 
   form.example input[type=text].search {
         width: 80% !important;
   }
+
+  ::placeholder { color: darkgray !important; }
   
   /* Style the submit button */
   form.example button {
@@ -241,7 +267,7 @@ a.btn-secondary:active {
 .Rtable {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 0 3em 0;
+  margin: 0 0 0.2em 0;
   padding: 0;
   //box-shadow: 0 0 40px rgba(0,0,0,0.2);
   
@@ -492,7 +518,7 @@ i.material-icons.primary {
     vertical-align: bottom;
     margin-bottom: 0px;
     position: relative;
-    color: #cccc;
+    color: #ddd;
 }
 
 i.material-icons.secondary {
@@ -500,7 +526,7 @@ i.material-icons.secondary {
     vertical-align: bottom;
     margin-bottom: 0px;
     position: relative;
-    color: #c4d600;
+    color: darkcyan;
 }
 
 i.material-icons.small {

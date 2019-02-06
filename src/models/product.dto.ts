@@ -5,4 +5,5 @@ export class ProductDto {
     part_number: string;
     manufacturer: string;
     product_group: string;
+    inventory_item: number;
 }

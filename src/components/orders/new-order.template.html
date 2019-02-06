@@ -1,44 +1,47 @@
 <div class="new-order">
-    <div *ngIf="showMessage" class="alert" [ngClass]="{'alert-info': showInfo === true} " [ngClass]="{'alert-danger': showError === true} " [ngClass]="{'alert-success': showSuccess === true}">
-        <strong *ngIf="showError">Error:</strong> <div class="line-breaker">{{alertMessage}}</div> 
+    <div *ngIf="showMessage" class="alert" [ngClass]="{'alert-info': showInfo === true} " [ngClass]="{'alert-danger': showError === true} "
+        [ngClass]="{'alert-success': showSuccess === true}">
+        <strong *ngIf="showError">Error:</strong>
+        <div class="line-breaker">{{alertMessage}}</div>
     </div>
-    
-<!--Inventory History Modal-->
-<div class="modal-container" *ngIf="showCompleteConfirmation">
-    <div class="content">
-        <div class="inner">
-            <div class="flex-container row padded-aside">
-                <h2 class="center">Confirm save</h2>
-            </div>
-            <div class="flex-container row padded-aside">
-                <div class="col">
-                    <div class="title center">
-                        If you save  the order as completed, you can't edit it later. Are you sure?'                    </div>
+
+    <!--Inventory History Modal-->
+    <div class="modal-container" *ngIf="showCompleteConfirmation">
+        <div class="content">
+            <div class="inner">
+                <div class="flex-container row padded-aside">
+                    <h2 class="center">Confirm save</h2>
                 </div>
-            </div>
-            <div class="flex-container row padded-aside">
-                <div class="col">&nbsp;</div>
-                <div class="col-md">
-                    <div class="btn-container">
-                        <a href="javascript:void(0);" (click)="showCompleteConfirmation = false;save(this.saveEvent);" class="btn-primary center">
-                            <div class="btn-text">Save</div>
-                        </a>
+                <div class="flex-container row padded-aside">
+                    <div class="col">
+                        <div class="title center">
+                            If you save the order as completed, you can't edit it later. Are you sure?' </div>
                     </div>
                 </div>
-                <div class="col-md">
-                    <div class="btn-container">
-                        <a href="javascript:void(0);" (click)="showCompleteConfirmation = false;" class="btn-primary center">
-                            <div class="btn-text">Cancel</div>
-                        </a>
+                <div class="flex-container row padded-aside">
+                    <div class="col">&nbsp;</div>
+                    <div class="col-md">
+                        <div class="btn-container">
+                            <a href="javascript:void(0);" (click)="showCompleteConfirmation = false;save(this.saveEvent);"
+                                class="btn-primary center">
+                                <div class="btn-text">Save</div>
+                            </a>
+                        </div>
                     </div>
+                    <div class="col-md">
+                        <div class="btn-container">
+                            <a href="javascript:void(0);" (click)="showCompleteConfirmation = false;" class="btn-primary center">
+                                <div class="btn-text">Cancel</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col">&nbsp;</div>
                 </div>
-                <div class="col">&nbsp;</div>
             </div>
         </div>
+        <div class="modal-backdrop"></div>
     </div>
-    <div class="modal-backdrop"></div>
-</div>
-<!--end of modal-->
+    <!--end of modal-->
 
 
 
@@ -49,11 +52,11 @@
             </div>
         </div>
     </div>
-    <div [class.disabled]="!canSave" class="flex-container row padded-aside">
+    <div class="flex-container row padded-aside">
         <ng-container *ngFor="let orderType of orderTypes; let i = index">
             <div class="col-xxs">
                 <label class="container">{{orderType.orderDirection}}
-                    <input type="radio" name="radio" [checked]="orderTypes[i].id == 1"
+                    <input type="radio" name="radio" [checked]="orderProducts.order.orderType.orderDirection == orderTypes[i].orderDirection"
                         (change)="switchRadioBtns($event, orderTypes[i])">
                     <span class="checkmark"></span>
                 </label>
@@ -70,7 +73,7 @@
             </div>
         </div>
     </div>
-    <div [class.disabled]="!canSave" class="flex-container row padded-aside">
+    <div class="flex-container row padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
                 <select required [(ngModel)]="orderProducts.order.orderType.id" name="ordersubtype">
@@ -115,11 +118,11 @@
             </div>
         </div>
     </div>
-    <div [class.disabled]="!canSave" class="flex-container row padded-aside">
+    <div class="flex-container row padded-aside">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
                 <select required [(ngModel)]="orderProducts.orderDetail.warehouseCat" name="warehouse">
-                    <option  *ngFor="let item of warehouses" [ngValue]="item">{{item.name}}</option>
+                    <option *ngFor="let item of warehouses" [ngValue]="item">{{item.name}}</option>
                 </select>
             </form>
         </div>
@@ -145,12 +148,10 @@
             </form>
         </div>
     </div>
-    <div [class.disabled]="!canSave" class="padded-aside flex-container">
-        <textarea  class="search col" type="text" placeholder="Order notes..."
-        [(ngModel)]="orderProducts.order.notes"
-        ></textarea>
+    <div class="padded-aside flex-container">
+        <textarea class="search col" type="text" placeholder="Order notes..." [(ngModel)]="orderProducts.order.notes"></textarea>
     </div>
-    
+
     <!-- Products list -->
     <div class="flex-grid padded-aside">
         <div class="col">
@@ -162,18 +163,17 @@
     <div class="flex-grid padded-aside filter-fixed">
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <input [readonly]="!canSave" [(ngModel)]="scannedPartNo" (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })' class="search"
-                    (focusout)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })'
+                <input [(ngModel)]="scannedPartNo" (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })'
+                    class="search" (focusout)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_PARTNO })'
                     type="text" placeholder="EAN or Part Number" name="Search">
                 <button type="submit"><i class="material-icons small">search</i></button>
             </form>
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <!-- <input #testinput [(ngModel)]="scannedSerialNo" (keyup.enter)='onScanSubscription.next({ event: $event, message: SCAN_EVENT_MACADDRESS })' -->
-                <input [readonly]="!canSave" #testinput [(ngModel)]="scannedSerialNo" [disabled]="!scannedPartNo"  (keyup.enter)='addItem(testinput.value)'
-                    class="search" type="text" placeholder="MAC Address" name="mac">
-                <button  type="submit"><i class="material-icons small">search</i></button>
+                <input #scaninput [(ngModel)]="scannedSerialNo" [class.disabled]="!scannedPartNo || orderProducts.order.orderType.id == 2"
+                    (keyup.enter)='addItem(scaninput.value)' class="search" type="text" placeholder="MAC Address" name="mac">
+                <button type="submit"><i class="material-icons small">search</i></button>
             </form>
         </div>
         <div class="col-sm">
@@ -181,16 +181,19 @@
         </div>
         <div class="col-sm">
             <form class="example" action="javascript:void(0);">
-                <select [disabled]="!canSave" required [(ngModel)]="orderProducts.order.orderState" name="orderstate">
+                <select [disabled]="!canSave()" required [(ngModel)]="orderProducts.order.orderState" name="orderstate">
                     <option *ngFor="let state of orderStates" [ngValue]="state">Save as {{state}}</option>
                 </select>
             </form>
         </div>
         <div class="col-xs">
             <div class="btn-container">
-                <a href="javascript:void(0);" (click)="saveCompleteConfirmtation($event)" [class.disabled]="!canSave"  class="btn-primary">
-                     <span><i class="material-icons small">save</i></span>
-                     <div class="btn-text">Save</div>
+                <a href="javascript:void(0);" (click)="save($event)" [class.disabled]="!canSave()" class="btn-primary">
+                    <a href="javascript:void(0);" (click)="saveCompleteConfirmtation($event)" [class.disabled]="!canSave"
+                        class="btn-primary">
+                         <span><i class="material-icons small">save</i></span>
+                         <div class="btn-text">Save</div>
+                    </a>
                 </a>
             </div>
         </div>
@@ -211,57 +214,130 @@
         </div>
     </div>
 
-<!-- Product Items on Order In -->
-<div class="wrapper padded-aside" *ngIf="orderProducts.order.orderType.orderDirection == 'In'">
-    <div class="Rtable Rtable--5cols Rtable--collapse">
-        <div class="Rtable-row Rtable-row--head headers-fixed">
-            <div class="Rtable-cell small-cell column-heading">Serial no</div>
-            <div class="Rtable-cell topic-cell column-heading">Name</div>
-            <div class="Rtable-cell date-cell column-heading">Warehouse</div>
-            <div class="Rtable-cell date-cell column-heading">Inventory</div>
-            <div class="Rtable-cell date-cell column-heading">Inventory Status</div>
-            <div class="Rtable-cell date-cell column-heading">Item Status</div>
-            <div class="Rtable-cell small-cell column-heading">Delete</div>
-        </div>
+    <!-- Product Items on Order In -->
+    <div class="wrapper padded-aside" *ngIf="orderProducts.order.orderType.orderDirection == 'In'">
+        <div class="Rtable Rtable--5cols Rtable--collapse">
+            <div class="Rtable-row Rtable-row--head headers-fixed">
+                <div class="Rtable-cell small-cell column-heading">Serial no</div>
+                <div class="Rtable-cell topic-cell column-heading">Name</div>
+                <div class="Rtable-cell date-cell column-heading">Warehouse</div>
+                <div class="Rtable-cell date-cell column-heading">Inventory</div>
+                <div class="Rtable-cell date-cell column-heading">Inventory Status</div>
+                <div class="Rtable-cell date-cell column-heading">Item Status</div>
+                <div class="Rtable-cell small-cell column-heading">Delete</div>
+            </div>
 
-        <ng-container *ngFor="let orderDetail of orderDetailArray">
-            <ng-container *ngIf="selectedProductKey === orderDetail.key">
-                <div class="Rtable-row" *ngFor="let item of orderDetail.value">
-                    <div class="Rtable-cell small-cell">
-                        <div class="Rtable-cell--heading">Serial No.</div>
-                        <div class="Rtable-cell--content date-content">{{item.serialNumber}}</div>
+            <ng-container *ngFor="let orderDetail of orderDetailArray">
+                <ng-container *ngIf="selectedProductKey === orderDetail.key">
+                    <div class="Rtable-row" *ngFor="let item of orderDetail.value">
+                        <div class="Rtable-cell small-cell">
+                            <div class="Rtable-cell--heading">Serial No.</div>
+                            <div class="Rtable-cell--content date-content">{{item.serialNumber}}</div>
+                        </div>
+                        <div class="Rtable-cell topic-cell">
+                            <div class="Rtable-cell--heading">Name</div>
+                            <div class="Rtable-cell--content title-content">{{item.name}}</div>
+                        </div>
+                        <div class="Rtable-cell date-cell">
+                            <div class="Rtable-cell--heading">Warehouse</div>
+                            <div class="Rtable-cell--content title-content">{{item.warehouseCat.name}}</div>
+                        </div>
+                        <div class="Rtable-cell date-cell">
+                            <div class="Rtable-cell--heading">Inventory</div>
+                            <div class="Rtable-cell--content title-content">{{item.inventoryCat.name}}</div>
+                        </div>
+                        <div class="Rtable-cell date-cell">
+                            <div class="Rtable-cell--heading">Inventory Status</div>
+                            <div class="Rtable-cell--content title-content">{{item.onInventoryStatusCat.name}}</div>
+                        </div>
+                        <div class="Rtable-cell date-cell">
+                            <div class="Rtable-cell--heading">Item Status</div>
+                            <div class="Rtable-cell--content title-content">{{item.itemStatusCat.name}}</div>
+                        </div>
+                        <div class="Rtable-cell small-cell">
+                            <div class="Rtable-cell--heading">Delete</div>
+                            <div class="Rtable-cell--content">
+                                <a href="javascript:void(0);" [class.disabled]="!canSave()" (click)="removeitem(item.partNumber, item.serialNumber)"
+                                    class="btn-container">
+                                    <span><i class="material-icons small">delete_forever</i></span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="Rtable-cell topic-cell">
-                        <div class="Rtable-cell--heading">Name</div>
-                        <div class="Rtable-cell--content title-content">{{item.name}}</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Warehouse</div>
-                        <div class="Rtable-cell--content title-content">{{item.warehouseCat.name}}</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Inventory</div>
-                        <div class="Rtable-cell--content title-content">{{item.inventoryCat.name}}</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Inventory Status</div>
-                        <div class="Rtable-cell--content title-content">{{item.onInventoryStatusCat.name}}</div>
-                    </div>
-                    <div class="Rtable-cell date-cell">
-                        <div class="Rtable-cell--heading">Item Status</div>
-                        <div class="Rtable-cell--content title-content">{{item.itemStatusCat.name}}</div>
-                    </div>
-                    <div class="Rtable-cell small-cell">
-                        <div class="Rtable-cell--heading">Delete</div>
-                        <div class="Rtable-cell--content">
-                            <a  href="javascript:void(0);" [class.disabled]="!canSave" (click)="removeitem(item.partNumber, item.serialNumber)" class="btn-container">
-                                <span><i class="material-icons small">delete_forever</i></span>
-                            </a>
+                </ng-container>
+            </ng-container>
+
+
+        </div>
+    </div>
+
+    <div class="flex-container row padded-aside" *ngIf="orderProducts.order.orderType.orderDirection == 'Out'">
+        <div class="example-container">
+            <h2>All Products</h2>
+            <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="availableProductsList" [cdkDropListConnectedTo]="[doneList]"
+                class="example-list" (cdkDropListDropped)="drop($event)">
+                <div class="example-box" *ngFor="let item of availableProductsList" cdkDrag>
+                    <div class="wrapper">
+                        <div class="Rtable Rtable--5cols Rtable--collapse">
+                            <div class="Rtable-row Rtable-row--head">
+                                <div class="Rtable-cell small-cell column-heading">Serial no</div>
+                                <div class="Rtable-cell topic-cell column-heading">Name</div>
+                            </div>
+
+                            <ng-container>
+                                <ng-container>
+                                    <div class="Rtable-row">
+                                        <div class="Rtable-cell small-cell">
+                                            <div class="Rtable-cell--heading">Serial No.</div>
+                                            <div class="Rtable-cell--content date-content">{{item.serialNumber}}</div>
+                                        </div>
+                                        <div class="Rtable-cell topic-cell">
+                                            <div class="Rtable-cell--heading">Name</div>
+                                            <div class="Rtable-cell--content title-content">{{item.product.name}}</div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
                         </div>
                     </div>
                 </div>
-            </ng-container>
-        </ng-container>
-    </div>
-</div>
+            </div>
+        </div>
 
+        <div class="example-container">
+            <h2>Selected Products</h2>
+            <div cdkDropList #doneList="cdkDropList" [cdkDropListData]="draggedProductList" [cdkDropListConnectedTo]="[todoList]"
+                class="example-list" (cdkDropListDropped)="drop($event)">
+                <div class="example-box" *ngFor="let item of draggedProductList" cdkDrag>
+                    <div class="wrapper">
+                        <div class="Rtable Rtable--5cols Rtable--collapse">
+                            <div class="Rtable-row Rtable-row--head">
+                                <div class="Rtable-cell date-cell column-heading">Part No</div>
+                                <div class="Rtable-cell small-cell column-heading">Serial No</div>
+                                <div class="Rtable-cell topic-cell column-heading">Name</div>
+                            </div>
+
+                            <ng-container>
+                                <ng-container>
+                                    <div class="Rtable-row">
+                                        <div class="Rtable-cell date-cell">
+                                            <div class="Rtable-cell--heading">Part No.</div>
+                                            <div class="Rtable-cell--content title-content">{{item.product.partNumber}}</div>
+                                        </div>
+                                        <div class="Rtable-cell small-cell">
+                                            <div class="Rtable-cell--heading">Serial No.</div>
+                                            <div class="Rtable-cell--content date-content">{{item.serialNumber}}</div>
+                                        </div>
+                                        <div class="Rtable-cell topic-cell">
+                                            <div class="Rtable-cell--heading">Name</div>
+                                            <div class="Rtable-cell--content title-content">{{item.product.name}}</div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

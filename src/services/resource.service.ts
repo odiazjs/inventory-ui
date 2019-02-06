@@ -108,6 +108,9 @@ export class ResourceService<T> {
       .pipe(
         map((list: any) => {
           return list.results ? list.results.map(serializeCase) : list.map(serializeCase)
+        }),
+        map(item => {
+          return this.serializer(item)
         })
       );
   }

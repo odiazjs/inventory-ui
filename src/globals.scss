@@ -1,5 +1,14 @@
+@import 'css-vars';
+
 $font-family: 'Titillium Web';
-$bg-color: #eeeeee;
-$font-color-dark: #424242;
-$font-color-light: white;
-$sidebar-bg-color: #424242;
+$bg-color: white;
+$font-color-dark: dimgray;
+$font-color-light: #ddd;
+$sidebar-bg-color: #574c4f;
+$btn-primary: #7d978e;
+$btn-secondary: darkcyan;
+$btn-font-color: white;
+
+@include css-vars((
+    --bg-color: $bg-color
+))

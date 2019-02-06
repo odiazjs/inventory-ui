@@ -23,7 +23,6 @@ export interface ParsedJwtInfo {
 export class AuthService extends ResourceService<any> {
     @Select(state => state.auth) authInfo$: Observable<AuthStateModel>;
     constructor(
-        private store: Store,
         httpWrapper: HttpWrapper<HttpResponse<any>>
     ) {
         super(

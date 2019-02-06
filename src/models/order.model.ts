@@ -15,6 +15,6 @@ export class OrderProductsModel {
 export default class OrderModel extends OrderDto {
     checked?: boolean = false;
     constructor(dto: OrderDto) {
-        super()
+        super(dto)
     }
 }
