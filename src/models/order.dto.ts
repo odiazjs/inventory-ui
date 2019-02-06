@@ -41,6 +41,7 @@ export class OrderDetailDto {
     price?: number;
     assignedUser?: number;
     serialNumber?: number;
+    inventoryItem?: number;
 }
 
 export class OrderProductsDto {
