@@ -62,7 +62,7 @@ export class InventoryComponent implements OnInit {
                             onInventoryStatusCat: this.inventoryStatuses[0],
                             itemStatusCat: this.itemStatuses[0]
                         }
-                        this.configValues = Object.assign({}, this.filterValues);
+                        // this.configValues = Object.assign({}, this.filterValues);
                     })
                 }),
                 tap(() => {
@@ -82,9 +82,17 @@ export class InventoryComponent implements OnInit {
         item.checked = !item.checked;
     }
 
+
     showModal() {
         this.selectedItems = this.itemsList.filter(x => x.checked);
-        console.log(this.selectedItems)
+        // by default it takes the value from the las item on the seleteditems list
+        this.configValues = {
+            warehouseCat: this.warehouses.find(x => x.id === this.selectedItems[this.selectedItems.length - 1].warehouse.id),
+            onInventoryStatusCat: this.inventoryStatuses.find(x => x.id === this.selectedItems[this.selectedItems.length - 1]
+                                .onInventoryStatus.id),
+            inventoryCat: this.inventories.find(x => x.id === this.selectedItems[this.selectedItems.length - 1].inventory.id),
+            itemStatusCat: this.itemStatuses.find(x => x.id === this.selectedItems[this.selectedItems.length - 1].itemStatus.id)
+        }
         return this.modalShown = !this.modalShown;
     }
 

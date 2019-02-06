@@ -17,6 +17,7 @@ export class ProductsComponent implements AfterContentInit, OnInit {
     lineChart: Array<any> = [];
     productsList: Array<ProductModel> = []
     productSearchName: string;
+    productSearchparNumber: string;
     productSearchManufacturer: string;
     productSeachGroup: string;
 
@@ -184,6 +185,9 @@ export class ProductsComponent implements AfterContentInit, OnInit {
         }
         if (this.productSearchName !== undefined && this.productSearchName !== '') {
             dto.name = this.productSearchName;
+        }
+        if (this.productSearchparNumber !== undefined && this.productSearchparNumber !== '') {
+            dto.partNumber = this.productSearchparNumber;
         }
         this.productSearchService.getList(dto)
         .subscribe( (result: any) => {
