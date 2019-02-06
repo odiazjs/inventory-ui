@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { OrderProductsModel, OrderDetailModel } from '../../models/order.model';
 import { ProductOrderDetailModel, ProductModel } from '../../models/product.model';
 import { Subject, Observable } from 'rxjs';
@@ -21,7 +21,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
     templateUrl: './new-order.template.html',
     styleUrls: ['./new-order.component.scss']
 })
-export class NewOrderComponent implements OnInit {
+export class NewOrderComponent implements OnInit, AfterViewInit {
 
     readonly SCAN_EVENT_PARTNO = "PART_NO";
     readonly SCAN_EVENT_MACADDRESS = "MAC_ADDRESS";
@@ -36,7 +36,6 @@ export class NewOrderComponent implements OnInit {
     showInfo = false;
     showMessage = false;
     productList: any;
-    canSave: boolean = true;
 
     orderTypes: CatalogModel[] = [
         { id: 1, name: 'Buy', orderDirection: 'In', icon: 'input' },
@@ -60,7 +59,7 @@ export class NewOrderComponent implements OnInit {
     orderProducts: OrderProductsModel = {
         order: {
             orderNumber: null,
-            orderType: this.orderTypes[0],
+            orderType: {} as any,
             orderState: this.orderStates[0],
             orderDate: new Date().toLocaleDateString('en-US'),
             ticketNumber: null,
@@ -71,20 +70,21 @@ export class NewOrderComponent implements OnInit {
 
     selectedProductKey: string;
 
+    // Orders IN
     onScanSubscription = new Subject<any>();
     orderDetailArray: Array<{ key: any, value: any }> = [];
     orderDetailMap: Dictionary<ProductOrderDetailModel[]> = {};
 
-    availableProductsList: ProductModel[] = [];
-    draggedProductList: ProductModel[] = [];
+    // Orders OUT
+    outOrderDetailArray: Array<{ key: any, value: any }> = [];
+    outOrderDetailMap: Dictionary<ProductOrderDetailModel[]> = {};
+
+    availableProductsList: ProductOrderDetailModel[] = [];
+    draggedProductList: ProductOrderDetailModel[] = [];
 
     filterOrderSubTypes = () => {
-        const params = this.activatedRoute.snapshot.params;
         this.orderSubTypes =
-                [...this.orderSubTypes.filter(x => x.orderDirection == this.orderProducts.order.orderType.orderDirection)]
-        if (!params.id) {
-            this.orderProducts.order.orderType = Object.assign(new Object(), this.orderSubTypes[0]);
-        }
+            [...this.orderSubTypes.filter(x => x.orderDirection == this.orderProducts.order.orderType.orderDirection)]
     }
 
     initCatalogues = (catalogsConfig: OrderDetailModel = null) => {
@@ -97,7 +97,7 @@ export class NewOrderComponent implements OnInit {
             this.itemStatuses = catalogDictionary['ItemStatus'];
             this.orderSubTypes = catalogDictionary['OrderSubTypes'];
 
-            if (!catalogsConfig){
+            if (!catalogsConfig) {
                 this.orderProducts.orderDetail = {
                     warehouseCat: this.warehouses[0],
                     inventoryCat: this.inventories[0],
@@ -129,17 +129,25 @@ export class NewOrderComponent implements OnInit {
         public activatedRoute: ActivatedRoute
     ) { }
 
-    ngOnInit(): void {
-        this.productService.getList()
-            .subscribe((products) => { this.productList = products });
+    ngOnInit(): void { }
 
+    ngAfterViewInit(): void {
         Observable.of()
             .pipe(
                 startWith(null),
                 delay(0),
                 tap(() => {
+                    this.productService.getList()
+                        .subscribe((products) => {
+                            this.productList = products
+                        });
+                }),
+                tap(() => {
+                    const params = this.activatedRoute.snapshot.params;
+                    if (!params.id) {
+                        this.filterOrderSubTypes();
+                    }
                     this.initCatalogues();
-                    this.filterOrderSubTypes();
                 }),
                 tap(() => {
                     // check if its an order update
@@ -149,6 +157,7 @@ export class NewOrderComponent implements OnInit {
                         this.orderService.getById(params.id)
                             .subscribe(result => {
                                 this.orderProducts.order = result.order;
+                                this.draggedProductList = [...result.products] as any;
                                 result.products.forEach(item => {
                                     this.handleProductDict(item.product as any);
                                 })
@@ -165,11 +174,6 @@ export class NewOrderComponent implements OnInit {
                                 // filter order subtypes
                                 this.initCatalogues(cataloguesConfig);
                                 this.filterOrderSubTypes();
-                                // disable save button if is not a draft and show a message
-                                if (result.order.orderState !== 'Draft') {
-                                    this.canSave = false;
-                                    this.ShowAlert('Only view, any change made to this order won\'t be saved', 3);
-                                }
                             })
                     }
                 })
@@ -227,7 +231,15 @@ export class NewOrderComponent implements OnInit {
         onScan$.remove(onScan$);
     }
 
-
+    canSave() {
+        // disable save button if is not a draft and show a message
+        if (this.orderProducts.order.orderState !== 'Draft') {
+            this.ShowAlert('Only view, any change made to this order won\'t be saved', 3);
+        }
+        return this.orderProducts.order.orderState === 'Draft' && (
+            this.orderProducts.order.ticketNumber !== '' && this.orderProducts.order.ticketNumber !== null
+        )
+    }
 
     removeitem(productKey: string, serialNumber: string) {
         const item = this.orderDetailArray.find(x => x.key === productKey).value.find(y => y.serialNumber === serialNumber)
@@ -242,11 +254,11 @@ export class NewOrderComponent implements OnInit {
 
     addItem(value: string) {
         // check if the serialNumber already exist
-        if (this.orderDetailArray.find(x => x.key === this.selectedProductKey).value.find(y => y.serialNumber === value)){
+        if (this.orderDetailArray.find(x => x.key === this.selectedProductKey).value.find(y => y.serialNumber === value)) {
             this.ShowAlert('This item already exist on this order', 0);
             return
         }
-        if (value === null || value === ''){
+        if (value === null || value === '') {
             this.ShowAlert('MAC Address can\'t be empty', 0);
             return
         }
@@ -261,34 +273,55 @@ export class NewOrderComponent implements OnInit {
         this.scannedSerialNo = '';
     }
 
-    drop(event: CdkDragDrop<ProductModel[]>) {
+    drop(event: CdkDragDrop<ProductOrderDetailModel[]>) {
+
+        const itemToMove = event.previousContainer.data[event.previousIndex];
+        const alreadyExists = this.draggedProductList.find(item => {
+            return item.serialNumber == itemToMove.serialNumber
+        });
+
+        if (alreadyExists) {
+            this.ShowAlert('Item already exists.', 2);
+            return;
+        };
+
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
-            console.log('Transfering array item ---> ', event)
+            console.log('Available list ---> ', this.availableProductsList)
             transferArrayItem(event.previousContainer.data,
                 event.container.data,
                 event.previousIndex,
-                event.currentIndex);
+                event.currentIndex
+            );
         }
-        console.log('Drop Event ---> ', event)
+        console.log('Selected list ---> ', this.draggedProductList)
+
     }
 
-    handleProductDict (product: ProductModel) {
+    handleProductDict(product: ProductModel) {
         const { partNumber } = product;
-        if (!this.orderDetailMap[partNumber]) {
-            this.scannedSerialNo = ''
-            this.orderDetailMap[partNumber] = [];
+        if (this.orderProducts.order.orderType.orderDirection === 'Out') {
+            if (!this.outOrderDetailMap[partNumber]) {
+                this.scannedSerialNo = ''
+                this.outOrderDetailMap[partNumber] = [];
+            }
+            this.selectedProductKey = product.partNumber;
+            this.outOrderDetailArray = [...KeysPipe.pipe(this.orderDetailMap)];
+            console.log('model...', this.outOrderDetailArray);
+        } else {
+            if (!this.orderDetailMap[partNumber]) {
+                this.scannedSerialNo = ''
+                this.orderDetailMap[partNumber] = [];
+            }
+            this.selectedProductKey = product.partNumber;
+            this.orderDetailArray = [...KeysPipe.pipe(this.orderDetailMap)];
+            console.log('model...', this.orderDetailArray);
         }
-
-        this.selectedProductKey = product.partNumber;
-        // this.orderDetailMap[product.partNumber] = new Array();
-        this.orderDetailArray = [...KeysPipe.pipe(this.orderDetailMap)];
-        console.log('model...', this.orderDetailArray);
     }
 
-    handleProductItems (qtyCounter, item, orderDetail) {
-        const { order, serialNumber, product: { partNumber, id, name, avgPrice } } = item;
+    handleProductItems(qtyCounter, item, orderDetail) {
+        const { serialNumber, price, product: { partNumber, id, name, avgPrice, inventoryItem } } = item;
         const {
             warehouseCat,
             inventoryCat,
@@ -297,20 +330,25 @@ export class NewOrderComponent implements OnInit {
         } = orderDetail;
         const orderConfig = {
             id: item.id,
-            order,
             serialNumber,
             partNumber,
             product: id,
             name: name,
             quantity: qtyCounter + 1,
-            price: avgPrice,
+            price: price ? price : avgPrice,
+            inventoryItem,
             warehouseCat,
             inventoryCat,
             itemStatusCat,
             onInventoryStatusCat
         };
-        this.orderDetailMap[partNumber].push(orderConfig);
-        this.orderDetailArray = [...KeysPipe.pipe(this.orderDetailMap)];
+        if (this.orderProducts.order.orderType.orderDirection === 'Out') {
+            this.outOrderDetailMap[partNumber].push(orderConfig);
+            this.outOrderDetailArray = [...KeysPipe.pipe(this.outOrderDetailMap)];
+        } else {
+            this.orderDetailMap[partNumber].push(orderConfig);
+            this.orderDetailArray = [...KeysPipe.pipe(this.orderDetailMap)];
+        }
     }
 
     switchRadioBtns(event, newValue) {
@@ -330,7 +368,7 @@ export class NewOrderComponent implements OnInit {
         let message = '';
         const inputDate = new Date(this.orderProducts.order.orderDate)
         const actualDate = new Date()
-        if (inputDate > actualDate){
+        if (inputDate > actualDate) {
             message = '-  Invalid date, must be today or before';
         }
 
@@ -357,6 +395,7 @@ export class NewOrderComponent implements OnInit {
     }
 
     save(ev: Event) {
+
         ev.preventDefault();
         const haveError = this.validate();
         if (haveError) { return }
@@ -364,15 +403,16 @@ export class NewOrderComponent implements OnInit {
         if (!completedConfimation) { return }
         const productsArray = [];
         const params = this.activatedRoute.snapshot.params;
-        this.orderDetailArray.map(item => {
+        const itemMapper = (item) => {
             item.value.forEach(item => {
-                const { id, order, serialNumber, product, quantity, price } = item;
+                const { serialNumber, product, quantity, price } = item;
                 const { itemStatusCat, onInventoryStatusCat, inventoryCat, warehouseCat } = this.orderProducts.orderDetail;
                 let payload = {
-                    id,
-                    order,
+                    id: item.product,
+                    //order: params.id ? parseInt(params.id) : null,
                     product,
                     serialNumber,
+                    inventoryItem: item.id,
                     itemStatus: itemStatusCat.id,
                     onInventoryStatus: onInventoryStatusCat.id,
                     inventory: inventoryCat.id,
@@ -381,12 +421,29 @@ export class NewOrderComponent implements OnInit {
                     price,
                     assignedUser: 1
                 }
-                if (!id) {
-                    delete payload.id;
-                }
                 productsArray.push(payload)
             })
-        })
+        }
+
+        // In case of order OUT
+        if (this.orderProducts.order.orderType.orderDirection == 'Out') {
+            
+            this.outOrderDetailMap = {};
+            this.outOrderDetailArray = [];
+            
+            this.draggedProductList.forEach(item => {
+                this.handleProductDict(item.product as any)
+                this.handleProductItems(
+                    1,
+                    item,
+                    this.orderProducts.orderDetail
+                )
+            })
+            this.outOrderDetailArray.map(itemMapper)
+        } else {
+            this.orderDetailArray.map(itemMapper)
+        }
+        
         // Todo: this don't save the date from selected by the user
         this.orderProducts.order.orderDate = new Date(this.orderProducts.order.orderDate).toISOString();
         const orderDto: any = new OrderProductsDto(this.orderProducts.order, productsArray);
@@ -404,7 +461,7 @@ export class NewOrderComponent implements OnInit {
                     this.ShowAlert('order Saved', 1);
                     setTimeout(() => {
                         this.store.dispatch(new Navigate(['/orders']))
-                    }, 3500)
+                    }, 2000)
                 })
         }
     }
@@ -419,10 +476,6 @@ export class NewOrderComponent implements OnInit {
             this.showError = true;
             this.showMessage = true
             this.alertMessage = messageToShow;
-            setTimeout(() => {
-              this.showMessage = false;
-              this.showError = false
-            }, 4500);
         } else if (type === 1) {
             this.showInfo = true;
             this.showMessage = true
@@ -438,6 +491,9 @@ export class NewOrderComponent implements OnInit {
             this.showInfo = true;
             this.alertMessage = messageToShow;
         }
-
+        setTimeout(() => {
+            this.showMessage = false;
+            this.showError = false
+        }, 3500);
     }
 }

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { NgxsModule, } from '@ngxs/store';
+import { NgxsModule, getActionTypeFromInstance, NGXS_PLUGINS, } from '@ngxs/store';
 import { FormsModule } from '@angular/forms';
 import { NgxsRouterPluginModule, RouterStateSerializer } from '@ngxs/router-plugin';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
@@ -39,6 +39,7 @@ import { TokenInterceptor } from 'src/common/token.interceptor';
 
 // Material Modules
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { Logout } from 'src/ngxs/models/authState.model';
 
 ​
 export interface RouterStateParams {
@@ -63,6 +64,14 @@ export class CustomRouterStateSerializer implements RouterStateSerializer<Router
     const { params } = route;
     return { url, params, queryParams };
   }
+}
+
+// Meta reducer for logout
+export function logoutPlugin(state, action, next) {
+  if (getActionTypeFromInstance(action) === Logout.type) {
+    state = {};
+  }
+  return next(state, action);
 }
 
 @NgModule({
@@ -97,6 +106,11 @@ export class CustomRouterStateSerializer implements RouterStateSerializer<Router
       useClass: TokenInterceptor,
       multi: true
     },
+    {
+      provide: NGXS_PLUGINS,
+      useValue: logoutPlugin,
+      multi: true  
+    }
   ],
   bootstrap: [AppComponent]
 })

@@ -31,9 +31,6 @@ export class AuthState {
     logout({ setState }: StateContext<AuthStateModel>) {
         return Observable.of([]).pipe(
             tap(() => {
-                setState({ token: null, username: null, password: null });
-            }),
-            tap(() => {
                 return this.authService.logout()
             })
         )

@@ -22,6 +22,9 @@ export class OrderDto {
     ticketNumber: string;
     notes?: string;
     createdDate?: string;
+    constructor (dto) {
+        return Object.assign({}, dto)
+    }
 }
 
 export class OrderDetailDto {
@@ -37,12 +40,13 @@ export class OrderDetailDto {
     quantity?: number;
     price?: number;
     assignedUser?: number;
+    serialNumber?: number;
 }
 
 export class OrderProductsDto {
     order: OrderDto;
     products: OrderDetailDto[];
-    constructor(dto: OrderDto, products: OrderDetailDto[]) {
+    constructor(dto: OrderDto, products?: OrderDetailDto[]) {
         this.order = dto;
         this.products = products;
     }
