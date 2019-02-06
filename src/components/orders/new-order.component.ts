@@ -251,7 +251,7 @@ export class NewOrderComponent implements OnInit, AfterViewInit {
         )
     }
 
-    removekey(productKey: string, serialNumber: string) {
+    removeItem(productKey: string, serialNumber: string) {
         const key = this.orderDetailArray.find(x => x.key === productKey).value.find(y => y.serialNumber === serialNumber)
         const values = this.orderDetailArray.find(x => x.key === productKey).value
         const index = values.indexOf(key)
@@ -262,7 +262,7 @@ export class NewOrderComponent implements OnInit, AfterViewInit {
 
     }
 
-    addkey(value: string) {
+    addItem(value: string) {
         // check if the serialNumber already exist
         if (this.orderDetailArray.find(x => x.key === this.selectedProductKey).value.find(y => y.serialNumber === value)) {
             this.ShowAlert('This key already exist on this order', 0);
@@ -566,6 +566,6 @@ export class NewOrderComponent implements OnInit, AfterViewInit {
         setTimeout(() => {
             this.showMessage = false;
             this.showError = false
-        }, 3500);
+        }, 4500);
     }
 }
