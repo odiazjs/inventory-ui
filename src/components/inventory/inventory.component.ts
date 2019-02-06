@@ -85,7 +85,7 @@ export class InventoryComponent implements OnInit {
 
     showModal() {
         this.selectedItems = this.itemsList.filter(x => x.checked);
-        console.log(this.selectedItems[0].onInventoryStatus)
+        // by default it takes the value from the las item on the seleteditems list
         this.configValues = {
             warehouseCat: this.warehouses.find(x => x.id === this.selectedItems[this.selectedItems.length - 1].warehouse.id),
             onInventoryStatusCat: this.inventoryStatuses.find(x => x.id === this.selectedItems[this.selectedItems.length - 1]
