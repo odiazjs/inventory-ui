@@ -33,9 +33,7 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
                 startWith(null),
                 delay(0),
                 tap(() => {
-                    setInterval(() => {
-                        console.log(this.dto)
-                    }, 1500)
+                    
                 })
             ).subscribe();
     }

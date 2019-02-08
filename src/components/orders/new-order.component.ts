@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { startWith, delay, tap } from 'rxjs/operators';
-import { OrderProductsDto, ORDER_INITIAL_STATE } from 'src/models/order.dto';
+import { OrderProductsDto, ORDER_PRODUCTS_INITIAL_STATE } from 'src/models/order.dto';
 
 @Component({
     selector: 'app-new-order-list',
@@ -11,11 +11,7 @@ import { OrderProductsDto, ORDER_INITIAL_STATE } from 'src/models/order.dto';
 
 export class NewOrderComponent implements OnInit, AfterViewInit {
 
-    enableSave: boolean;
-    dto: OrderProductsDto = {
-        order: ORDER_INITIAL_STATE(),
-        products: []
-    };
+    dto: OrderProductsDto = ORDER_PRODUCTS_INITIAL_STATE;
 
     showError = false;
     alertMessage: string;
@@ -41,10 +37,6 @@ export class NewOrderComponent implements OnInit, AfterViewInit {
                 tap(() => { 
                 })
             ).subscribe()
-    }
-
-    canSave() {
-        return true
     }
 
     ShowAlert(messageToShow: string, type: number) {

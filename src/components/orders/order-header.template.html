@@ -40,13 +40,13 @@
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <input [ngModel]="model.orderDate | date:'yyyy-MM-dd'" (ngModelChange)="model.orderDate = $event"
+            <input [ngModel]="dto.order.orderDate | date:'yyyy-MM-dd'" (ngModelChange)="dto.order.orderDate = $event"
                 type="date" name="orderdate" />
         </form>
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <input type="text" [(ngModel)]="model.ticketNumber" placeholder="Ticket No" name="ticketnumber">
+            <input type="text" [(ngModel)]="dto.order.ticketNumber" placeholder="Ticket No" name="ticketnumber">
         </form>
     </div>
     <div class="col-sm">
@@ -106,8 +106,8 @@
     </div>
 </div>
 <div class="padded-aside flex-container">
-    <textarea class="search col" type="text" placeholder="Order notes..." [(ngModel)]="model.notes"></textarea>
+    <textarea class="search col" type="text" placeholder="Order notes..." [(ngModel)]="dto.order.notes"></textarea>
 </div>
 
 <!-- FILTER CONTROLS -->
-<app-order-filters [(dto)]="dto" [enableSave]="enableSave"></app-order-filters>
+<app-order-filters [(dto)]="dto"></app-order-filters>

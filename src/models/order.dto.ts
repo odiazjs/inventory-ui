@@ -77,21 +77,21 @@ export const ORDER_INITIAL_STATE = (catalogs?) => {
         orderType: catalogs ? catalogs['orderSubTypes'][0] : DEFAULT_CATALOG_VALUE,
         orderDate: new Date().toLocaleDateString('en-US'),
         createdBy: null,
-        orderState: null,
+        orderState: DEFAULT_ORDER_STATES[0],
         ticketNumber: '',
         notes: null
     })
 }
 
-export const ORDER_DETAIL_INITIAL_STATE = (catalogs) => {
+export const ORDER_DETAIL_INITIAL_STATE = (catalogs?) => {
     return Object.assign({}, {
         id: null,
         order: null,
         product: null,
-        itemStatus: catalogs['itemStatuses'][0],
-        onInventoryStatus: catalogs['inventoryStatuses'][0],
-        inventory: catalogs['inventories'][0],
-        warehouse: catalogs['warehouses'][0],
+        itemStatus: catalogs ? catalogs['itemStatuses'][0] : {},
+        onInventoryStatus: catalogs ? catalogs['inventoryStatuses'][0] : {},
+        inventory: catalogs ? catalogs['inventories'][0] : {},
+        warehouse: catalogs ? catalogs['warehouses'][0] : {},
         price: null,
         assignedUser: null,
         serialNumber: null,
@@ -100,15 +100,6 @@ export const ORDER_DETAIL_INITIAL_STATE = (catalogs) => {
 }
 
 export const ORDER_PRODUCTS_INITIAL_STATE: OrderProductsDto = {
-    order: Object.assign({}, {
-        id: null,
-        orderNumber: null,
-        orderType: null,
-        orderDate: new Date().toLocaleDateString('en-US'),
-        createdBy: null,
-        orderState: null,
-        ticketNumber: null,
-        notes: null
-    }),
+    order: Object.assign({}, ORDER_INITIAL_STATE()),
     products: []
 }

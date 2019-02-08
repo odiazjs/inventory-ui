@@ -14,10 +14,15 @@ import { OrderInListComponent } from './order-in-list.component';
 export class OrderFiltersComponent implements OnInit, AfterViewInit {
 
     @Input('dto') dto: OrderProductsDto;
-    @Input('enableSave') enableSave: boolean;
     
     @ViewChild(OrderInListComponent)
-    orderInListComponent: OrderInListComponent
+    orderInListComponent: OrderInListComponent;
+
+    orderStates: string[] = [
+        'Draft',
+        'Completed',
+        'Discarded'
+    ];
 
     constructor(
         private productService: ProductService
@@ -33,9 +38,15 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
                 startWith(null),
                 delay(0),
                 tap(() => {
-                    
+                    setInterval(() => {
+                        console.log(this.dto)
+                    }, 1500)
                 })
             ).subscribe();
+    }
+
+    canSave() {
+        return this.dto.order.ticketNumber !== ''
     }
 
     scanPartNo(data) {

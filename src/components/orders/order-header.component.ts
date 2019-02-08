@@ -25,10 +25,7 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
     orderDirection = '';
     orderSubTypes = [];
     
-    @Input('dto') dto: OrderProductsDto = {
-        order: this.model,
-        products: []
-    }
+    @Input('dto') dto: OrderProductsDto;
 
     constructor(
         public dataSource: OrderDataSource,
