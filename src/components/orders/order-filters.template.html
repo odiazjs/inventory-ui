@@ -8,7 +8,7 @@
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <input #scaninput [(ngModel)]="scannedSerialNo" [class.disabled]="!scannedPartNo" (keyup.enter)='scanMacAddress(scaninput.value)'
+            <input #scaninput [(ngModel)]="scannedSerialNo"  (keyup.enter)='scanMacAddress(scaninput.value)'
                 class="search" type="text" placeholder="MAC Address" name="mac">
             <button type="submit"><i class="material-icons small">search</i></button>
         </form>
@@ -18,15 +18,17 @@
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <select [disabled]="!canSave()" required [(ngModel)]="dto.order.orderState" name="orderstate">
+            <!-- <select [disabled]="!canSave()" required [(ngModel)]="dto.order.orderState" name="orderstate"> -->
+            <select  required [(ngModel)]="dto.order.orderState" name="orderstate">
                 <option *ngFor="let state of orderStates" [ngValue]="state">Save as {{state}}</option>
             </select>
         </form>
     </div>
     <div class="col-xs">
         <div class="btn-container">
-            <a href="javascript:void(0);" (click)="save($event)" [class.disabled]="!canSave()" class="btn-primary">
-                <a href="javascript:void(0);" (click)="saveCompleteConfirmtation($event)" [class.disabled]="!canSave()"
+            <!-- <a href="javascript:void(0);" (click)="save($event)" [class.disabled]="!canSave()" class="btn-primary"> -->
+                <a href="javascript:void(0);" (click)="save($event)" class="btn-primary">
+                <a href="javascript:void(0);" (click)="saveCompleteConfirmtation($event)" 
                     class="btn-primary">
                      <span><i class="material-icons small">save</i></span>
                      <div class="btn-text">Save</div>
@@ -37,10 +39,12 @@
 </div>
 
 <!--ORDERS ALL LIST -->
-<div class="flex-grid padded-aside">
+<div>
     <app-order-in-list 
         [(dto)]="dto"
-        [(orderDetail)]="orderDetail">
+        [(orderDetail)]="orderDetail"
+        [(selectedProductKey)]="selectedProductKey"
+        [(orderDetailMap)]="orderDetailMap">
     </app-order-in-list>
 </div>
 <div class="flex-grid padded-aside">

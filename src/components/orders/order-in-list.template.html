@@ -1,7 +1,7 @@
 <div *ngIf="dto.order.orderType.orderDirection === 'In'">
-    <div class="tabs-container padded-aside">
+    <div class="new-order tabs-container padded-aside">
         <div class="flex-container row">
-            <div class="col-xs" *ngFor="let item of orderDetailArray">
+            <div class="col-xs" *ngFor="let item of dto.products">
                 <div class="tab" [ngClass]="{'tabSelected': selectedProductKey === item.key}" (click)="toggleProductKey(item.key)">
                     {{item.key}}
                     <span class="count">
@@ -26,7 +26,7 @@
                 <div class="Rtable-cell small-cell column-heading">Delete</div>
             </div>
 
-            <ng-container *ngFor="let orderDetail of orderDetailArray">
+            <ng-container *ngFor="let orderDetail of dto.products">
                 <ng-container *ngIf="selectedProductKey === orderDetail.key">
                     <div class="Rtable-row" *ngFor="let item of orderDetail.value">
                         <div class="Rtable-cell small-cell">
@@ -56,7 +56,7 @@
                         <div class="Rtable-cell small-cell">
                             <div class="Rtable-cell--heading">Delete</div>
                             <div class="Rtable-cell--content">
-                                <a href="javascript:void(0);" [class.disabled]="!canSave()" (click)="removeitem(item.partNumber, item.serialNumber)"
+                                <a href="javascript:void(0);" (click)="removeitem(item.partNumber, item.serialNumber)"
                                     class="btn-container">
                                     <span><i class="material-icons small">delete_forever</i></span>
                                 </a>

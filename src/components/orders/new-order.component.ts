@@ -34,10 +34,13 @@ export class NewOrderComponent implements OnInit, AfterViewInit {
             .pipe(
                 startWith(null),
                 delay(0),
-                tap(() => { 
+                tap(() => {
+                
                 })
             ).subscribe()
     }
+
+    
 
     ShowAlert(messageToShow: string, type: number) {
         if (type === 0) {
