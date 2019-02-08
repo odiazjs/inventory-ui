@@ -15,8 +15,6 @@ import { OrderService } from 'src/services/order.service';
 @Injectable()
 export class OrderDataSource {
     dto: OrderProductsDto = ORDER_PRODUCTS_INITIAL_STATE;
-    itemsList: OrderDetailDto[] = [];
-    addedItemList: OrderDetailDto[] = [];
     @Select(state => state.catalogs) catalogs$: Observable<Dictionary<CatalogDto[]>>;
     constructor(
         private store: Store,
@@ -50,7 +48,6 @@ export class OrderDataSource {
             .pipe(
                 map(result => {
                     this.dto = new OrderProductsDto(result);
-                    this.addedItemList = [...result.products] as any;
                 })
             )
     }

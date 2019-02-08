@@ -1,9 +1,9 @@
 <div *ngIf="dto.order.orderType.orderDirection === 'Out'">
     <div class="example-container">
         <h2>All Products</h2>
-        <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="availableProductsList" [cdkDropListConnectedTo]="[doneList]"
+        <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="itemsList" [cdkDropListConnectedTo]="[doneList]"
             class="example-list" (cdkDropListDropped)="drop($event)">
-            <div class="example-box" *ngFor="let item of availableProductsList" cdkDrag>
+            <div class="example-box" *ngFor="let item of itemsList" cdkDrag>
                 <div class="wrapper">
                     <div class="Rtable Rtable--5cols Rtable--collapse">
                         <div class="Rtable-row Rtable-row--head">

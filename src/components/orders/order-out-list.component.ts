@@ -1,9 +1,10 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { startWith, delay, tap } from 'rxjs/operators';
 import { OrderDataSource } from './order.dataSource';
 import { ActivatedRoute } from '@angular/router';
-import { OrderProductsDto } from 'src/models/order.dto';
+import { OrderProductsDto, OrderDetailDto } from 'src/models/order.dto';
+import { ProductDto } from 'src/models/product.dto';
 
 @Component({
     selector: 'app-order-out-list',
@@ -12,7 +13,12 @@ import { OrderProductsDto } from 'src/models/order.dto';
 })
 
 export class OrderOutListComponent implements OnInit, AfterViewInit {
-    @Input('dto') dto: OrderProductsDto;
+    @Input() dto: OrderProductsDto;
+    @Input() scanPartNoSubject: Subject<ProductDto[]>;
+    @Input() scanMacAddressSubject: Subject<any>;
+
+    itemsList: OrderDetailDto[] = [];
+    addedItemList: OrderDetailDto[] = [];
     constructor (
         public dataSource: OrderDataSource,
         public activatedRoute: ActivatedRoute
@@ -28,9 +34,19 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
                 delay(0),
                 tap(() => {
                     const { snapshot: { params: { id } } } = this.activatedRoute;
-                    this.dataSource.getOrderProducts(id).subscribe();
+                    this.scanPartNoSubject.subscribe(matches => {
+                        console.log('matches from child list', matches);
+                    })
+                    this.scanMacAddressSubject.subscribe(value => {
+                        console.log('value from child list', value);
+                    })
                 })
-            )
+            ).subscribe()
+    }
+
+    ngOnDestroy () {
+        this.scanPartNoSubject.unsubscribe();
+        this.scanMacAddressSubject.unsubscribe();
     }
 
 }

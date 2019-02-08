@@ -38,8 +38,15 @@
 
 <!--ORDERS ALL LIST -->
 <div class="flex-grid padded-aside">
-    <app-order-in-list [(dto)]="dto"></app-order-in-list>
+    <app-order-in-list 
+        [(dto)]="dto"
+        [(orderDetail)]="orderDetail">
+    </app-order-in-list>
 </div>
 <div class="flex-grid padded-aside">
-    <app-order-out-list [(dto)]="dto"></app-order-out-list>
+    <app-order-out-list 
+        [(dto)]="dto" 
+        [(scanPartNoSubject)]="scanPartNoSubject"
+        [(scanMacAddressSubject)]="scanMacAddressSubject">
+    </app-order-out-list>
 </div>

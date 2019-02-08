@@ -1,9 +1,9 @@
-import { Component, OnInit, AfterViewInit, Input, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { startWith, delay, tap } from 'rxjs/operators';
 import { ProductService } from 'src/services/barrel';
-import { OrderProductsDto } from 'src/models/order.dto';
-import { OrderInListComponent } from './order-in-list.component';
+import { OrderProductsDto, OrderDetailDto } from 'src/models/order.dto';
+import { ProductDto } from 'src/models/product.dto';
 
 @Component({
     selector: 'app-order-filters',
@@ -14,15 +14,16 @@ import { OrderInListComponent } from './order-in-list.component';
 export class OrderFiltersComponent implements OnInit, AfterViewInit {
 
     @Input('dto') dto: OrderProductsDto;
-    
-    @ViewChild(OrderInListComponent)
-    orderInListComponent: OrderInListComponent;
+    @Input('orderDetail') orderDetail: OrderDetailDto;
 
     orderStates: string[] = [
         'Draft',
         'Completed',
         'Discarded'
     ];
+
+    scanPartNoSubject:Subject<ProductDto[]> = new Subject();
+    scanMacAddressSubject:Subject<string> = new Subject();
 
     constructor(
         private productService: ProductService
@@ -38,32 +39,28 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
                 startWith(null),
                 delay(0),
                 tap(() => {
-                    setInterval(() => {
-                        console.log(this.dto)
-                    }, 1500)
+
                 })
             ).subscribe();
     }
 
-    canSave() {
+    canSave () {
         return this.dto.order.ticketNumber !== ''
     }
 
-    scanPartNo(data) {
+    scanPartNo (data) {
         const { target: { value } } = data;
-        return this.productService.getList()
+        this.productService.getList()
             .subscribe(products => {
                     let matches = [];
-                    const result: any[] = [...products];
+                    const result: ProductDto[] = [...products];
                     matches = result.filter(x => x.partNumber === value);
-                    console.log(matches)
-                    this.orderInListComponent.productMatches = [...matches];
-                    return matches;
+                    this.scanPartNoSubject.next([...matches]);
                 }
             )
     }
 
     scanMacAddress (value: string) {
-        this.orderInListComponent.macAddress = value;
+        this.scanMacAddressSubject.next(value);
     }
 }

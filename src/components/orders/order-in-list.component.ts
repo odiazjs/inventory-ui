@@ -4,7 +4,7 @@ import { startWith, delay, tap } from 'rxjs/operators';
 import { OrderDataSource } from './order.dataSource';
 import { ActivatedRoute } from '@angular/router';
 import { ProductDto } from 'src/models/product.dto';
-import { OrderProductsDto } from 'src/models/order.dto';
+import { OrderProductsDto, OrderDetailDto } from 'src/models/order.dto';
 
 @Component({
     selector: 'app-order-in-list',
@@ -15,6 +15,7 @@ import { OrderProductsDto } from 'src/models/order.dto';
 export class OrderInListComponent implements OnInit, AfterViewInit {
     
     @Input() dto: OrderProductsDto;
+    @Input() orderDetail: OrderDetailDto;
     
     public macAddress = '';
     public productMatches: ProductDto[] = [];
