@@ -1,10 +1,10 @@
 import { ProductDto } from "./product.dto";
 
-export class OrderType {
+export interface OrderType {
     id: number;
     name: string;
     enabled: boolean;
-    order_direction: string;
+    orderDirection: string;
 }
 
 export class CreatedBy {
@@ -13,57 +13,102 @@ export class CreatedBy {
 }
 
 export class OrderDto {
-    id?: number;
+    id: number;
     orderNumber: string;
-    orderType: CatalogDto;
+    orderType: OrderType;
     orderDate: string;
-    createdBy?: CreatedBy;
+    createdBy: number;
     orderState: string;
     ticketNumber: string;
-    notes?: string;
-    createdDate?: string;
-    constructor (dto) {
+    notes: string;
+    constructor(dto) {
         return Object.assign({}, dto)
     }
 }
 
 export class OrderDetailDto {
-    id?: number;
-    order?: number;
-    productId?: number;
-    product?: ProductDto;
-    itemStatus?: number;
-    onInventoryStatus?: number;
-    inventory?: number;
-    warehouse?: number;
-    orderSubtype?: number;
-    quantity?: number;
-    price?: number;
-    assignedUser?: number;
-    serialNumber?: number;
-    inventoryItem?: number;
+    id: number;
+    order: number;
+    product: ProductDto;
+    itemStatus: number;
+    onInventoryStatus: number;
+    inventory: number;
+    warehouse: number;
+    price: string;
+    assignedUser: number;
+    serialNumber: string;
+    inventoryItem: number;
 }
 
 export class OrderProductsDto {
     order: OrderDto;
     products: OrderDetailDto[];
-    constructor(dto: OrderDto, products?: OrderDetailDto[]) {
-        this.order = dto;
-        this.products = products;
+    constructor(response) {
+        return Object.assign(this, response)
     }
 }
 
-export class CatalogDto {
-    id: number;
-    name: string;
-    enabled?: boolean;
-    code?: string;
-    orderDirection?: string;
-    order_direction?: string;
-    markAs?: string;
+export const DEFAULT_CATALOG_VALUE = {
+    id: null,
+    name: null,
+    enabled: null,
+    orderDirection: null
 }
 
-export class CatalogModel extends CatalogDto {
-    icon?: string;
-    orderDirection?: string;
+export const DEFAULT_ORDER_STATES = [
+    'Draft',
+    'Completed',
+    'Discarded'
+];
+
+export const DEFAULT_ORDER_TYPES = [
+    { id: 1, name: 'Buy', orderDirection: 'In', icon: 'input' },
+    { id: 2, name: 'Sell', orderDirection: 'Out', icon: 'input' }
+]
+
+export const DEFAULT_ORDER_SUBTYPES = (catalogs) => {
+    return catalogs['orderSubTypes'];
+}
+
+export const ORDER_INITIAL_STATE = (catalogs?) => {
+    return {
+        id: null,
+        orderNumber: null,
+        orderType: catalogs ? catalogs['orderSubTypes'][0] : DEFAULT_CATALOG_VALUE,
+        orderDate: new Date().toLocaleDateString('en-US'),
+        createdBy: null,
+        orderState: null,
+        ticketNumber: null,
+        notes: null
+    }
+}
+
+export const ORDER_DETAIL_INITIAL_STATE = (catalogs) => {
+    return {
+        id: null,
+        order: null,
+        product: null,
+        itemStatus: catalogs['itemStatuses'][0],
+        onInventoryStatus: catalogs['inventoryStatuses'][0],
+        inventory: catalogs['inventories'][0],
+        warehouse: catalogs['warehouses'][0],
+        price: null,
+        assignedUser: null,
+        serialNumber: null,
+        inventoryItem: null
+    }
+}
+
+export const ORDER_PRODUCTS_INITIAL_STATE: OrderProductsDto = {
+    order: {
+        id: null,
+        orderNumber: null,
+        orderType: null,
+        orderDate: new Date().toLocaleDateString('en-US'),
+        createdBy: null,
+        orderState: null,
+        ticketNumber: null,
+        notes: null
+    },
+    products: []
 }

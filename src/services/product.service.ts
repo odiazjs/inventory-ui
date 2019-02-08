@@ -12,7 +12,7 @@ export class ProductService extends ResourceService<ProductModel[]> {
         super(
             httpWrapper,
             urlConfig.getProductsUrl,
-            productServiceFactory
+            { getAll: productServiceFactory, getById: productServiceFactory }
         )
     }
 }

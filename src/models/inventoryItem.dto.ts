@@ -1,5 +1,5 @@
-import { CatalogDto } from "./order.dto";
 import { ProductDto } from "./product.dto";
+import { CatalogDto } from "src/components/types";
 
 export class InventoryItemDto {
     id: number;

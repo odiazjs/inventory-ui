@@ -1,5 +1,5 @@
-import { CatalogModel } from "./order.dto";
 import { ProductModel } from "./product.model";
+import { CatalogModel } from "src/components/types";
 
 export class InventoryItemModel {
     id: number;

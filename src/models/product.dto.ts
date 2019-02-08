@@ -1,9 +1,17 @@
 export class ProductDto {
     id: number;
     name: string;
-    master_name: string;
-    part_number: string;
     manufacturer: string;
-    product_group: string;
-    inventory_item: number;
+    productGroup: string;
+    barcode?: any;
+    inputs: number;
+    outputs: number;
+    totalItems: number;
+    createdDate: Date;
+    minPrice: string;
+    maxPrice: string;
+    avgPrice: string;
+    lastRecordedPrice: string;
+    partNumber: string;
+    ean?: any;
 }

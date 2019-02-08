@@ -3,9 +3,9 @@ import { ResourceService } from './resource.service';
 import { HttpWrapper } from '../common/barrel';
 import { HttpResponse } from '@angular/common/http';
 import { urlConfig } from '../environments/config';
-import { CatalogModel, CatalogDto } from 'src/models/order.dto';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { CatalogModel, CatalogDto } from 'src/components/types';
 
 declare var require: any;
 
@@ -15,7 +15,7 @@ export class CatalogsService extends ResourceService <CatalogModel[]> {
     super(
       httpWrapper,
       '',
-      catalogServiceFactory
+      { getAll: catalogServiceFactory, getById: catalogServiceFactory }
     )
   }
   toCamelCase = require('to-camel-case');

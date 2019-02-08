@@ -28,7 +28,7 @@ export class AuthService extends ResourceService<any> {
         super(
             httpWrapper,
             urlConfig.authUrl,
-            authServiceFactory
+            { getAll: authServiceFactory, getById: authServiceFactory }
         )
     }
     login(payload): Observable<any> {

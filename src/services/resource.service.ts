@@ -38,13 +38,20 @@ export class QueryOptions {
   }
 }
 
+export interface SerializerConfig {
+  getAll: (value: any, serializeDirection?: string) => any,
+  getById: (value: any, serializeDirection?: string) => any,
+  postCreate?: (value: any, serializeDirection?: string) => any,
+  postUpdate?: (value: any, serializeDirection?: string) => any
+}
+
 export class ResourceService<T> {
   readonly SERIALIZE_CASE = 'SERIALIZE';
   readonly DESERIALIZE_CASE = 'DESERIALIZE';
   constructor(
     public httpClient: HttpWrapper<HttpResponse<T>>,
     public baseUrl: string,
-    private serializer: (value: any, serializeDirection?: string) => any
+    private serializerConfig: SerializerConfig
   ) {
   }
 
@@ -68,7 +75,7 @@ export class ResourceService<T> {
     return this.httpClient
       .post<T>(`${this.baseUrl}`, item)
       .pipe(
-        map(item => this.serializer(item))
+        map(item => this.serializerConfig.postCreate(item))
       );
   }
   update(item: any, id?: number | string): Observable<T> {
@@ -92,14 +99,14 @@ export class ResourceService<T> {
     return this.httpClient
       .put<T>(`${url}`, item)
       .pipe(
-        map(item => { return this.serializer(item, this.SERIALIZE_CASE) })
+        map(item => { return this.serializerConfig.postUpdate(item, this.SERIALIZE_CASE) })
       );
   }
   getById(id: number): Observable<T> {
     return this.httpClient
       .get(`${this.baseUrl}/${id}`)
       .pipe(
-        map((result: T) => { return this.serializer(result, this.SERIALIZE_CASE) })
+        map((result: T) => { return this.serializerConfig.getById(result, this.SERIALIZE_CASE) })
       );
   }
   getList(paramsObject: any = {}): Observable<T> {
@@ -110,7 +117,7 @@ export class ResourceService<T> {
           return list.results ? list.results.map(serializeCase) : list.map(serializeCase)
         }),
         map(item => {
-          return this.serializer(item)
+          return this.serializerConfig.getAll(item)
         })
       );
   }
