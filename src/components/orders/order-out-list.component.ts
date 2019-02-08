@@ -1,16 +1,18 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { startWith, delay, tap } from 'rxjs/operators';
 import { OrderDataSource } from './order.dataSource';
 import { ActivatedRoute } from '@angular/router';
+import { OrderProductsDto } from 'src/models/order.dto';
 
 @Component({
     selector: 'app-order-out-list',
     templateUrl: './order-out-list.template.html',
-    styleUrls: ['./order-out-list.component.scss']
+    styleUrls: ['./new-order.component.scss']
 })
 
 export class OrderOutListComponent implements OnInit, AfterViewInit {
+    @Input('dto') dto: OrderProductsDto;
     constructor (
         public dataSource: OrderDataSource,
         public activatedRoute: ActivatedRoute

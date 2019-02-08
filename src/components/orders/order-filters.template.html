@@ -36,6 +36,10 @@
     </div>
 </div>
 
-<!--ORDER IN LIST -->
-<app-order-in-list [(dto)]="dto"></app-order-in-list>
-<!-- <app-order-out-list [dto]="dto"></app-order-out-list> -->
+<!--ORDERS ALL LIST -->
+<div class="flex-grid padded-aside">
+    <app-order-in-list [(dto)]="dto"></app-order-in-list>
+</div>
+<div class="flex-grid padded-aside">
+    <app-order-out-list [(dto)]="dto"></app-order-out-list>
+</div>
