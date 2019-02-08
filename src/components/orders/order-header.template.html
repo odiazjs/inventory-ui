@@ -33,7 +33,7 @@
 <div class="flex-container row padded-aside">
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <select required [(ngModel)]="model.orderType.id" name="ordersubtype">
+            <select required [(ngModel)]="dto.order.orderType.id" name="ordersubtype">
                 <option *ngFor="let item of orderSubTypes" [ngValue]="item.id">{{item.name}}</option>
             </select>
         </form>
@@ -46,7 +46,7 @@
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <input type="text" [(ngModel)]="model.ticketNumber" placeholder="Ticket No." name="ticketno">
+            <input type="text" [(ngModel)]="model.ticketNumber" placeholder="Ticket No" name="ticketnumber">
         </form>
     </div>
     <div class="col-sm">
@@ -108,3 +108,6 @@
 <div class="padded-aside flex-container">
     <textarea class="search col" type="text" placeholder="Order notes..." [(ngModel)]="model.notes"></textarea>
 </div>
+
+<!-- FILTER CONTROLS -->
+<app-order-filters [(dto)]="dto" [enableSave]="enableSave"></app-order-filters>

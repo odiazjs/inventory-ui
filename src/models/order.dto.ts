@@ -71,20 +71,20 @@ export const DEFAULT_ORDER_SUBTYPES = (catalogs) => {
 }
 
 export const ORDER_INITIAL_STATE = (catalogs?) => {
-    return {
+    return Object.assign({}, {
         id: null,
         orderNumber: null,
         orderType: catalogs ? catalogs['orderSubTypes'][0] : DEFAULT_CATALOG_VALUE,
         orderDate: new Date().toLocaleDateString('en-US'),
         createdBy: null,
         orderState: null,
-        ticketNumber: null,
+        ticketNumber: '',
         notes: null
-    }
+    })
 }
 
 export const ORDER_DETAIL_INITIAL_STATE = (catalogs) => {
-    return {
+    return Object.assign({}, {
         id: null,
         order: null,
         product: null,
@@ -96,11 +96,11 @@ export const ORDER_DETAIL_INITIAL_STATE = (catalogs) => {
         assignedUser: null,
         serialNumber: null,
         inventoryItem: null
-    }
+    })
 }
 
 export const ORDER_PRODUCTS_INITIAL_STATE: OrderProductsDto = {
-    order: {
+    order: Object.assign({}, {
         id: null,
         orderNumber: null,
         orderType: null,
@@ -109,6 +109,6 @@ export const ORDER_PRODUCTS_INITIAL_STATE: OrderProductsDto = {
         orderState: null,
         ticketNumber: null,
         notes: null
-    },
+    }),
     products: []
 }

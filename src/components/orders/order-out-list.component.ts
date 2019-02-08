@@ -2,7 +2,6 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { startWith, delay, tap } from 'rxjs/operators';
 import { OrderDataSource } from './order.dataSource';
-import { OrderService } from 'src/services/barrel';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { startWith, delay, tap } from 'rxjs/operators';
 import { OrderDataSource } from './order.dataSource';
@@ -7,7 +7,8 @@ import {
     ORDER_INITIAL_STATE,
     DEFAULT_ORDER_TYPES,
     ORDER_DETAIL_INITIAL_STATE,
-    DEFAULT_ORDER_SUBTYPES
+    DEFAULT_ORDER_SUBTYPES,
+    OrderProductsDto
 } from 'src/models/order.dto';
 
 @Component({
@@ -18,17 +19,24 @@ import {
 
 export class OrderHeaderComponent implements OnInit, AfterViewInit {
     model = ORDER_INITIAL_STATE();
+    orderDetail = {};
     catalogs: any = {};
     orderTypes = DEFAULT_ORDER_TYPES;
     orderDirection = '';
     orderSubTypes = [];
-    orderDetail = {};
+    
+    @Input('dto') dto: OrderProductsDto = {
+        order: this.model,
+        products: []
+    }
+
     constructor(
         public dataSource: OrderDataSource,
         public activatedRoute: ActivatedRoute
     ) {
     }
     ngOnInit(): void {
+
     }
     ngAfterViewInit(): void {
         Observable.of()
@@ -66,6 +74,7 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
         this.orderDirection = newValue.orderDirection;
         this.fillCatalogs();
         this.filterOrderSubTypes();
+        this.dto.order.orderType.orderDirection = newValue.orderDirection;
     }
 
 }
