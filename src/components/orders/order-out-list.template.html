@@ -33,9 +33,9 @@
 
     <div class="example-container">
         <h2>Selected Products</h2>
-        <div cdkDropList #doneList="cdkDropList" [cdkDropListData]="draggedProductList" [cdkDropListConnectedTo]="[todoList]"
+        <div cdkDropList #doneList="cdkDropList" [cdkDropListData]="allAddedItemsList" [cdkDropListConnectedTo]="[todoList]"
             class="example-list" (cdkDropListDropped)="drop($event)">
-            <div class="example-box" *ngFor="let item of draggedProductList" cdkDrag>
+            <div class="example-box" *ngFor="let item of allAddedItemsList" cdkDrag>
                 <div class="wrapper">
                     <div class="Rtable Rtable--5cols Rtable--collapse">
                         <div class="Rtable-row Rtable-row--head">

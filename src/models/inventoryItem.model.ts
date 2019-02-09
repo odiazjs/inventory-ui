@@ -4,6 +4,7 @@ import { CatalogModel } from "src/components/types";
 export class InventoryItemModel {
     id: number;
     product: ProductModel;
+    available: boolean;
     serialNumber: string;
     itemStatus: CatalogModel;
     onInventoryStatus: CatalogModel;

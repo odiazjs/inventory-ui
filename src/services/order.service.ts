@@ -14,7 +14,9 @@ export class OrderService extends ResourceService<OrderProductsDto> {
             urlConfig.getOrdersUrl,
             { 
                 getAll: getAllOrdersFactory, 
-                getById: getOrderByIdFactory 
+                getById: getOrderByIdFactory,
+                postUpdate: () => {},
+                postCreate: () => {}
             }
         )
     }

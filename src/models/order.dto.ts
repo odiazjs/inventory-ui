@@ -1,4 +1,6 @@
 import { ProductDto } from "./product.dto";
+import { isEmpty } from "lodash";
+import { CatalogDto } from "src/components/types";
 
 export interface OrderType {
     id: number;
@@ -15,8 +17,8 @@ export class CreatedBy {
 export class OrderDto {
     id: number;
     orderNumber: string;
-    orderType: OrderType;
-    orderDate: string;
+    orderType: OrderType | number;
+    orderDate: any;
     createdBy: number;
     orderState: string;
     ticketNumber: string;
@@ -27,13 +29,13 @@ export class OrderDto {
 }
 
 export class OrderDetailDto {
-    id: number;
-    order: number;
-    product: ProductDto;
-    itemStatus: number;
-    onInventoryStatus: number;
-    inventory: number;
-    warehouse: number;
+    id?: number;
+    order?: number;
+    product: ProductDto | number;
+    itemStatus: CatalogDto | number;
+    onInventoryStatus: CatalogDto | number;
+    inventory: CatalogDto | number;
+    warehouse: CatalogDto | number;
     price: string;
     assignedUser: number;
     serialNumber: string;
@@ -49,7 +51,7 @@ export class OrderProductsDto {
 }
 
 export const DEFAULT_CATALOG_VALUE = {
-    id: null,
+    id: 1,
     name: null,
     enabled: null,
     orderDirection: null
@@ -70,11 +72,18 @@ export const DEFAULT_ORDER_SUBTYPES = (catalogs) => {
     return catalogs['orderSubTypes'];
 }
 
+export const ORDER_DETAIL_CATALOGS_DEFAULT = {
+    itemStatus: DEFAULT_CATALOG_VALUE,
+    onInventoryStatus: DEFAULT_CATALOG_VALUE,
+    inventory: DEFAULT_CATALOG_VALUE,
+    warehouse: DEFAULT_CATALOG_VALUE
+}
+
 export const ORDER_INITIAL_STATE = (catalogs?) => {
     return Object.assign({}, {
         id: null,
         orderNumber: null,
-        orderType: catalogs ? catalogs['orderSubTypes'][0] : DEFAULT_CATALOG_VALUE,
+        orderType: !isEmpty(catalogs) ? catalogs['orderSubTypes'][0] : DEFAULT_CATALOG_VALUE,
         orderDate: new Date().toLocaleDateString('en-US'),
         createdBy: null,
         orderState: DEFAULT_ORDER_STATES[0],
@@ -88,10 +97,10 @@ export const ORDER_DETAIL_INITIAL_STATE = (catalogs?) => {
         id: null,
         order: null,
         product: null,
-        itemStatus: catalogs ? catalogs['itemStatuses'][0] : {},
-        onInventoryStatus: catalogs ? catalogs['inventoryStatuses'][0] : {},
-        inventory: catalogs ? catalogs['inventories'][0] : {},
-        warehouse: catalogs ? catalogs['warehouses'][0] : {},
+        itemStatus: !isEmpty(catalogs) ? catalogs['itemStatuses'][0] : DEFAULT_CATALOG_VALUE,
+        onInventoryStatus: !isEmpty(catalogs) ? catalogs['inventoryStatuses'][0] : DEFAULT_CATALOG_VALUE,
+        inventory: !isEmpty(catalogs) ? catalogs['inventories'][0] : DEFAULT_CATALOG_VALUE,
+        warehouse: !isEmpty(catalogs) ? catalogs['warehouses'][0] : DEFAULT_CATALOG_VALUE,
         price: null,
         assignedUser: null,
         serialNumber: null,

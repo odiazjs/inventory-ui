@@ -5,43 +5,5 @@
         <div class="line-breaker">{{alertMessage}}</div>
     </div>
 
-    <!--Inventory History Modal-->
-    <div class="modal-container" *ngIf="showCompleteConfirmation">
-        <div class="content">
-            <div class="inner">
-                <div class="flex-container row padded-aside">
-                    <h2 class="center">Confirm save</h2>
-                </div>
-                <div class="flex-container row padded-aside">
-                    <div class="col">
-                        <div class="title center">
-                            If you save the order as completed, you can't edit it later. Are you sure?' </div>
-                    </div>
-                </div>
-                <div class="flex-container row padded-aside">
-                    <div class="col">&nbsp;</div>
-                    <div class="col-md">
-                        <div class="btn-container">
-                            <a href="javascript:void(0);" (click)="showCompleteConfirmation = false;save(this.saveEvent);"
-                                class="btn-primary center">
-                                <div class="btn-text">Save</div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-md">
-                        <div class="btn-container">
-                            <a href="javascript:void(0);" (click)="showCompleteConfirmation = false;" class="btn-primary center">
-                                <div class="btn-text">Cancel</div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col">&nbsp;</div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-backdrop"></div>
-    </div>
-    <!--end of modal-->
-
     <!-- ORDER MASTER -->
     <app-order-header [(dto)]="dto"></app-order-header>

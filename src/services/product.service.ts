@@ -7,8 +7,8 @@ import { ProductModel } from '../models/product.model';
 import { ProductDto } from 'src/models/product.dto';
 
 @Injectable()
-export class ProductService extends ResourceService<ProductModel[]> {
-    constructor(httpWrapper: HttpWrapper<HttpResponse<ProductModel[]>>) {
+export class ProductService extends ResourceService<ProductDto[]> {
+    constructor(httpWrapper: HttpWrapper<HttpResponse<ProductDto[]>>) {
         super(
             httpWrapper,
             urlConfig.getProductsUrl,

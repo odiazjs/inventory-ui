@@ -33,7 +33,15 @@ export class QueryOptions {
   public static toQueryString(paramsObject: any): string {
     return Object
       .keys(paramsObject)
-      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(paramsObject[key])}`)
+      .map(key => {
+        let head = encodeURIComponent(key);
+        let value = encodeURIComponent(paramsObject[key])
+        if (value.indexOf('%') > 0){
+          value = value.replace('%', '=');
+          value = value.substring(0, value.indexOf('=') + 1);
+        }
+        return `${head}=${value}`
+      })
       .join('&');
   }
 }
@@ -75,7 +83,7 @@ export class ResourceService<T> {
     return this.httpClient
       .post<T>(`${this.baseUrl}`, item)
       .pipe(
-        map(item => this.serializerConfig.postCreate(item))
+        map(item => this.serializerConfig.postCreate ? this.serializerConfig.postCreate(item) : item)
       );
   }
   update(item: any, id?: number | string): Observable<T> {

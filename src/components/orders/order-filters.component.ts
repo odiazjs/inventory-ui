@@ -1,9 +1,10 @@
-import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, ViewChild } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { startWith, delay, tap } from 'rxjs/operators';
 import { ProductService } from 'src/services/barrel';
 import { OrderProductsDto, OrderDetailDto } from 'src/models/order.dto';
 import { ProductDto } from 'src/models/product.dto';
+import { OrderOutListComponent } from './order-out-list.component';
 
 @Component({
     selector: 'app-order-filters',
@@ -16,14 +17,21 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
     @Input('dto') dto: OrderProductsDto;
     @Input('orderDetail') orderDetail: OrderDetailDto;
 
+    @ViewChild(OrderOutListComponent)
+    public orderOurListComponent: OrderOutListComponent
+
+    saveEvent: Event;
+    showCompleteConfirmation: boolean = false;
+
     orderStates: string[] = [
         'Draft',
         'Completed',
         'Discarded'
     ];
 
-    scanPartNoSubject:Subject<ProductDto[]> = new Subject();
-    scanMacAddressSubject:Subject<string> = new Subject();
+    onSaveSubject: Subject<void> = new Subject();
+    scanPartNoSubject: Subject<ProductDto[]> = new Subject();
+    scanMacAddressSubject: Subject<string> = new Subject();
 
     constructor(
         private productService: ProductService
@@ -45,7 +53,20 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
     }
 
     canSave () {
-        return this.dto.order.ticketNumber !== ''
+        return this.dto.order.ticketNumber !== '' && this.orderOurListComponent.allAddedItemsList.length
+    }
+
+    saveCompleteConfirmtation (ev:Event) {
+        this.saveEvent = ev;
+        if (this.dto.order.orderState === 'Completed') {
+            this.showCompleteConfirmation = true;
+        } else {
+            this.save();
+        }
+    }
+
+    save () {
+        this.onSaveSubject.next();
     }
 
     scanPartNo (data) {
