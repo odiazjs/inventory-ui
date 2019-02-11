@@ -29,7 +29,7 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
     ];
     orderDetailMap: Dictionary<any[]> = {};
     scannedSerialNo: string;
-    result:any[]
+    result: ProductModel[]
     selectedProductKey: string;
 
     scanPartNoSubject:Subject<ProductDto[]> = new Subject();
@@ -49,7 +49,9 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
                 startWith(null),
                 delay(0),
                 tap(() => {
-
+                    // setInterval(() => {
+                    //     console.log(this.selectedProductKey)
+                    // }, 2500)
                 })
             ).subscribe();
     }
@@ -61,24 +63,38 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
     scanPartNo (data) {
         const { target: { value } } = data;
         this.selectedProductKey = value;
-        this.productService.getList()
+        if (data !== '' || data !== null){
+            this.productService.getList()
             .subscribe(products => {
                     let matches = [];
                     this.result = [...products];
                     matches = this.result.filter(x => x.partNumber === value);
-                    const product: ProductModel = [...matches].shift()
-                    this.handleProductDict(product);
-                    this.scanPartNoSubject.next([...matches]);
+                    if (matches.length) {
+                        const product: ProductModel = [...matches].shift()
+                        this.handleProductDict(product);
+                        this.scanPartNoSubject.next([...matches]);
+                    } else {
+                        // make an alert here
+                        console.log('Product not found')
+                    }
                 }
             )
+        }
     }
 
     scanMacAddress (value: string) {
+        if (this.orderDetailMap[this.selectedProductKey].find(y => y.serialNumber === value)){
+            console.log('This item already exist on this order');
+            return
+        }
+        if (value === null || value === ''){
+            console.log('MAC Address can\'t be empty', 0);
+            return
+        }
         const matches = this.result.filter(x => x.partNumber === this.selectedProductKey);
         const productItem: any = { product: [...matches].shift() };
         productItem.serialNumber = value;
         this.handleProductItems(1, productItem, this.orderDetail)
-        // clear the field after the insertion.
         this.scannedSerialNo = '';
         this.scanMacAddressSubject.next(value);
     }
@@ -94,7 +110,7 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
     }
 
     handleProductItems (qtyCounter, item, orderDetail) {
-        console.log('order detail filter', this.orderDetail)
+        // console.log('order detail filter', this.orderDetail)
         const { order, serialNumber, product: { partNumber, id, name, avgPrice } } = item;
         const orderConfig = {
             id: item.id,

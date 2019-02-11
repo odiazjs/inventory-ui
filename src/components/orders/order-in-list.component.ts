@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { startWith, delay, tap } from 'rxjs/operators';
 import { OrderDataSource } from './order.dataSource';
@@ -15,18 +15,18 @@ import { KeysPipe } from 'src/common/keys.pipe';
 })
 
 export class OrderInListComponent implements OnInit, AfterViewInit {
-    
+
     @Input() dto: OrderProductsDto;
     @Input() orderDetail: OrderDetailDto;
-    @Input() selectedProductKey: string;
+    @Input('selectedProductKey') selectedProductKey: string;
     @Input() orderDetailMap: any;
+    @Output('selectedProductKeyChange') selectedProductKeyEmit: EventEmitter<string> = new EventEmitter<string>();
 
-     
+
     public macAddress = '';
     public productMatches: ProductDto[] = [];
     scannedPartNo = this.selectedProductKey;
-    scannedSerialNo = '';
-    
+
     constructor(
         public dataSource: OrderDataSource,
         public activatedRoute: ActivatedRoute
@@ -59,11 +59,11 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
     
     toggleProductKey(key: string) {
         this.selectedProductKey = key;
+        this.selectedProductKeyEmit.emit(this.selectedProductKey);
         // coul use a emiter to change the value in the parent
     }
 
     deleteProduct(item: any) {
-        console.log(item)
         this.orderDetailMap[item.key] !== undefined ? delete this.orderDetailMap[item.key] : false;
         this.dto.products = this.dto.products = [...KeysPipe.pipe(this.orderDetailMap)];
 
