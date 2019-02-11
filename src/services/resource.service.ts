@@ -59,7 +59,12 @@ export class ResourceService<T> {
   constructor(
     public httpClient: HttpWrapper<HttpResponse<T>>,
     public baseUrl: string,
-    private serializerConfig: SerializerConfig
+    private serializerConfig: SerializerConfig = {
+      getAll : () =>{},
+      getById: () =>{},
+      postCreate: () =>{},
+      postUpdate: () =>{}
+    }
   ) {
   }
 
@@ -107,7 +112,7 @@ export class ResourceService<T> {
     return this.httpClient
       .put<T>(`${url}`, item)
       .pipe(
-        map(item => { return this.serializerConfig.postUpdate(item, this.SERIALIZE_CASE) })
+        map(item => this.serializerConfig.postUpdate ? this.serializerConfig.postUpdate(item, this.SERIALIZE_CASE): item)
       );
   }
   getById(id: number): Observable<T> {

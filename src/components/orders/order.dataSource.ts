@@ -113,6 +113,6 @@ export class OrderDataSource {
         }
         payload.order.orderType = order.orderType['id'] as any;
         payload.order.orderDate = new Date() as any;
-        return this.orderService.update(payload, id) as any;;
+        return this.orderService.update(payload, id) as any;
     }
 }
