@@ -3,23 +3,22 @@ import { ResourceService, serializeCase, deserializeCase ,QueryOptions } from '.
 import { HttpWrapper } from '../common/barrel';
 import { HttpResponse } from '@angular/common/http';
 import { urlConfig } from '../environments/config';
-import { InventoryItemDto } from '../models/inventoryItem.dto'
 import { InventoryItemModel } from '../models/inventoryItem.model'
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable()
-export class InventoryItemFilterService extends ResourceService<InventoryItemDto[]> {
+export class InventoryItemFilterService extends ResourceService<InventoryItemModel[]> {
 
 
-    constructor(httpWrapper: HttpWrapper<HttpResponse<InventoryItemDto[]>>) {
+    constructor(httpWrapper: HttpWrapper<HttpResponse<InventoryItemModel[]>>) {
         super(
             httpWrapper,
             urlConfig.getFilteredItemsUrl,
             inventoryItemFactory
         )
     }
-    getList(paramsObject: any): Observable<InventoryItemDto[]> {
+    getList(paramsObject: any): Observable<InventoryItemModel[]> {
         const serializedSnakeCase =  deserializeCase(paramsObject);
         const paramsQueryString = QueryOptions.toQueryString(serializedSnakeCase);
         const queryUrl = `${this.baseUrl}${paramsQueryString}`;
@@ -27,7 +26,7 @@ export class InventoryItemFilterService extends ResourceService<InventoryItemDto
           .get(`${queryUrl}`)
           .pipe(
             map((list: any[]) => {
-                return list['results'].map(serializeCase)
+                return list['results'] ? list['results'].map(serializeCase) : []
               })
           );
         }

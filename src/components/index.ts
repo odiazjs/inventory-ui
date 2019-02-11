@@ -10,7 +10,8 @@ import {
     OrderHeaderComponent,
     OrderInListComponent,
     OrderOutListComponent,
-    OrderFiltersComponent
+    OrderFiltersComponent,
+    BtnComponent
 } from './barrel';
 
 export const APP_COMPONENTS = [
@@ -25,5 +26,6 @@ export const APP_COMPONENTS = [
     OrderHeaderComponent,
     OrderInListComponent,
     OrderOutListComponent,
-    OrderFiltersComponent
+    OrderFiltersComponent,
+    BtnComponent
 ]

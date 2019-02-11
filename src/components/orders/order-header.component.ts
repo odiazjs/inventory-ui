@@ -8,7 +8,9 @@ import {
     DEFAULT_ORDER_TYPES,
     ORDER_DETAIL_INITIAL_STATE,
     DEFAULT_ORDER_SUBTYPES,
-    OrderProductsDto
+    OrderProductsDto,
+    ORDER_DETAIL_CATALOGS_DEFAULT,
+    ORDER_PRODUCTS_INITIAL_STATE
 } from 'src/models/order.dto';
 
 @Component({
@@ -18,13 +20,12 @@ import {
 })
 
 export class OrderHeaderComponent implements OnInit, AfterViewInit {
-    model = ORDER_INITIAL_STATE();
-    orderDetail = {};
+    orderDetail = ORDER_DETAIL_CATALOGS_DEFAULT;
     catalogs: any = {};
     orderTypes = DEFAULT_ORDER_TYPES;
     orderDirection = '';
     orderSubTypes = [];
-    
+
     @Input('dto') dto: OrderProductsDto;
 
     constructor(
@@ -39,10 +40,13 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
         Observable.of()
             .pipe(
                 startWith(null),
-                delay(0),
+                delay(1000),
                 tap(() => {
                     this.fillCatalogs();
-                    this.model = ORDER_INITIAL_STATE(this.catalogs);
+                    const { snapshot: { params: { id } } } = this.activatedRoute;
+                    if (id) {
+                        this.orderDirection = this.dataSource.dto.order.orderType['orderDirection']
+                    }
                 })
             ).subscribe()
     }
@@ -70,7 +74,7 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
         this.orderDirection = newValue.orderDirection;
         this.fillCatalogs();
         this.filterOrderSubTypes();
-        this.dto.order.orderType.orderDirection = newValue.orderDirection;
+        this.dto.order.orderType['orderDirection'] = newValue.orderDirection;
     }
 
 }
