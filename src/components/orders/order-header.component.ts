@@ -4,13 +4,10 @@ import { startWith, delay, tap } from 'rxjs/operators';
 import { OrderDataSource } from './order.dataSource';
 import { ActivatedRoute } from '@angular/router';
 import {
-    ORDER_INITIAL_STATE,
     DEFAULT_ORDER_TYPES,
     ORDER_DETAIL_INITIAL_STATE,
     DEFAULT_ORDER_SUBTYPES,
     OrderProductsDto,
-    ORDER_DETAIL_CATALOGS_DEFAULT,
-    ORDER_PRODUCTS_INITIAL_STATE
 } from 'src/models/order.dto';
 
 @Component({
@@ -20,7 +17,7 @@ import {
 })
 
 export class OrderHeaderComponent implements OnInit, AfterViewInit {
-    orderDetail = ORDER_DETAIL_CATALOGS_DEFAULT;
+    orderDetail = ORDER_DETAIL_INITIAL_STATE;
     catalogs: any = {};
     orderTypes = DEFAULT_ORDER_TYPES;
     orderDirection = '';
@@ -60,7 +57,7 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
             .subscribe(result => {
                 this.catalogs = Object.assign({}, result);
                 this.orderSubTypes = DEFAULT_ORDER_SUBTYPES(this.catalogs);
-                this.orderDetail = ORDER_DETAIL_INITIAL_STATE(this.catalogs);
+                this.orderDetail = ORDER_DETAIL_INITIAL_STATE(this.catalogs) as any;
             })
     }
 

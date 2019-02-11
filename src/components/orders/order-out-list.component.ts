@@ -65,7 +65,7 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
                         this.dataSource.getInventoryItems(partNo)
                             .subscribe(result => {
                                 console.log(result)
-                                this.itemsList = [...result].filter(x => x.available);
+                                this.itemsList = [...result].filter(x => x.available) as any;
                             })
                     })
 

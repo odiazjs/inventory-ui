@@ -68,7 +68,7 @@ export class OrderDataSource {
     ) {
         let payload: OrderProductsDto = {
             order,
-            products: inventoryItems.map<OrderDetailDto>((item) => {
+            products: inventoryItems.map<any>((item) => {
                 return {
                     product: item.product['id'],
                     itemStatus: orderDetail.itemStatus['id'],
@@ -82,8 +82,8 @@ export class OrderDataSource {
                 }
             })
         }
-        payload.order.orderType = order.orderType['id'];
-        payload.order.orderDate = new Date();
+        payload.order.orderType = order.orderType['id'] as any;
+        payload.order.orderDate = new Date() as any;
 
         return this.orderService.create(payload)
     }
@@ -91,7 +91,7 @@ export class OrderDataSource {
     updateOrder (id: string, order: OrderDto, orderDetail: OrderDetailDto, orderDetailList: OrderDetailDto[]) {
         let payload: OrderProductsDto = {
             order,
-            products: orderDetailList.map<OrderDetailDto>((item, index) => {
+            products: orderDetailList.map<OrderDetailDto>((item: any, index) => {
                 if (!item.inventoryItem) {
                     return {
                         order: parseInt(id),
@@ -106,13 +106,13 @@ export class OrderDataSource {
                         inventoryItem: item.id
                     }
                 } else {
-                    item.product = item.product['id']
+                    item.product = item.product['id'] as any;
                     return item
                 }
             })
         }
-        payload.order.orderType = order.orderType['id'];
-        payload.order.orderDate = new Date(); 
-        return this.orderService.update(payload, id)
+        payload.order.orderType = order.orderType['id'] as any;
+        payload.order.orderDate = new Date() as any;
+        return this.orderService.update(payload, id) as any;;
     }
 }
