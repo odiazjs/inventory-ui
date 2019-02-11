@@ -77,15 +77,13 @@
 <!--end of modal-->
 
 <!--ORDERS ALL LIST -->
-<div>
+      
+<div class="flex-grid padded-aside">
     <app-order-in-list 
         [(dto)]="dto"
         [(orderDetail)]="orderDetail"
         [(selectedProductKey)]="selectedProductKey"
         [(orderDetailMap)]="orderDetailMap">
-      
-<div class="flex-grid padded-aside">
-    <app-order-in-list [(dto)]="dto" [(orderDetail)]="orderDetail">
     </app-order-in-list>
 </div>
 <div class="flex-grid padded-aside">
