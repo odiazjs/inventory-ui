@@ -58,7 +58,6 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
     fillCatalogs() {
         this.dataSource.getOrderCatalogs()
             .subscribe(result => {
-                console.log(result);
                 this.catalogs = Object.assign({}, result);
                 this.orderSubTypes = DEFAULT_ORDER_SUBTYPES(this.catalogs);
                 this.orderDetail = ORDER_DETAIL_INITIAL_STATE(this.catalogs);
