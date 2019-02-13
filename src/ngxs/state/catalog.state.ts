@@ -1,11 +1,9 @@
 import { StateContext, Action, State } from "@ngxs/store";
 import { tap } from "rxjs/operators";
-import { Router } from "@angular/router";
 import { CatalogStateModel, GetAll } from "../models/catalogState.model";
 import { CatalogsService } from "src/services/barrel";
 import { forkJoin } from "rxjs";
-import { Dictionary } from "src/components/types";
-import { CatalogDto } from "src/models/order.dto";
+import { Dictionary, CatalogDto } from "src/components/types";
 
 @State<CatalogStateModel>({
     name: 'catalogs'
@@ -13,7 +11,6 @@ import { CatalogDto } from "src/models/order.dto";
 export class CatalogState {
 
     constructor(
-        private router: Router,
         private catalogueService: CatalogsService) { }
 
     @Action(GetAll)

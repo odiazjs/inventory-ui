@@ -33,9 +33,24 @@ export class QueryOptions {
   public static toQueryString(paramsObject: any): string {
     return Object
       .keys(paramsObject)
-      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(paramsObject[key])}`)
+      .map(key => {
+        let head = encodeURIComponent(key);
+        let value = encodeURIComponent(paramsObject[key])
+        if (value.indexOf('%') > 0){
+          value = value.replace('%', '=');
+          value = value.substring(0, value.indexOf('=') + 1);
+        }
+        return `${head}=${value}`
+      })
       .join('&');
   }
+}
+
+export interface SerializerConfig {
+  getAll: (value: any, serializeDirection?: string) => any,
+  getById: (value: any, serializeDirection?: string) => any,
+  postCreate?: (value: any, serializeDirection?: string) => any,
+  postUpdate?: (value: any, serializeDirection?: string) => any
 }
 
 export class ResourceService<T> {
@@ -44,7 +59,12 @@ export class ResourceService<T> {
   constructor(
     public httpClient: HttpWrapper<HttpResponse<T>>,
     public baseUrl: string,
-    private serializer: (value: any, serializeDirection?: string) => any
+    private serializerConfig: SerializerConfig = {
+      getAll : () =>{},
+      getById: () =>{},
+      postCreate: () =>{},
+      postUpdate: () =>{}
+    }
   ) {
   }
 
@@ -68,7 +88,7 @@ export class ResourceService<T> {
     return this.httpClient
       .post<T>(`${this.baseUrl}`, item)
       .pipe(
-        map(item => this.serializer(item))
+        map(item => this.serializerConfig.postCreate ? this.serializerConfig.postCreate(item) : item)
       );
   }
   update(item: any, id?: number | string): Observable<T> {
@@ -92,14 +112,14 @@ export class ResourceService<T> {
     return this.httpClient
       .put<T>(`${url}`, item)
       .pipe(
-        map(item => { return this.serializer(item, this.SERIALIZE_CASE) })
+        map(item => this.serializerConfig.postUpdate ? this.serializerConfig.postUpdate(item, this.SERIALIZE_CASE): item)
       );
   }
   getById(id: number): Observable<T> {
     return this.httpClient
       .get(`${this.baseUrl}/${id}`)
       .pipe(
-        map((result: T) => { return this.serializer(result, this.SERIALIZE_CASE) })
+        map((result: T) => { return this.serializerConfig.getById(result, this.SERIALIZE_CASE) })
       );
   }
   getList(paramsObject: any = {}): Observable<T> {
@@ -110,7 +130,7 @@ export class ResourceService<T> {
           return list.results ? list.results.map(serializeCase) : list.map(serializeCase)
         }),
         map(item => {
-          return this.serializer(item)
+          return this.serializerConfig.getAll(item)
         })
       );
   }

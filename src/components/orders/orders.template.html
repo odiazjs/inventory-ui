@@ -20,14 +20,14 @@
                 </div>
             </div>
             <div class="col-xs">
-                    <div class="btn-container">
-                        <a (click)="viewOrder()" href="javascript:void(0);" [class.disabled]="!canView" class="btn-secondary">
-                             <span class="left">
-                                <i class="material-icons small">remove_red_eye</i>
-                            </span>
-                        </a>
-                    </div>
+                <div class="btn-container">
+                    <a (click)="viewOrder()" href="javascript:void(0);" [class.disabled]="!canView" class="btn-secondary">
+                         <span class="left">
+                            <i class="material-icons small">remove_red_eye</i>
+                        </span>
+                    </a>
                 </div>
+            </div>
             <div class="col-xs">
                 <div class="btn-container">
                     <a href="javascript:void(0);" class="btn-secondary">
@@ -48,7 +48,6 @@
     <div class="col-md">
         <div class="flex-grid">
             <div class="col-sm">
-
             </div>
         </div>
     </div>
@@ -124,10 +123,6 @@
                     <div class="Rtable-cell--heading">Status</div>
                     <div class="Rtable-cell--content title-content">{{order.orderState}}</div>
                 </div>
-                <!-- <div class="Rtable-cell date-cell">
-                    <div class="Rtable-cell--heading">Select</div>
-                    <div class="Rtable-cell--content title-content">Checked</div>
-                </div> -->
             </div>
         </div>
     </div>

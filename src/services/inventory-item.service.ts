@@ -12,7 +12,7 @@ export class InventoryItemService extends ResourceService<InventoryItemDto[]> {
         super(
             httpWrapper,
             urlConfig.getAllItemsUrl,
-            inventoryItemFactory
+            { getAll: inventoryItemFactory, getById: inventoryItemFactory }
         )
     }
 }

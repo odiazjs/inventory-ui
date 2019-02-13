@@ -1,0 +1,89 @@
+<div class="flex-grid padded-aside filter-fixed">
+    <div class="col-sm">
+        <form class="example" action="javascript:void(0);">
+            <input [(ngModel)]="scannedPartNo" (keyup.enter)='scanPartNo($event)' class="search" type="text"
+                placeholder="EAN or Part Number" name="Search">
+            <button type="submit"><i class="material-icons small">search</i></button>
+        </form>
+    </div>
+    <div class="col-sm">
+        <form class="example" action="javascript:void(0);">
+            <input #scaninput [(ngModel)]="scannedSerialNo"  (keyup.enter)='scanMacAddress(scaninput.value)'
+                class="search" type="text" placeholder="MAC Address" name="mac">
+            <button type="submit"><i class="material-icons small">search</i></button>
+        </form>
+    </div>
+    <div class="col-sm">
+        &nbsp;
+    </div>
+    <div class="col-sm">
+        <form class="example" action="javascript:void(0);">
+            <select  required [(ngModel)]="dto.order.orderState" name="orderstate">
+                <option *ngFor="let state of orderStates" [ngValue]="state">Save as {{state}}</option>
+            </select>
+        </form>
+    </div>
+    <div class="col-xs">
+        <div class="btn-container">
+            <a href="javascript:void(0);" (click)="saveCompleteConfirmtation($event)" [class.disabled]="!canSave()"
+                class="btn-primary">
+                 <span><i class="material-icons small">save</i></span>
+                 <div class="btn-text">Save</div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!--Inventory History Modal-->
+<div class="modal-container" *ngIf="showCompleteConfirmation">
+    <div class="content">
+        <div class="inner">
+            <div class="flex-container row padded-aside">
+                <h2 class="center">Confirm save</h2>
+            </div>
+            <div class="flex-container row padded-aside">
+                <div class="col">
+                    <div class="title center">
+                        If you save the order as completed, you can't edit it later. Are you sure?' </div>
+                </div>
+            </div>
+            <div class="flex-container row padded-aside">
+                <div class="col">&nbsp;</div>
+                <div class="col-md">
+                    <div class="btn-container">
+                        <a href="javascript:void(0);" (click)="showCompleteConfirmation = false;save(this.saveEvent);"
+                            class="btn-primary center">
+                            <div class="btn-text">Save</div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="btn-container">
+                        <a href="javascript:void(0);" (click)="showCompleteConfirmation = false;" class="btn-primary center">
+                            <div class="btn-text">Cancel</div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col">&nbsp;</div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop"></div>
+</div>
+<!--end of modal-->
+
+<!--ORDERS ALL LIST -->
+      
+<div>
+    <app-order-in-list 
+        [(dto)]="dto"
+        [(orderDetail)]="orderDetail"
+        [(selectedProductKey)]="selectedProductKey"
+        [(orderDetailMap)]="orderDetailMap">
+    </app-order-in-list>
+</div>
+<div class="flex-grid padded-aside">
+    <app-order-out-list [(dto)]="dto" [(orderDetail)]="orderDetail" [(saveSubject)]="onSaveSubject"
+        [(scanPartNoSubject)]="scanPartNoSubject" [(scanMacAddressSubject)]="scanMacAddressSubject">
+    </app-order-out-list>
+</div>
