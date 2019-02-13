@@ -18,7 +18,6 @@
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <!-- <select [disabled]="!canSave()" required [(ngModel)]="dto.order.orderState" name="orderstate"> -->
             <select  required [(ngModel)]="dto.order.orderState" name="orderstate">
                 <option *ngFor="let state of orderStates" [ngValue]="state">Save as {{state}}</option>
             </select>
@@ -26,13 +25,10 @@
     </div>
     <div class="col-xs">
         <div class="btn-container">
-            <!-- <a href="javascript:void(0);" (click)="save($event)" [class.disabled]="!canSave()" class="btn-primary"> -->
-                <a href="javascript:void(0);" (click)="save($event)" class="btn-primary">
-                <a href="javascript:void(0);" (click)="saveCompleteConfirmtation($event)" [class.disabled]="!canSave()"
-                    class="btn-primary">
-                     <span><i class="material-icons small">save</i></span>
-                     <div class="btn-text">Save</div>
-                </a>
+            <a href="javascript:void(0);" (click)="saveCompleteConfirmtation($event)" [class.disabled]="!canSave()"
+                class="btn-primary">
+                 <span><i class="material-icons small">save</i></span>
+                 <div class="btn-text">Save</div>
             </a>
         </div>
     </div>
