@@ -1,7 +1,7 @@
 <div class="flex-container row padded-aside">
     <h1>Inventory Item</h1>
 </div>
-<div class="flex-container row padded-aside">
+<div class="flex-container row padded-aside filter-fixed">
     <div class="col-xs padded-top">
         <div class="btn-container" (click)="showModal();">
             <a href="javascript:void(0);" class="btn-secondary">
@@ -85,7 +85,7 @@
 <div class="flex-container row padded-aside">
     <div class="wrapper">
         <div class="Rtable Rtable--5cols Rtable--collapse">
-            <div class="Rtable-row Rtable-row--head">
+            <div class="Rtable-row Rtable-row--head headers-fixed">
                 <div class="Rtable-cell small-cell column-heading">Select</div>
                 <div class="Rtable-cell date-cell column-heading">Serial No.</div>
                 <div class="Rtable-cell topic-cell column-heading">Product Name</div>
@@ -140,7 +140,7 @@
                 <div class="Rtable-cell small-cell">
                     <div class="Rtable-cell--heading">History</div>
                     <div class="Rtable-cell--content">
-                        <a  href="javascript:void(0);"  class="btn-container">
+                        <a  href="javascript:void(0);" (click)="showHistory(item.id);" class="btn-container">
                             <span><i class="material-icons small">history</i></span>
                         </a>
                     </div>
@@ -149,12 +149,89 @@
         </div>
     </div>
 </div>
+<!--Inventory History Modal-->
+<div class="modal-container" *ngIf="historyShow">
+        <div class="content">
+            <div class="inner">
+                <div class="flex-container row padded-aside">
+                    <h2 class="center">Item History</h2>
+                </div>
+                <div class="flex-container row padded-aside">
+                    <div class="col">
+                        <div class="title">
+                            Item: {{historyItemName}}
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="title">
+                            Serial No.: {{historyItemSerialNo}}
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-container row padded-aside">
+                        <div class="wrapper">
+                            <div class="Rtable Rtable--5cols Rtable--collapse">
+                                <div class="Rtable-row Rtable-row--head">
+                                    <div class="Rtable-cell date-cell column-heading">Updated</div>
+                                    <div class="Rtable-cell small-cell column-heading">Price</div>
+                                    <div class="Rtable-cell date-cell column-heading">Warehouse</div>
+                                    <div class="Rtable-cell small-cell column-heading">Inventory</div>
+                                    <div class="Rtable-cell date-cell column-heading">Inventory Status</div>
+                                    <div class="Rtable-cell date-cell column-heading">Item Status</div>
+                                </div>
+                    
+                                <div class="Rtable-row" *ngFor="let item of itemHistory">
+                
+                                    <div class="Rtable-cell date-cell">
+                                        <div class="Rtable-cell--heading">Updated</div>
+                                        <div class="Rtable-cell--content title-content">{{item.updatedIn}}</div>
+                                    </div>
+                                    <div class="Rtable-cell small-cell">
+                                        <div class="Rtable-cell--heading">Price</div>
+                                        <div class="Rtable-cell--content title-content">{{item.price}}</div>
+                                    </div>
+                                    <div class="Rtable-cell date-cell">
+                                        <div class="Rtable-cell--heading">Warehouse</div>
+                                        <div class="Rtable-cell--content title-content">{{item.warehouse.name}}</div>
+                                    </div>
+                                    <div class="Rtable-cell small-cell">
+                                        <div class="Rtable-cell--heading">Inventory</div>
+                                        <div class="Rtable-cell--content title-content">{{item.inventory.name}}</div>
+                                    </div>
+                                    <div class="Rtable-cell date-cell">
+                                        <div class="Rtable-cell--heading">Inventory Status</div>
+                                        <div class="Rtable-cell--content title-content">{{item.onInventoryStatus.name}}</div>
+                                    </div>
+                                    <div class="Rtable-cell date-cell">
+                                        <div class="Rtable-cell--heading">Item Status</div>
+                                        <div class="Rtable-cell--content title-content">{{item.itemStatus.name}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <div class="flex-container row padded-aside">
+                    <div class="col">&nbsp;</div>
+                    <div class="col-md">
+                        <div class="btn-container">
+                            <a href="javascript:void(0);" (click)="historyShow = false; itemHistory = []" class="btn-primary center">
+                                <div class="btn-text">Close</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col">&nbsp;</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop"></div>
+    </div>
+<!--end of modal-->
 
 <div class="modal-container" *ngIf="modalShown">
     <div class="content">
         <div class="inner">
             <div class="flex-container row padded-aside">
-                <h2 class="center">On Inventory Item</h2>
+                <h1 class="center ">On Inventory Item</h1>
             </div>
             <div class="flex-container row padded-aside">
                 <div class="list">

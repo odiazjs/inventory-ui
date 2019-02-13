@@ -8,7 +8,8 @@ import {
     InventoryItemService,
     CatalogsService,
     InventoryItemFilterService,
-    ProductSearchService
+    ProductSearchService, 
+    InventoryItemHistoryService
 } from './barrel';
 
 export const APP_SERVICES = [
@@ -21,5 +22,6 @@ export const APP_SERVICES = [
     InventoryItemService,
     CatalogsService,
     InventoryItemFilterService,
-    ProductSearchService
+    ProductSearchService,
+    InventoryItemHistoryService
 ];

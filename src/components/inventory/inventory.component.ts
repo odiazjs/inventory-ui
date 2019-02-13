@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { startWith, delay, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { InventoryItemService, InventoryItemFilterService } from 'src/services/barrel';
+import { InventoryItemService, InventoryItemFilterService, InventoryItemHistoryService } from 'src/services/barrel';
 import { InventoryItemModel } from 'src/models/inventoryItem.model';
 import { Dictionary } from '../types';
 import { CatalogDto, CatalogModel } from 'src/models/order.dto';
@@ -16,6 +16,10 @@ import { GetAll } from 'src/ngxs/models/catalogState.model';
 export class InventoryComponent implements OnInit {
 
     modalShown: boolean = false;
+    historyShow = false;
+    historyItemName: string;
+    historyItemSerialNo: string;
+    itemHistory: InventoryItemModel[] = [];
     itemsList: InventoryItemModel[] = [];
     selectedItems: InventoryItemModel[] = [];
 
@@ -37,7 +41,8 @@ export class InventoryComponent implements OnInit {
     constructor(
         private store: Store,
         private inventoryItemService: InventoryItemService,
-        private inventoryITemFilterService: InventoryItemFilterService ) { }
+        private inventoryITemFilterService: InventoryItemFilterService,
+        private inventoryitemHistoryService: InventoryItemHistoryService  ) { }
 
     ngOnInit(): void {
         Observable.of()
@@ -57,7 +62,7 @@ export class InventoryComponent implements OnInit {
                             onInventoryStatusCat: this.inventoryStatuses[0],
                             itemStatusCat: this.itemStatuses[0]
                         }
-                        this.configValues = Object.assign({}, this.filterValues);
+                        // this.configValues = Object.assign({}, this.filterValues);
                     })
                 }),
                 tap(() => {
@@ -77,9 +82,31 @@ export class InventoryComponent implements OnInit {
         item.checked = !item.checked;
     }
 
+
     showModal() {
         this.selectedItems = this.itemsList.filter(x => x.checked);
+        // by default it takes the value from the las item on the seleteditems list
+        this.configValues = {
+            warehouseCat: this.warehouses.find(x => x.id === this.selectedItems[this.selectedItems.length - 1].warehouse.id),
+            onInventoryStatusCat: this.inventoryStatuses.find(x => x.id === this.selectedItems[this.selectedItems.length - 1]
+                                .onInventoryStatus.id),
+            inventoryCat: this.inventories.find(x => x.id === this.selectedItems[this.selectedItems.length - 1].inventory.id),
+            itemStatusCat: this.itemStatuses.find(x => x.id === this.selectedItems[this.selectedItems.length - 1].itemStatus.id)
+        }
         return this.modalShown = !this.modalShown;
+    }
+
+    showHistory(id: string) {
+        const itemSelected = this.itemsList.filter( x => x.id === Number(id))
+        this.inventoryitemHistoryService.getList(id).subscribe( (result: any) => {
+            this.itemHistory = [...result];
+            this.itemHistory.push(itemSelected[0])
+        }, (error) => {
+            this.itemHistory.push(itemSelected[0]);
+        })
+        this.historyItemName = itemSelected[0].product.name;
+        this.historyItemSerialNo = itemSelected[0].serialNumber;
+        this.historyShow = !this.historyShow;
     }
 
     filterItems() {

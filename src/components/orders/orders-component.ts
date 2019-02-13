@@ -8,7 +8,6 @@ import OrderModel from '../../models/order.model';
 import { OrderService } from '../../services/order.service';
 import { startWith, delay } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { OrderDetailDto } from 'src/models/order.dto';
 
 @Component({
     selector: 'app-orders',

@@ -1,3 +1,18 @@
 .padded-top {
     margin-top: 25px;
 }
+
+.filter-fixed{
+    background-color: #eeeeee;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 3.5rem;
+    z-index: 2;
+  }
+
+.headers-fixed{
+    position: -webkit-sticky;
+    position: sticky;
+    top: 8.8rem;
+    z-index: 2;
+  }

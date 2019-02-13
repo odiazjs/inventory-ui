@@ -16,7 +16,7 @@ export const configFile = {
     'urlConfig': {
         'auth': {
             'version': 'v1',
-            'url': '10.1.16.20:8000/api',
+            'url': '127.0.0.1:8000/api',
             'signup': 'signup',
             'loginEndpoint': 'auth/token',
             'logoutEndpoint': 'auth/logout',
@@ -31,7 +31,8 @@ export const configFile = {
         },
         'inventoryItems': {
             'getAllItems': 'inventory_items',
-            'getFilteredItems': 'inventory_items?'
+            'getFilteredItems': 'inventory_items?',
+            'getInventoryitemHistory': 'inventory_item_history/'
         },
         'catalogs':{
             'getAllWarehouses': 'warehouses',
@@ -55,7 +56,7 @@ const {
         auth: { url, version, loginEndpoint },
         orders: { getAllOrders },
         products: { getAllProducts, getFilteredProducts },
-        inventoryItems: { getAllItems, getFilteredItems },
+        inventoryItems: { getAllItems, getFilteredItems, getInventoryitemHistory },
         catalogs: {
             getAllWarehouses,
             getALlInventories,
@@ -78,6 +79,7 @@ export const urlConfig = {
     getCatalogWarehousesUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllWarehouses}`,
     getCatalogInventoriesUrl: `${protocol}://${baseUrl}/${apiVersion}/${getALlInventories}`,
     getCatalogOnInventoryStatusUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllOnInventoryStatus}`,
+    getInventoryitemsHistory: `${protocol}://${baseUrl}/${apiVersion}/${getInventoryitemHistory}`,
     getCatalogAllItemStatusUrl: `${protocol}://${baseUrl}/${apiVersion}/${getAllItemStatus}`,
     getCatalogManufacturers: `${protocol}://${baseUrl}/${apiVersion}/${getAllManufacturer}`,
     getCatalogProductsGroup: `${protocol}://${baseUrl}/${apiVersion}/${getAllProductsGroup}`,

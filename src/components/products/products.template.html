@@ -7,6 +7,7 @@
         <div class="col-md">
             <form class="flex-container row  example" action="javascript:void(0);">
                 <input class="search col-md padded-top padded-left" type="text" placeholder="Product name" name="searchByName" [(ngModel)] = "productSearchName" (keyup.enter)="searchProduct();">
+                <input class="search col-md padded-top padded-left" type="text" placeholder="EAN or Part No." name="searchByPartNumber" [(ngModel)] = "productSearchparNumber" (keyup.enter)="searchProduct();">
                 <div class="col-md">
                     <div class="col">
                         <div class="title">

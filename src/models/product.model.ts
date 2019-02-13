@@ -1,4 +1,3 @@
-import { ProductDto } from "./product.dto";
 import { OrderDetailModel } from "./order.model";
 
 export class ProductModel {
@@ -10,7 +9,8 @@ export class ProductModel {
     manufacturer: string;
     productGroup: string;
     checked?: boolean;
-    constructor(dto: ProductDto) {
+    constructor(dto) {
+        return Object.assign({}, dto)
     }
 }
 

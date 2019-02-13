@@ -20,6 +20,9 @@ export class InventoryItemService extends ResourceService<InventoryItemDto[]> {
 const inventoryItemFactory: any = (value: InventoryItemModel[]) => {
     console.log('serializer', value)
     let outterMap: any[] = value.map(item => serializeCase(item))
-    outterMap.forEach(item => { item.product = serializeCase(item.product) })
+    outterMap.map(item => {
+        item.product = serializeCase(item.product)
+        return item;
+    })
     return outterMap;
 }
