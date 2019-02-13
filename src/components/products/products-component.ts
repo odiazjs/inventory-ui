@@ -5,8 +5,8 @@ import { Observable } from 'rxjs';
 import { startWith, delay } from 'rxjs/operators';
 import { ProductService } from '../../services/product.service';
 import { ProductModel } from '../../models/product.model';
-import { CatalogModel } from 'src/models/order.dto';
 import { CatalogsService, ProductSearchService } from 'src/services/barrel';
+import { CatalogModel } from '../types';
 
 @Component({
     selector: 'app-products',

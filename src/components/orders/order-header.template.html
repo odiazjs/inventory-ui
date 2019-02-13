@@ -1,0 +1,113 @@
+<div class="flex-grid padded-aside">
+    <div class="col">
+        <div class="title">
+            Order Type
+        </div>
+    </div>
+</div>
+
+<div class="flex-container row padded-aside">
+    <ng-container *ngFor="let orderType of orderTypes; let i = index">
+        <div class="col-xxs">
+            <label class="container">{{orderType.orderDirection}}
+                <input type="radio" name="radio" 
+                    [checked]="checkOrderType(i)"
+                    (change)="switchRadioBtns($event, orderTypes[i])">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+        <div class="col-xxs">
+            <i [ngClass]="{'invert': orderType.orderDirection == 'In'}" class="material-icons small">{{orderType.icon}}</i>
+        </div>
+    </ng-container>
+</div>
+
+<div class="flex-grid padded-aside">
+    <div class="col">
+        <div class="title">
+            Order Information
+        </div>
+    </div>
+</div>
+
+<div class="flex-container row padded-aside">
+    <div class="col-sm">
+        <form class="example" action="javascript:void(0);">
+            <select required [(ngModel)]="dto.order.orderType.id" name="ordersubtype">
+                <option *ngFor="let item of orderSubTypes" [ngValue]="item.id">{{item.name}}</option>
+            </select>
+        </form>
+    </div>
+    <div class="col-sm">
+        <form class="example" action="javascript:void(0);">
+            <input [ngModel]="dto.order.orderDate | date:'yyyy-MM-dd'" (ngModelChange)="dto.order.orderDate = $event"
+                type="date" name="orderdate" />
+        </form>
+    </div>
+    <div class="col-sm">
+        <form class="example" action="javascript:void(0);">
+            <input type="text" [(ngModel)]="dto.order.ticketNumber" placeholder="Ticket No" name="ticketnumber">
+        </form>
+    </div>
+    <div class="col-sm">
+        &nbsp;
+    </div>
+</div>
+<div class="flex-grid padded-aside">
+    <div class="col">
+        <div class="title">
+            Warehouse
+        </div>
+    </div>
+    <div class="col">
+        <div class="title">
+            Inventory Name
+        </div>
+    </div>
+    <div class="col">
+        <div class="title">
+            Status
+        </div>
+    </div>
+    <div class="col">
+        <div class="title">
+            Item State
+        </div>
+    </div>
+</div>
+<div class="flex-container row padded-aside">
+    <div class="col-sm">
+        <form class="example" action="javascript:void(0);">
+            <select required [(ngModel)]="orderDetail.warehouse" name="warehouse">
+                <option *ngFor="let item of catalogs.warehouses" [ngValue]="item">{{item.name}}</option>
+            </select>
+        </form>
+    </div>
+    <div class="col-sm">
+        <form class="example" action="javascript:void(0);">
+            <select required [(ngModel)]="orderDetail.inventory" name="inventory">
+                <option *ngFor="let item of catalogs.inventories" [ngValue]="item">{{item.name}}</option>
+            </select>
+        </form>
+    </div>
+    <div class="col-sm">
+        <form class="example" action="javascript:void(0);">
+            <select required [(ngModel)]="orderDetail.onInventoryStatus" name="oninvstatus">
+                <option *ngFor="let item of catalogs.inventoryStatuses" [ngValue]="item">{{item.name}}</option>
+            </select>
+        </form>
+    </div>
+    <div class="col-sm">
+        <form class="example" action="javascript:void(0);">
+            <select required [(ngModel)]="orderDetail.itemStatus" name="itemstatus">
+                <option *ngFor="let item of catalogs.itemStatuses" [ngValue]="item">{{item.name}}</option>
+            </select>
+        </form>
+    </div>
+</div>
+<div class="padded-aside flex-container">
+    <textarea class="search col" type="text" placeholder="Order notes..." [(ngModel)]="dto.order.notes"></textarea>
+</div>
+
+<!-- FILTER CONTROLS -->
+<app-order-filters [(dto)]="dto" [(orderDetail)]="orderDetail"></app-order-filters>

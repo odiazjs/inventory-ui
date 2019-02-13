@@ -1,15 +1,10 @@
 import { OrderDetailModel } from "./order.model";
+import { ProductDto } from "./product.dto";
 
-export class ProductModel {
-    id: number;
-    name: string;
-    masterName: string;
-    partNumber: string;
-    barcode: string;
-    manufacturer: string;
-    productGroup: string;
+export class ProductModel extends ProductDto {
     checked?: boolean;
     constructor(dto) {
+        super()
         return Object.assign({}, dto)
     }
 }

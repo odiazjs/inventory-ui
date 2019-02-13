@@ -1,4 +1,5 @@
-import { OrderDto, OrderDetailDto, CatalogDto } from "./order.dto";
+import { OrderDto, OrderDetailDto, OrderProductsDto } from "./order.dto";
+import { CatalogDto } from "src/components/types";
 
 export class OrderDetailModel extends OrderDetailDto {
     itemStatusCat: CatalogDto;
@@ -7,7 +8,7 @@ export class OrderDetailModel extends OrderDetailDto {
     warehouseCat: CatalogDto;
 }
 
-export class OrderProductsModel {
+export class OrderProductsModel extends OrderProductsDto {
     order: OrderModel;
     orderDetail: OrderDetailModel;
 }

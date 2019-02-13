@@ -3,8 +3,7 @@ import { startWith, delay, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { InventoryItemService, InventoryItemFilterService, InventoryItemHistoryService } from 'src/services/barrel';
 import { InventoryItemModel } from 'src/models/inventoryItem.model';
-import { Dictionary } from '../types';
-import { CatalogDto, CatalogModel } from 'src/models/order.dto';
+import { Dictionary, CatalogModel, CatalogDto } from '../types';
 import { Select, Store } from '@ngxs/store';
 import { GetAll } from 'src/ngxs/models/catalogState.model';
 

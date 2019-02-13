@@ -1,0 +1,70 @@
+<div *ngIf="dto.order.orderType.orderDirection === 'In'">
+    <div class="new-order tabs-container padded-aside">
+        <div class="flex-container row">
+            <div class="col-xs" *ngFor="let item of dto.products">
+                <div class="tab" [ngClass]="{'tabSelected': selectedProductKey === item.key}" (click)="toggleProductKey(item.key)">
+                    {{item.key}}
+                    <span class="count">
+                        <strong>[{{item.value.length}}] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>
+                    </span>
+                </div>
+                <div class="close" (click)="deleteProduct(item)">x</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Items -->
+    <div class="wrapper padded-aside">
+        <div class="Rtable Rtable--5cols Rtable--collapse">
+            <div class="Rtable-row Rtable-row--head headers-fixed">
+                <div class="Rtable-cell small-cell column-heading">Serial no</div>
+                <div class="Rtable-cell topic-cell column-heading">Name</div>
+                <div class="Rtable-cell date-cell column-heading">Warehouse</div>
+                <div class="Rtable-cell date-cell column-heading">Inventory</div>
+                <div class="Rtable-cell date-cell column-heading">Inventory Status</div>
+                <div class="Rtable-cell date-cell column-heading">Item Status</div>
+                <div class="Rtable-cell small-cell column-heading">Delete</div>
+            </div>
+
+            <ng-container *ngFor="let orderDetail of dto.products">
+                <ng-container *ngIf="selectedProductKey === orderDetail.key">
+                    <div class="Rtable-row" *ngFor="let item of orderDetail.value">
+                        <div class="Rtable-cell small-cell">
+                            <div class="Rtable-cell--heading">Serial No.</div>
+                            <div class="Rtable-cell--content date-content">{{item.serialNumber}}</div>
+                        </div>
+                        <div class="Rtable-cell topic-cell">
+                            <div class="Rtable-cell--heading">Name</div>
+                            <div class="Rtable-cell--content title-content">{{item.name}}</div>
+                        </div>
+                        <div class="Rtable-cell date-cell">
+                            <div class="Rtable-cell--heading">Warehouse</div>
+                            <div class="Rtable-cell--content title-content">{{item.warehouseCat.name}}</div>
+                        </div>
+                        <div class="Rtable-cell date-cell">
+                            <div class="Rtable-cell--heading">Inventory</div>
+                            <div class="Rtable-cell--content title-content">{{item.inventoryCat.name}}</div>
+                        </div>
+                        <div class="Rtable-cell date-cell">
+                            <div class="Rtable-cell--heading">Inventory Status</div>
+                            <div class="Rtable-cell--content title-content">{{item.onInventoryStatusCat.name}}</div>
+                        </div>
+                        <div class="Rtable-cell date-cell">
+                            <div class="Rtable-cell--heading">Item Status</div>
+                            <div class="Rtable-cell--content title-content">{{item.itemStatusCat.name}}</div>
+                        </div>
+                        <div class="Rtable-cell small-cell">
+                            <div class="Rtable-cell--heading">Delete</div>
+                            <div class="Rtable-cell--content">
+                                <a href="javascript:void(0);" (click)="removeitem(item.partNumber, item.serialNumber)"
+                                    class="btn-container">
+                                    <span><i class="material-icons small">delete_forever</i></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-import { CatalogDto } from "src/models/order.dto";
+import { CatalogDto } from "src/components/types";
 
 export const CATALOG_GETALL_STATE = 'Catalog_GetAll'
 

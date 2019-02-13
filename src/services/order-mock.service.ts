@@ -1,12 +1,11 @@
 import { Injectable } from "@angular/core";
-import { Observable, pipe } from "rxjs";
-import { OrderDto } from "../models/order.dto";
+import { Observable } from "rxjs";
 import { startWith, delay, map } from "rxjs/operators";
 
 @Injectable()
 export class OrderMockService {
   getList<T>(): Observable<any[]> {
-    const orderList: OrderDto[] = [
+    const orderList: any[] = [
       {
         id: 100001,
         createdDate: "2017-05-05",
