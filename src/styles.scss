@@ -130,10 +130,12 @@ button:focus {outline:none;}
     a.btn-primary span i, i.material-icons {
         padding: 8px 0px 0px 4px;
         color: snow;
+        line-height: 1 !important;
     }
 
     a.btn-primary i, a.btn-secondary i, i.material-icons {
         padding: 8px 0px 0px 4px;
+        line-height: 0.6 !important;
     }
 }
 
