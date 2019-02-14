@@ -42,7 +42,11 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
                     this.fillCatalogs();
                     const { snapshot: { params: { id, orderType } } } = this.activatedRoute;
                     if (id) {
-                        this.dto.order.orderType['orderDirection'] = orderType
+                        if (typeof this.dto.order.orderType == 'number') {
+                            this.dto.order.orderType = { orderDirection: orderType } as any
+                        } else {
+                            this.dto.order.orderType['orderDirection'] = orderType
+                        }
                         this.orderDirection = orderType
                     }
                 })

@@ -51,7 +51,7 @@
                 <div class="col">&nbsp;</div>
                 <div class="col-md">
                     <div class="btn-container">
-                        <a href="javascript:void(0);" (click)="showCompleteConfirmation = false;save(this.saveEvent);"
+                        <a href="javascript:void(0);" (click)="showCompleteConfirmation = false; save(this.saveEvent);"
                             class="btn-primary center">
                             <div class="btn-text">Save</div>
                         </a>
@@ -84,7 +84,11 @@
     </app-order-in-list>
 </div>
 <div *ngIf="dto.order.orderType.orderDirection === 'Out'" class="flex-grid padded-aside">
-    <app-order-out-list [(dto)]="dto" [(orderDetail)]="orderDetail" [(saveSubject)]="onSaveSubject"
-        [(scanPartNoSubject)]="scanPartNoSubject" [(scanMacAddressSubject)]="scanMacAddressSubject">
+    <app-order-out-list 
+        [(dto)]="dto" 
+        [(orderDetail)]="orderDetail" 
+        [(saveSubject)]="onSaveSubject"
+        [(scanPartNoSubject)]="scanPartNoSubject" 
+        [(scanMacAddressSubject)]="scanMacAddressSubject">
     </app-order-out-list>
 </div>
