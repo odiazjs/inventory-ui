@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { startWith, delay, tap } from 'rxjs/operators';
 import { OrderDataSource } from './order.dataSource';
 import { ActivatedRoute } from '@angular/router';
@@ -16,6 +16,7 @@ import { KeysPipe } from 'src/common/keys.pipe';
 
 export class OrderInListComponent implements OnInit, AfterViewInit {
 
+    @Input() saveSubject: Subject<void>;
     @Input() dto: OrderProductsDto;
     @Input() orderDetail: OrderDetailDto;
     @Input('selectedProductKey') selectedProductKey: string;
@@ -44,6 +45,13 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
                     // setInterval(()=>{
                     //     console.log('dto list in', this.dto)
                     // },2500)
+                    this.saveSubject.subscribe(data => {
+                        console.log(this.dto)
+                        this.dataSource.saveOrderIn(this.dto.order, this.orderDetail, this.dto.products)
+                        .subscribe(response => {
+                            console.log('saved order dto ---> ', response);
+                        })
+                    })
                 })
             ).subscribe();
     }

@@ -63,7 +63,10 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
     }
 
     canSave () {
-        return this.dto.order.ticketNumber !== '' && this.orderOurListComponent.allAddedItemsList.length
+        if (this.dto.order.orderType['orderDirection'] === 'In') {
+            return this.dto.products.length
+        }
+        return this.orderOurListComponent && this.orderOurListComponent.allAddedItemsList.length
     }
 
     saveCompleteConfirmtation (ev:Event) {
@@ -129,10 +132,10 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
     }
 
     handleProductItems (qtyCounter, item, orderDetail) {
-        // console.log('order detail filter', this.orderDetail)
+        // console.log('handle product item ', item)
         const { order, serialNumber, product: { partNumber, id, name, avgPrice } } = item;
         const orderConfig = {
-            id: item.id,
+            id: item.product.id,
             order,
             serialNumber,
             partNumber,

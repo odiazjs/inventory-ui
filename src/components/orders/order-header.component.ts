@@ -37,7 +37,7 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
         Observable.of()
             .pipe(
                 startWith(null),
-                delay(1000),
+                delay(500),
                 tap(() => {
                     this.fillCatalogs();
                     const { snapshot: { params: { id } } } = this.activatedRoute;
