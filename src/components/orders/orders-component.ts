@@ -43,13 +43,13 @@ export class OrdersComponent implements AfterContentInit {
     }
 
     editOrder() {
-        const { id } = this.orderList.find(x => x.checked)
-        this.store.dispatch(new Navigate(['/orders/', id]))
+        const { id, orderType: { orderDirection } }: any = this.orderList.find(x => x.checked)
+        this.store.dispatch(new Navigate(['/orders/', id, orderDirection]))
     }
 
     viewOrder() {
-        const { id } = this.orderList.find(x => x.checked)
-        this.store.dispatch(new Navigate(['/orders/', id]))
+        const { id, orderType: { orderDirection } }: any = this.orderList.find(x => x.checked)
+        this.store.dispatch(new Navigate(['/orders/', id, orderDirection]))
     }
 
     validateCanEdit () {

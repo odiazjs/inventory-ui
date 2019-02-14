@@ -42,9 +42,6 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
                 startWith(null),
                 delay(0),
                 tap(() => {
-                    // setInterval(()=>{
-                    //     console.log('dto list in', this.dto)
-                    // },2500)
                     this.saveSubject.subscribe(data => {
                         console.log(this.dto)
                         this.dataSource.saveOrderIn(this.dto.order, this.orderDetail, this.dto.products)

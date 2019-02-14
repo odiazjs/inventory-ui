@@ -37,12 +37,13 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
         Observable.of()
             .pipe(
                 startWith(null),
-                delay(500),
+                delay(0),
                 tap(() => {
                     this.fillCatalogs();
-                    const { snapshot: { params: { id } } } = this.activatedRoute;
+                    const { snapshot: { params: { id, orderType } } } = this.activatedRoute;
                     if (id) {
-                        this.orderDirection = this.dataSource.dto.order.orderType['orderDirection']
+                        this.dto.order.orderType['orderDirection'] = orderType
+                        this.orderDirection = orderType
                     }
                 })
             ).subscribe()

@@ -15,7 +15,7 @@ export const appRoutes: Routes = [
     { path: 'dashboard', component: DashboardComponent },
     { path: 'orders', component: OrdersComponent },
     { path: 'orders/new', component: NewOrderComponent },
-    { path: 'orders/:id', component: NewOrderComponent },
+    { path: 'orders/:id/:orderType', component: NewOrderComponent },
     { path: 'products', component: ProductsComponent },
     { path: 'inventory', component: InventoryComponent },
 ];

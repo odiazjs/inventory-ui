@@ -108,7 +108,7 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
         console.log(response)
         setTimeout(() => {
             this.store.dispatch(new Navigate(['/orders']))
-        }, 2000)
+        }, 1500)
     }
 
     drop(event: CdkDragDrop<ProductOrderDetailModel[]>) {

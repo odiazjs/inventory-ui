@@ -123,9 +123,9 @@ export class OrderDataSource {
                 }
             })
         }
-        payload.order.orderType = order.orderType['id'] as any;
+        const immutableOrder = Object.assign(new Object(), order);
+        payload.order.orderType = immutableOrder.orderType['id'];
         payload.order.orderDate = new Date() as any;
-
         return this.orderService.create(payload)
     }
 
@@ -152,7 +152,8 @@ export class OrderDataSource {
                 }
             })
         }
-        payload.order.orderType = order.orderType['id'] as any;
+        const immutableOrder = Object.assign(new Object(), order);
+        payload.order.orderType = immutableOrder.orderType['id']
         payload.order.orderDate = new Date() as any;
         return this.orderService.update(payload, id) as any;
     }
