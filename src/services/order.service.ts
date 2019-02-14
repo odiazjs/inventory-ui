@@ -15,8 +15,8 @@ export class OrderService extends ResourceService<OrderProductsDto> {
             { 
                 getAll: getAllOrdersFactory, 
                 getById: getOrderByIdFactory,
-                postUpdate: () => {},
-                postCreate: () => {}
+                postUpdate: (response) => response,
+                postCreate: (response) =>  response
             }
         )
     }

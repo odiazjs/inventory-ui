@@ -74,15 +74,16 @@
 
 <!--ORDERS ALL LIST -->
       
-<div>
+<div *ngIf="dto.order.orderType.orderDirection === 'In'">
     <app-order-in-list 
         [(dto)]="dto"
         [(orderDetail)]="orderDetail"
         [(selectedProductKey)]="selectedProductKey"
-        [(orderDetailMap)]="orderDetailMap">
+        [(orderDetailMap)]="orderDetailMap"
+        [(saveSubject)]="onSaveSubject">
     </app-order-in-list>
 </div>
-<div class="flex-grid padded-aside">
+<div *ngIf="dto.order.orderType.orderDirection === 'Out'" class="flex-grid padded-aside">
     <app-order-out-list [(dto)]="dto" [(orderDetail)]="orderDetail" [(saveSubject)]="onSaveSubject"
         [(scanPartNoSubject)]="scanPartNoSubject" [(scanMacAddressSubject)]="scanMacAddressSubject">
     </app-order-out-list>

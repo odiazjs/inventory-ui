@@ -39,7 +39,7 @@ export class OrderDetailDto {
     price: string;
     assignedUser: number;
     serialNumber: string;
-    inventoryItem: number;
+    inventoryItem?: number;
 }
 
 export class OrderProductsDto {
@@ -87,7 +87,7 @@ export const ORDER_INITIAL_STATE = (catalogs?) => {
         orderDate: new Date().toLocaleDateString('en-US'),
         createdBy: null,
         orderState: DEFAULT_ORDER_STATES[0],
-        ticketNumber: '',
+        ticketNumber: null,
         notes: null
     })
 }

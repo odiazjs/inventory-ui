@@ -4,7 +4,7 @@ import {
     OrderDto,
     OrderDetailDto
 } from 'src/models/order.dto';
-import { map } from 'rxjs/operators';
+import { map, tap, concatAll } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
@@ -14,6 +14,7 @@ import { GetAll } from 'src/ngxs/models/catalogState.model';
 import { OrderService } from 'src/services/order.service';
 import { InventoryItemFilterService } from 'src/services/inventory-item-filter.service';
 import { InventoryItemModel } from 'src/models/inventoryItem.model';
+import { AuthService } from 'src/services/auth.service';
 
 @Injectable()
 export class OrderDataSource {
@@ -22,7 +23,8 @@ export class OrderDataSource {
     constructor(
         private store: Store,
         private orderService: OrderService,
-        private inventoryItemService: InventoryItemFilterService
+        private inventoryItemService: InventoryItemFilterService,
+        private authService: AuthService
     ) { }
     getOrderCatalogs() {
         const fillCatalogs = (data) => {
@@ -61,8 +63,47 @@ export class OrderDataSource {
         return this.inventoryItemService.getList({part_number: partNo});
     }
 
+    saveOrderIn(
+        order: OrderDto,
+        orderDetail: OrderDetailDto,
+        inventoryItems: OrderDetailDto[]
+    ){
+        let theListofProducts:any  = [];
+        inventoryItems.forEach((product)=>{
+            product['value'].forEach(element => {
+                theListofProducts.push(element)
+            });
+        })
+        let userId: number;
+        return this.authService.getUserInfo().pipe(
+            map((info) => {
+                userId = info.user_id
+                let payload: OrderProductsDto = {
+                    order,
+                    products: theListofProducts.map((item)=>{
+                        return{
+                            product: item.id,
+                            itemStatus: orderDetail.itemStatus['id'],
+                            onInventoryStatus: orderDetail.onInventoryStatus['id'],
+                            inventory: orderDetail.inventory['id'],
+                            warehouse: orderDetail.warehouse['id'],
+                            price: item.price,
+                            assignedUser: userId,
+                            serialNumber: item.serialNumber,
+                        }
+                    })
+                }
+                payload.order.orderType = order.orderType['id'];
+                payload.order.orderDate = new Date(order.orderDate).toISOString();
+                console.log('payload on datasource',payload)
+                return this.orderService.create(payload);
+            }),
+            concatAll()
+        )
+    }
+
     saveOrder (
-        order: OrderDto, 
+        order: OrderDto,
         orderDetail: OrderDetailDto,
         inventoryItems: InventoryItemModel[]
     ) {
