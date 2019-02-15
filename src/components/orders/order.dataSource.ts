@@ -95,6 +95,7 @@ export class OrderDataSource {
                 }
                 payload.order.orderType = order.orderType['id'];
                 payload.order.orderDate = new Date(order.orderDate).toISOString();
+                payload.order.notes = payload.order.notes === null || payload.order.notes === '' ? '' : order.notes;
                 console.log('payload on datasource',payload)
                 return this.orderService.create(payload);
             }),
@@ -155,6 +156,39 @@ export class OrderDataSource {
         const immutableOrder = Object.assign(new Object(), order);
         payload.order.orderType = immutableOrder.orderType['id']
         payload.order.orderDate = new Date() as any;
+        return this.orderService.update(payload, id) as any;
+    }
+
+    updateOrderIn (id: string, order: OrderDto, orderDetail: OrderDetailDto, inventoryItems: OrderDetailDto[]) {
+        const theListofProducts = [];
+        inventoryItems.forEach((product)=>{
+            product['value'].forEach(element => {
+                theListofProducts.push(element)
+            });
+        })
+        let payload: OrderProductsDto = {
+            order,
+            products: theListofProducts.map<OrderDetailDto>((item) => {
+                if (!item.inventoryItem) {
+                    return {
+                        order: parseInt(id),
+                        product: item.id,
+                        itemStatus: orderDetail.itemStatus['id'],
+                        onInventoryStatus: orderDetail.onInventoryStatus['id'],
+                        inventory: orderDetail.inventory['id'],
+                        warehouse: orderDetail.warehouse['id'],
+                        price: item.price,
+                        serialNumber: item.serialNumber,
+                        assignedUser: item.assignedUser
+                    }
+                } else {
+                    item.product = item.product['id'] as any;
+                    return item
+                }
+            })
+        }
+        const immutableOrder = Object.assign(new Object(), order);
+        payload.order.orderType = immutableOrder.orderType['id']
         return this.orderService.update(payload, id) as any;
     }
 }

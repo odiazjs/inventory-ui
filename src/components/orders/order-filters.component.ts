@@ -33,13 +33,13 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
         'Discarded'
     ];
     orderDetailMap: Dictionary<any[]> = {};
-    scannedSerialNo: string;
+    scannedSerialNo: string = '';
     result: ProductModel[]
     selectedProductKey: string;
 
     onSaveSubject: Subject<void> = new Subject();
     scanPartNoSubject: Subject<ProductDto[]> = new Subject();
-    scanMacAddressSubject: Subject<string> = new Subject();
+    scanMacAddressSubject: Subject<any> = new Subject();
 
     constructor(
         private productService: ProductService
@@ -47,7 +47,10 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
 
     }
     ngOnInit(): void {
-
+        this.productService.getList()
+        .subscribe(products => {
+            this.result = [...products];
+        })
     }
     ngAfterViewInit(): void {
         Observable.of()
@@ -62,14 +65,14 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
             ).subscribe();
     }
 
-    canSave () {
+    canSave() {
         if (this.dto.order.orderType['orderDirection'] === 'In') {
             return this.dto.products.length
         }
         return this.orderOurListComponent && this.orderOurListComponent.allAddedItemsList.length
     }
 
-    saveCompleteConfirmtation (ev:Event) {
+    saveCompleteConfirmtation(ev: Event) {
         this.saveEvent = ev;
         if (this.dto.order.orderState === 'Completed') {
             this.showCompleteConfirmation = true;
@@ -78,60 +81,47 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
         }
     }
 
-    save () {
+    save() {
         this.onSaveSubject.next();
     }
 
-    scanPartNo (data) {
+    scanPartNo(data) {
         const { target: { value } } = data;
         this.selectedProductKey = value;
-        if (data !== '' || data !== null){
+        if (data !== '' || data !== null) {
             this.productService.getList()
-            .subscribe(products => {
+                .subscribe(products => {
                     let matches = [];
                     this.result = [...products];
                     matches = this.result.filter(x => x.partNumber === value);
                     if (matches.length) {
-                        const product: ProductModel = [...matches].shift()
-                        this.handleProductDict(product);
                         this.scanPartNoSubject.next([...matches]);
                     } else {
                         // make an alert here
                         console.log('Product not found')
                     }
-                }
-            )
+                })
         }
     }
 
-    scanMacAddress (value: string) {
-        if (this.orderDetailMap[this.selectedProductKey].find(y => y.serialNumber === value)){
+    scanMacAddress(value: string) {
+        if (this.orderDetailMap[this.selectedProductKey].find(y => y.serialNumber === value)) {
             console.log('This item already exist on this order');
             return
         }
-        if (value === null || value === ''){
+        if (value === null || value === '') {
             console.log('MAC Address can\'t be empty', 0);
             return
         }
         const matches = this.result.filter(x => x.partNumber === this.selectedProductKey);
         const productItem: any = { product: [...matches].shift() };
         productItem.serialNumber = value;
-        this.handleProductItems(1, productItem, this.orderDetail)
         this.scannedSerialNo = '';
-        this.scanMacAddressSubject.next(value);
+        this.scanMacAddressSubject.next(productItem);
     }
 
-    handleProductDict (product: ProductModel) {
-        const { partNumber } = product;
-        if (!this.orderDetailMap[partNumber]) {
-            this.scannedSerialNo = ''
-            this.orderDetailMap[partNumber] = [];
-        }
-        this.selectedProductKey = product.partNumber;
-        this.dto.products = [...KeysPipe.pipe(this.orderDetailMap)];
-    }
 
-    handleProductItems (qtyCounter, item, orderDetail) {
+    handleProductItems(qtyCounter, item, orderDetail) {
         // console.log('handle product item ', item)
         const { order, serialNumber, product: { partNumber, id, name, avgPrice } } = item;
         const orderConfig = {
@@ -150,6 +140,5 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
         };
         this.orderDetailMap[partNumber].push(orderConfig);
         this.dto.products = [...KeysPipe.pipe(this.orderDetailMap)];
-        console.log('products after add',this.dto.products)
     }
 }

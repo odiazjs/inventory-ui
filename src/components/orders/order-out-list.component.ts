@@ -23,7 +23,7 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
     @Input() dto: OrderProductsDto;
     @Input() orderDetail: OrderDetailDto;
     @Input() saveSubject: Subject<void>;
-    @Input() scanMacAddressSubject: Subject<string>;
+    @Input() scanMacAddressSubject: Subject<any>;
     @Input() scanPartNoSubject: Subject<ProductDto[]>;
 
     paramsId: string;

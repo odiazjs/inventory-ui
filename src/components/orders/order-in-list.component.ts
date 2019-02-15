@@ -4,9 +4,15 @@ import { startWith, delay, tap } from 'rxjs/operators';
 import { OrderDataSource } from './order.dataSource';
 import { ActivatedRoute } from '@angular/router';
 import { ProductDto } from 'src/models/product.dto';
-import { OrderProductsDto, OrderDetailDto } from 'src/models/order.dto';
+import { OrderProductsDto, OrderDetailDto, ORDER_INITIAL_STATE } from 'src/models/order.dto';
 import { KeysPipe } from 'src/common/keys.pipe';
+import { Store } from '@ngxs/store';
+import { Navigate } from '@ngxs/router-plugin';
+import { ProductModel } from '../../models/product.model';
+import { CatalogDto } from '../types';
 
+
+let subjectSubscriptions =  [];
 
 @Component({
     selector: 'app-order-in-list',
@@ -21,14 +27,19 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
     @Input() orderDetail: OrderDetailDto;
     @Input('selectedProductKey') selectedProductKey: string;
     @Input() orderDetailMap: any;
+    @Input() scanMacAddressSubject: Subject<string>;
+    @Input() scanPartNoSubject: Subject<ProductDto[]>;
     @Output('selectedProductKeyChange') selectedProductKeyEmit: EventEmitter<string> = new EventEmitter<string>();
 
 
     public macAddress = '';
     public productMatches: ProductDto[] = [];
     scannedPartNo = this.selectedProductKey;
+    paramsId: string;
+    catalogs: any = {};
 
     constructor(
+        public store: Store,
         public dataSource: OrderDataSource,
         public activatedRoute: ActivatedRoute
     ) {
@@ -42,13 +53,67 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
                 startWith(null),
                 delay(0),
                 tap(() => {
-                    this.saveSubject.subscribe(data => {
-                        console.log(this.dto)
-                        this.dataSource.saveOrderIn(this.dto.order, this.orderDetail, this.dto.products)
-                        .subscribe(response => {
-                            console.log('saved order dto ---> ', response);
+                    const { snapshot: { params: { id } } } = this.activatedRoute;
+                    this.paramsId = id;
+                    let cataloguesConfig: any;
+                    console.log(this.catalogs)
+                    if (id) {
+                        this.fillCatalogs()
+                        this.dataSource.getOrderById(id)
+                            .subscribe(result => {
+                                console.log(this.catalogs);
+                                this.dto.order = Object.assign({}, result.order);
+                                result.products.forEach(item => {
+                                    this.handleProductDict(item.product as any);
+                                })
+                                result.products.forEach(item => {
+                                    const qtyCounter = 0;
+                                    cataloguesConfig = {
+                                        warehouse: this.catalogs.warehouses.find(x => x.id === item.warehouse) as CatalogDto,
+                                        inventory: this.catalogs.inventories.find(x => x.id === item.inventory),
+                                        onInventoryStatus: this.catalogs.inventoryStatuses.find(x => x.id === item.onInventoryStatus),
+                                        itemStatus: this.catalogs.itemStatuses.find(x=> x.id === item.itemStatus)
+                                    }
+                                    this.handleProductItems(qtyCounter + 1, item, cataloguesConfig);
+                                })
+
+                            })
+                    } else {
+                        this.dto.order = ORDER_INITIAL_STATE()
+                        this.dto.products = []
+                    }
+                    subjectSubscriptions.push(
+                        this.saveSubject.subscribe(data => {
+                            if(this.paramsId){
+                                this.dataSource.updateOrderIn(this.paramsId, this.dto.order, this.orderDetail, this.dto.products)
+                                .subscribe(response => {
+                                    console.log('saved order dto ---> ', response);
+                                    setTimeout(() => {
+                                        this.store.dispatch(new Navigate(['/orders']))
+                                    }, 1500)
+                                })
+                            } else {
+                                this.dataSource.saveOrderIn(this.dto.order, this.orderDetail, this.dto.products)
+                                .subscribe(response => {
+                                    console.log('saved order dto ---> ', response);
+                                    setTimeout(() => {
+                                        this.store.dispatch(new Navigate(['/orders']))
+                                    }, 1500)
+                                })
+                            }
                         })
-                    })
+                    )
+                    subjectSubscriptions.push(
+                        this.scanPartNoSubject.subscribe((matches) => {
+                            const product: ProductModel = [...matches].shift()
+                            this.handleProductDict(product)
+                        })
+                    )
+                    subjectSubscriptions.push(
+                        this.scanMacAddressSubject.subscribe((productItem) => {
+                            this.handleProductItems(1, productItem, this.orderDetail)
+                        })
+                    )
                 })
             ).subscribe();
     }
@@ -61,11 +126,10 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
         this.orderDetailMap[item.partNumber] = [...newValues]
         this.dto.products = this.dto.products = [...KeysPipe.pipe(this.orderDetailMap)];
     }
-    
+
     toggleProductKey(key: string) {
         this.selectedProductKey = key;
         this.selectedProductKeyEmit.emit(this.selectedProductKey);
-        // coul use a emiter to change the value in the parent
     }
 
     deleteProduct(item: any) {
@@ -74,5 +138,48 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
 
     }
 
+    handleProductDict (product: ProductModel) {
+        this.toggleProductKey(product.partNumber)
+        const { partNumber } = product;
+        if (!this.orderDetailMap[partNumber]) {
+            this.orderDetailMap[partNumber] = [];
+        }
+        this.selectedProductKey = product.partNumber;
+        this.dto.products = [...KeysPipe.pipe(this.orderDetailMap)];
+    }
 
+    handleProductItems (qtyCounter, item, orderDetail) {
+        // console.log('handle product item ', item)
+        const { order, serialNumber, product: { partNumber, id, name, avgPrice } } = item;
+        const orderConfig = {
+            id: item.product.id,
+            order,
+            serialNumber,
+            partNumber,
+            product: id,
+            name: name,
+            quantity: qtyCounter + 1,
+            price: avgPrice,
+            warehouseCat: orderDetail.warehouse,
+            inventoryCat: orderDetail.inventory,
+            itemStatusCat: orderDetail.itemStatus,
+            onInventoryStatusCat: orderDetail.onInventoryStatus,
+            assignedUser: this.dto.order.createdBy
+        };
+        this.orderDetailMap[partNumber].push(orderConfig);
+        this.dto.products = [...KeysPipe.pipe(this.orderDetailMap)];
+    }
+
+    ngOnDestroy() {
+        if (subjectSubscriptions.length) {
+            subjectSubscriptions.forEach(subscription => subscription.unsubscribe())
+        }
+    }
+
+    fillCatalogs() {
+        this.dataSource.getOrderCatalogs()
+            .subscribe(result => {
+                this.catalogs = Object.assign({}, result);
+            })
+    }
 }
