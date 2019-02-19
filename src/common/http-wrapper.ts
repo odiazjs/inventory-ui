@@ -11,9 +11,10 @@ import { Router } from '@angular/router';
 import { Logout } from 'src/ngxs/models/authState.model';
 import { Store } from '@ngxs/store';
 
+import { sharedService } from './sharedService';
+
 @Injectable()
 export class HttpWrapper<T> {
-    isInRequest: boolean = false;
     constructor(
         private http: HttpClient,
         private router: Router,
@@ -45,7 +46,7 @@ export class HttpWrapper<T> {
 
     private request<T>(method: RequestMethod, url: string, body?: any, options?: RequestOptionsArgs): Observable<T> {
         const disableRequest = () => {
-            this.isInRequest = false;
+            sharedService.stopRequest()
         }
         const checkUnauthorized = (response) => {
             if (response.status === 401) {
@@ -61,7 +62,7 @@ export class HttpWrapper<T> {
             url,
             body
         )
-        this.isInRequest = true;
+        sharedService.makeRequest();
         return Observable.create((observer) => {
             this.http.request(requestOptions)
                 .subscribe((response: any | HttpResponse<any>) => {

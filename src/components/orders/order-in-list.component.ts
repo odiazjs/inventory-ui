@@ -10,6 +10,7 @@ import { Store } from '@ngxs/store';
 import { Navigate } from '@ngxs/router-plugin';
 import { ProductModel } from '../../models/product.model';
 import { CatalogDto } from '../types';
+import { NotificationService, Message, AlertType } from 'src/services/notifications.service';
 
 
 let subjectSubscriptions =  [];
@@ -41,7 +42,8 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
     constructor(
         public store: Store,
         public dataSource: OrderDataSource,
-        public activatedRoute: ActivatedRoute
+        public activatedRoute: ActivatedRoute,
+        public notificationService: NotificationService,
     ) {
     }
     ngOnInit(): void {
@@ -82,6 +84,15 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
                         this.dto.order = ORDER_INITIAL_STATE()
                         this.dto.products = []
                     }
+                    const addNotification = (id) => {
+                        const message: Message = {
+                            body: `Order Id: ${id} has been saved succesfully!`,
+                            timeout: 2000,
+                            type: AlertType.success
+                        }
+                        this.notificationService.push(message)
+                        this.store.dispatch(new Navigate(['/orders']))
+                    }
                     subjectSubscriptions.push(
                         this.saveSubject.subscribe(data => {
                             if (this.paramsId) {
@@ -90,18 +101,14 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
                                 .subscribe(response => { 
                                     this.dto = ORDER_PRODUCTS_INITIAL_STATE;
                                     console.log('saved order dto ---> ', response);
-                                    setTimeout(() => {
-                                        this.store.dispatch(new Navigate(['/orders']))
-                                    }, 1500)
+                                    addNotification(response.order.id);
                                 })
                             } else {
                                 const dto = Object.assign({}, this.dto.order)
                                 this.dataSource.saveOrderIn(dto, this.orderDetail, this.dto.products)
                                 .subscribe(response => {
                                     console.log('saved order dto ---> ', response);
-                                    setTimeout(() => {
-                                        this.store.dispatch(new Navigate(['/orders']))
-                                    }, 1500)
+                                    addNotification(response.order.id);
                                 })
                             }
                         })

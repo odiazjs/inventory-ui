@@ -3,8 +3,10 @@ import { HttpWrapper } from '../common/barrel';
 import { HttpResponse } from '@angular/common/http';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { AuthStateModel, Logout } from 'src/ngxs/models/authState.model';
+import { AuthStateModel } from 'src/ngxs/models/authState.model';
 import { Router } from '@angular/router';
+import { sharedService } from '../common/sharedService';
+import { NotificationService, Message, AlertType } from 'src/services/notifications.service';
 
 declare var require: any;
 
@@ -15,13 +17,24 @@ declare var require: any;
 })
 export class AppComponent implements AfterViewInit {
   title = 'inventory-ui';
+  sharedService = sharedService;
   @Select(state => state.auth) authInfo$: Observable<AuthStateModel>;
   constructor(
     private store: Store,
     private router: Router,
+    private notificationService: NotificationService,
     @Inject(HttpWrapper) public httpWrapper: HttpWrapper<HttpResponse<{}>>
   ) {
 
+  }
+
+  addNotification () {
+    const message: Message = {
+        body: `Your order has beed saved succesfully with Id - 000001`,
+        timeout: 2000,
+        type: AlertType.success
+    }
+    this.notificationService.push(message)
   }
 
   ngAfterViewInit() {

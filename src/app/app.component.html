@@ -1,5 +1,5 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div class="loader" *ngIf="httpWrapper.isInRequest">
+<div class="loader" *ngIf="sharedService.isInRequest">
     <div class="sk-folding-cube">
         <div class="sk-cube1 sk-cube"></div>
         <div class="sk-cube2 sk-cube"></div>
@@ -17,7 +17,16 @@
     <div class="sidebar">
         <app-sidebar></app-sidebar>
     </div>
-    <div class="main-container" [ngClass]="{'is-loading': httpWrapper.isInRequest}">
+    <div class="main-container" [ngClass]="{'is-loading': sharedService.isInRequest}">
+        <div class="notification-container" *ngIf="notificationService.messagesSubject | async as messages">
+            <div *ngIf="messages.length; else empty">
+                <div class="body"
+                    [ngClass]="'alert ' + message.class"
+                    *ngFor="let message of messages">
+                    {{message.body}}
+                </div>
+            </div>
+        </div>
         <div class="router">
             <router-outlet></router-outlet>
         </div>
