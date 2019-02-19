@@ -42,15 +42,18 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
                     this.fillCatalogs();
                     const { snapshot: { params: { id, orderType } } } = this.activatedRoute;
                     if (id) {
-                        if (typeof this.dto.order.orderType == 'number') {
-                            this.dto.order.orderType = { orderDirection: orderType } as any
-                        } else {
-                            this.dto.order.orderType['orderDirection'] = orderType
-                        }
                         this.orderDirection = orderType
                     }
                 })
             ).subscribe()
+    }
+
+    resolveOrderDirection (orderType) {
+        if (typeof this.dto.order.orderType == 'number') {
+            this.dto.order.orderType = { orderDirection: orderType } as any
+        } else {
+            this.dto.order.orderType['orderDirection'] = orderType
+        }
     }
 
     checkOrderType(index) {
@@ -76,7 +79,7 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
         this.orderDirection = newValue.orderDirection;
         this.fillCatalogs();
         this.filterOrderSubTypes();
-        this.dto.order.orderType['orderDirection'] = newValue.orderDirection;
+        this.resolveOrderDirection(newValue.orderDirection)
     }
 
 }

@@ -1,7 +1,7 @@
 <div class="flex-grid padded-aside filter-fixed">
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <input [(ngModel)]="scannedPartNo" (keyup.enter)='scanPartNo($event)' class="search" type="text"
+            <input [(ngModel)]="selectedProductKey" (keyup.enter)='scanPartNo($event)' class="search" type="text"
                 placeholder="EAN or Part Number" name="Search">
             <button type="submit"><i class="material-icons small">search</i></button>
         </form>
@@ -80,6 +80,8 @@
         [(orderDetail)]="orderDetail"
         [(selectedProductKey)]="selectedProductKey"
         [(orderDetailMap)]="orderDetailMap"
+        [(scanPartNoSubject)]="scanPartNoSubject" 
+        [(scanMacAddressSubject)]="scanMacAddressSubject"
         [(saveSubject)]="onSaveSubject">
     </app-order-in-list>
 </div>

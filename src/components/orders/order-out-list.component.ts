@@ -23,7 +23,7 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
     @Input() dto: OrderProductsDto;
     @Input() orderDetail: OrderDetailDto;
     @Input() saveSubject: Subject<void>;
-    @Input() scanMacAddressSubject: Subject<string>;
+    @Input() scanMacAddressSubject: Subject<any>;
     @Input() scanPartNoSubject: Subject<ProductDto[]>;
 
     paramsId: string;
@@ -74,7 +74,7 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
                                 const partNo = matches.pop().partNumber;
                                 this.dataSource.getInventoryItems(partNo)
                                     .subscribe(result => {
-                                        console.log('order out', result)
+                                        console.log('Available inventory items ---> ', result)
                                         this.itemsList = [...result].filter(x => x.available) as any;
                                     })
                             })
@@ -84,16 +84,17 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
                     subjectSubscriptions.push(
                         this.saveSubject.subscribe(data => {
                             this.validateOrderType();
+                            const dto = Object.assign({}, this.dto.order)
                             if (id) {
                                 this.dataSource.updateOrder(
                                     id,
-                                    this.dto.order,
+                                    dto,
                                     this.orderDetail,
                                     this.allAddedItemsList as OrderDetailDto[]
                                 ).subscribe(this.postRequest.bind(this))
                             } else {
                                 this.dataSource.saveOrder(
-                                    this.dto.order,
+                                    dto,
                                     this.orderDetail,
                                     this.allAddedItemsList as InventoryItemModel[]
                                 ).subscribe(this.postRequest.bind(this))
