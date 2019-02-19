@@ -88,7 +88,7 @@ export const ORDER_INITIAL_STATE = (catalogs?) => {
         createdBy: null,
         orderState: DEFAULT_ORDER_STATES[0],
         ticketNumber: null,
-        notes: null
+        notes: ''
     })
 }
 
