@@ -1,7 +1,7 @@
-import { Component, OnInit, AfterViewInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { startWith, delay, tap } from 'rxjs/operators';
-import { ProductService } from 'src/services/barrel';
+import { ProductService, NotificationService, AlertType, Message } from 'src/services/barrel';
 import { OrderProductsDto, OrderDetailDto } from 'src/models/order.dto';
 import { ProductDto } from 'src/models/product.dto';
 import { KeysPipe } from 'src/common/keys.pipe';
@@ -19,6 +19,8 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
 
     @Input('dto') dto: OrderProductsDto;
     @Input('orderDetail') orderDetail: OrderDetailDto;
+    @ViewChild('scaninput') macField: ElementRef;
+
 
     orderConfig: OrderDetailDto = this.orderDetail;
 
@@ -42,7 +44,8 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
     scanMacAddressSubject: Subject<any> = new Subject();
 
     constructor(
-        private productService: ProductService
+        private productService: ProductService,
+        public notificationService: NotificationService
     ) {
 
     }
@@ -58,6 +61,7 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
                 startWith(null),
                 delay(0),
                 tap(() => {
+                    
                 })
             ).subscribe();
     }
@@ -93,9 +97,15 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
                     matches = this.result.filter(x => x.partNumber === value);
                     if (matches.length) {
                         this.scanPartNoSubject.next([...matches]);
+                        this.setFocusOnScanner()
                     } else {
                         // make an alert here
-                        console.log('Product not found')
+                        const message: Message = {
+                            body: `Product: ${value}, not found!`,
+                            timeout: 2500,
+                            type: AlertType.error
+                        }
+                        this.notificationService.push(message)
                     }
                 })
         }
@@ -137,5 +147,8 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
         };
         this.orderDetailMap[partNumber].push(orderConfig);
         this.dto.products = [...KeysPipe.pipe(this.orderDetailMap)];
+    }
+    setFocusOnScanner(): void{
+        this.macField.nativeElement.focus()
     }
 }
