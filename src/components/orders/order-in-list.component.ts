@@ -4,7 +4,7 @@ import { startWith, delay, tap } from 'rxjs/operators';
 import { OrderDataSource } from './order.dataSource';
 import { ActivatedRoute } from '@angular/router';
 import { ProductDto } from 'src/models/product.dto';
-import { OrderProductsDto, OrderDetailDto, ORDER_INITIAL_STATE } from 'src/models/order.dto';
+import { OrderProductsDto, OrderDetailDto, ORDER_INITIAL_STATE, ORDER_PRODUCTS_INITIAL_STATE } from 'src/models/order.dto';
 import { KeysPipe } from 'src/common/keys.pipe';
 import { Store } from '@ngxs/store';
 import { Navigate } from '@ngxs/router-plugin';
@@ -35,7 +35,7 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
     public macAddress = '';
     public productMatches: ProductDto[] = [];
     scannedPartNo = this.selectedProductKey;
-    paramsId: string;
+    paramsId: string;OrderProductsDto
     catalogs: any = {};
 
     constructor(
@@ -84,16 +84,19 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
                     }
                     subjectSubscriptions.push(
                         this.saveSubject.subscribe(data => {
-                            if(this.paramsId){
-                                this.dataSource.updateOrderIn(this.paramsId, this.dto.order, this.orderDetail, this.dto.products)
-                                .subscribe(response => {
+                            if (this.paramsId) {
+                                const dto = Object.assign({}, this.dto.order)
+                                this.dataSource.updateOrderIn(this.paramsId, dto, this.orderDetail, this.dto.products)
+                                .subscribe(response => { 
+                                    this.dto = ORDER_PRODUCTS_INITIAL_STATE;
                                     console.log('saved order dto ---> ', response);
                                     setTimeout(() => {
                                         this.store.dispatch(new Navigate(['/orders']))
                                     }, 1500)
                                 })
                             } else {
-                                this.dataSource.saveOrderIn(this.dto.order, this.orderDetail, this.dto.products)
+                                const dto = Object.assign({}, this.dto.order)
+                                this.dataSource.saveOrderIn(dto, this.orderDetail, this.dto.products)
                                 .subscribe(response => {
                                     console.log('saved order dto ---> ', response);
                                     setTimeout(() => {

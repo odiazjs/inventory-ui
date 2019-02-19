@@ -58,9 +58,6 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
                 startWith(null),
                 delay(0),
                 tap(() => {
-                    // setInterval(() => {
-                    //     console.log(this.selectedProductKey)
-                    // }, 2500)
                 })
             ).subscribe();
     }

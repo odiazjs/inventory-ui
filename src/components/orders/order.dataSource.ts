@@ -4,7 +4,7 @@ import {
     OrderDto,
     OrderDetailDto
 } from 'src/models/order.dto';
-import { map, tap, concatAll } from 'rxjs/operators';
+import { map, concatAll } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
@@ -93,10 +93,9 @@ export class OrderDataSource {
                         }
                     })
                 }
-                payload.order.orderType = order.orderType['id'];
-                payload.order.orderDate = new Date(order.orderDate).toISOString();
-                payload.order.notes = payload.order.notes === null || payload.order.notes === '' ? '' : order.notes;
-                console.log('payload on datasource',payload)
+                const immutableOrder = Object.assign(new Object(), order);
+                payload.order.orderType = immutableOrder.orderType['id'];
+                payload.order.orderDate = new Date() as any;
                 return this.orderService.create(payload);
             }),
             concatAll()
