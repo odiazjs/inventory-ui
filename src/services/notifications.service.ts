@@ -12,7 +12,7 @@ export interface Message {
     body: string,
     type: AlertType,
     class?: string,
-    timeout: number,
+    timeout?: number,
     timestamp?: number,
     clear?: Function
 }
@@ -21,6 +21,7 @@ export interface Message {
 export class NotificationService {
     private queueList: Message[] = [];
     public messagesSubject = new Subject<Message[]>();
+    private static readonly DEFAULT_TIMEOUT = 3500;
     pop (message) {
         message.class = AlertType[message.type];
         message.timestamp = new Date().getTime();
@@ -37,7 +38,7 @@ export class NotificationService {
                     ...this.queueList.filter(msg => self.timestamp !== msg.timestamp)
                 ]
                 this.messagesSubject.next(this.queueList)
-            }, self.timeout)
+            }, self.timeout ? self.timeout : NotificationService.DEFAULT_TIMEOUT)
         }
         this.queueList.push(message)
         this.messagesSubject.next([...this.queueList]);

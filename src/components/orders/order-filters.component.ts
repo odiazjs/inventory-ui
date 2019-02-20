@@ -1,13 +1,14 @@
+import { ProductService, NotificationService, AlertType, Message } from 'src/services/barrel';
 import { Component, OnInit, AfterViewInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { startWith, delay, tap } from 'rxjs/operators';
-import { ProductService, NotificationService, AlertType, Message } from 'src/services/barrel';
 import { OrderProductsDto, OrderDetailDto } from 'src/models/order.dto';
 import { ProductDto } from 'src/models/product.dto';
 import { KeysPipe } from 'src/common/keys.pipe';
 import { Dictionary } from 'src/components/types';
-import { ProductOrderDetailModel, ProductModel } from '../../models/product.model';
+import { ProductModel } from '../../models/product.model';
 import { OrderOutListComponent } from './order-out-list.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-order-filters',
@@ -44,26 +45,29 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
     scanMacAddressSubject: Subject<any> = new Subject();
 
     constructor(
+        public activatedRoute: ActivatedRoute,
         private productService: ProductService,
-        public notificationService: NotificationService
+        private notificationService: NotificationService
     ) {
 
     }
     ngOnInit(): void {
-        this.productService.getList()
-        .subscribe(products => {
-            this.result = [...products];
-        })
-    }
-    ngAfterViewInit(): void {
         Observable.of()
             .pipe(
                 startWith(null),
                 delay(0),
                 tap(() => {
-                    
+                    this.productService.getList()
+                        .subscribe(products => {
+                            this.result = [...products];
+                        })
+                    const { snapshot: { params: { id, orderType } } } = this.activatedRoute;
+                    this.dto.order.orderType['orderDirection'] = orderType;
                 })
             ).subscribe();
+    }
+    ngAfterViewInit(): void {
+        
     }
 
     canSave() {
@@ -112,12 +116,25 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
     }
 
     scanMacAddress(value: string) {
+        if (!this.orderDetailMap[this.selectedProductKey]){
+            this.notificationService.push({
+                body: 'Please enter a EAN or Part Number first.', 
+                type: AlertType.info
+            })
+            return;
+        }
         if (this.orderDetailMap[this.selectedProductKey].find(y => y.serialNumber === value)) {
-            console.log('This item already exist on this order');
+            this.notificationService.push({
+                body: 'This item already exists in this order', 
+                type: AlertType.warning
+            })
             return
         }
         if (value === null || value === '') {
-            console.log('MAC Address can\'t be empty', 0);
+            this.notificationService.push({
+                body: 'MAC Address can\'t be empty', 
+                type: AlertType.warning
+            })
             return
         }
         const matches = this.result.filter(x => x.partNumber === this.selectedProductKey);
@@ -129,7 +146,6 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
 
 
     handleProductItems(qtyCounter, item, orderDetail) {
-        // console.log('handle product item ', item)
         const { order, serialNumber, product: { partNumber, id, name, avgPrice } } = item;
         const orderConfig = {
             id: item.product.id,

@@ -1,15 +1,15 @@
-<div class="flex-grid padded-aside filter-fixed">
+<div class="flex-grid padded-aside filter-fixed" *ngIf="dto.order.orderState !== 'Closed'">
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
             <input [(ngModel)]="selectedProductKey" (keyup.enter)='scanPartNo($event)' class="search" type="text"
-                placeholder="EAN or Part Number" name="Search">
+                placeholder="EAN or Part Number" name="Search" [class.disabled]="!dto.order.orderType.orderDirection" >
             <button type="submit"><i class="material-icons small">search</i></button>
         </form>
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
             <input #scaninput [(ngModel)]="scannedSerialNo"  (keyup.enter)='scanMacAddress(scaninput.value)'
-                class="search" type="text" placeholder="MAC Address" name="mac">
+                class="search" type="text" placeholder="MAC Address" name="mac" [class.disabled]="!dto.order.orderType.orderDirection">
             <button type="submit"><i class="material-icons small">search</i></button>
         </form>
     </div>

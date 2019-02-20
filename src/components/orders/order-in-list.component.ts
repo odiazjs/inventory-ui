@@ -11,16 +11,14 @@ import { Navigate } from '@ngxs/router-plugin';
 import { ProductModel } from '../../models/product.model';
 import { CatalogDto } from '../types';
 import { NotificationService, Message, AlertType } from 'src/services/notifications.service';
-
-
-let subjectSubscriptions =  [];
+import { DestroySubscribers } from 'src/common/destroySubscribers';
 
 @Component({
     selector: 'app-order-in-list',
     templateUrl: './order-in-list.template.html',
     styleUrls: ['./new-order.component.scss']
 })
-
+@DestroySubscribers()
 export class OrderInListComponent implements OnInit, AfterViewInit {
 
     @Input() saveSubject: Subject<void>;
@@ -36,8 +34,10 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
     public macAddress = '';
     public productMatches: ProductDto[] = [];
     scannedPartNo = this.selectedProductKey;
-    paramsId: string;OrderProductsDto
+    paramsId: string; OrderProductsDto
     catalogs: any = {};
+
+    public subscribers: any = {};
 
     constructor(
         public store: Store,
@@ -50,7 +50,7 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
 
     }
     ngAfterViewInit(): void {
-        Observable.of()
+        this.subscribers.all = Observable.of()
             .pipe(
                 startWith(null),
                 delay(0),
@@ -74,7 +74,7 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
                                         warehouse: this.catalogs.warehouses.find(x => x.id === item.warehouse) as CatalogDto,
                                         inventory: this.catalogs.inventories.find(x => x.id === item.inventory),
                                         onInventoryStatus: this.catalogs.inventoryStatuses.find(x => x.id === item.onInventoryStatus),
-                                        itemStatus: this.catalogs.itemStatuses.find(x=> x.id === item.itemStatus)
+                                        itemStatus: this.catalogs.itemStatuses.find(x => x.id === item.itemStatus)
                                     }
                                     this.handleProductItems(qtyCounter + 1, item, cataloguesConfig);
                                 })
@@ -93,42 +93,40 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
                         this.notificationService.push(message)
                         this.store.dispatch(new Navigate(['/orders']))
                     }
-                    subjectSubscriptions.push(
-                        this.saveSubject.subscribe(data => {
-                            if (this.paramsId) {
-                                const dto = Object.assign({}, this.dto.order)
-                                this.dataSource.updateOrderIn(this.paramsId, dto, this.orderDetail, this.dto.products)
-                                .subscribe(response => { 
+                    this.subscribers.saveSubscription = this.saveSubject.subscribe(data => {
+                        if (this.paramsId) {
+                            const dto = Object.assign({}, this.dto.order)
+                            this.dataSource.updateOrderIn(this.paramsId, dto, this.orderDetail, this.dto.products)
+                                .subscribe(response => {
                                     this.dto = ORDER_PRODUCTS_INITIAL_STATE;
                                     console.log('saved order dto ---> ', response);
                                     addNotification(response.order.id);
                                 })
-                            } else {
-                                const dto = Object.assign({}, this.dto.order)
-                                this.dataSource.saveOrderIn(dto, this.orderDetail, this.dto.products)
+                        } else {
+                            const dto = Object.assign({}, this.dto.order)
+                            this.dataSource.saveOrderIn(dto, this.orderDetail, this.dto.products)
                                 .subscribe(response => {
                                     console.log('saved order dto ---> ', response);
                                     addNotification(response.order.id);
                                 })
-                            }
-                        })
-                    )
-                    subjectSubscriptions.push(
-                        this.scanPartNoSubject.subscribe((matches) => {
-                            const product: ProductModel = [...matches].shift()
-                            this.handleProductDict(product)
-                        })
-                    )
-                    subjectSubscriptions.push(
-                        this.scanMacAddressSubject.subscribe((productItem) => {
-                            this.handleProductItems(1, productItem, this.orderDetail)
-                        })
+                        }
+                    })
+                    this.subscribers.scanSubscripton = this.scanPartNoSubject.subscribe((matches) => {
+                        const product: ProductModel = [...matches].shift()
+                        this.handleProductDict(product)
+                    })
+
+                    this.subscribers.scanMacAddressSubscription = this.scanMacAddressSubject.subscribe(
+                        (productItem) => {
+                            const orderDetail = Object.assign({}, this.orderDetail)
+                            this.handleProductItems(1, productItem, orderDetail)
+                        }
                     )
                 })
             ).subscribe();
     }
 
-    removeitem(productKey: string, serialNumber: string){
+    removeitem(productKey: string, serialNumber: string) {
         const item = this.orderDetailMap[productKey].find(y => y.serialNumber === serialNumber)
         const values = this.orderDetailMap[productKey]
         const index = values.indexOf(item)
@@ -148,7 +146,7 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
 
     }
 
-    handleProductDict (product: ProductModel) {
+    handleProductDict(product: ProductModel) {
         this.toggleProductKey(product.partNumber)
         const { partNumber } = product;
         if (!this.orderDetailMap[partNumber]) {
@@ -158,7 +156,7 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
         this.dto.products = [...KeysPipe.pipe(this.orderDetailMap)];
     }
 
-    handleProductItems (qtyCounter, item, orderDetail) {
+    handleProductItems(qtyCounter, item, orderDetail) {
         // console.log('handle product item ', item)
         const { order, serialNumber, product: { partNumber, id, name, avgPrice } } = item;
         const orderConfig = {
@@ -178,12 +176,6 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
         };
         this.orderDetailMap[partNumber].push(orderConfig);
         this.dto.products = [...KeysPipe.pipe(this.orderDetailMap)];
-    }
-
-    ngOnDestroy() {
-        if (subjectSubscriptions.length) {
-            subjectSubscriptions.forEach(subscription => subscription.unsubscribe())
-        }
     }
 
     fillCatalogs() {

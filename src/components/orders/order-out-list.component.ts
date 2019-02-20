@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { startWith, delay, tap, map, takeUntil, takeWhile } from 'rxjs/operators';
+import { startWith, delay, tap, map, takeWhile } from 'rxjs/operators';
 import { OrderDataSource } from './order.dataSource';
 import { ActivatedRoute } from '@angular/router';
 import { OrderProductsDto, OrderDetailDto, ORDER_INITIAL_STATE } from 'src/models/order.dto';
@@ -10,15 +10,16 @@ import { ProductOrderDetailModel } from 'src/models/product.model';
 import { InventoryItemModel } from 'src/models/inventoryItem.model';
 import { Store } from '@ngxs/store';
 import { Navigate } from '@ngxs/router-plugin';
+import { Message, AlertType, NotificationService } from 'src/services/notifications.service';
+import { DestroySubscribers } from 'src/common/destroySubscribers';
 
-let subjectSubscriptions = [];
 
 @Component({
     selector: 'app-order-out-list',
     templateUrl: './order-out-list.template.html',
     styleUrls: ['./new-order.component.scss']
 })
-
+@DestroySubscribers()
 export class OrderOutListComponent implements OnInit, AfterViewInit {
     @Input() dto: OrderProductsDto;
     @Input() orderDetail: OrderDetailDto;
@@ -31,10 +32,12 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
     orderDetailList: OrderDetailDto[] = [];
     addedItemList: InventoryItemModel[] = [];
     allAddedItemsList: any[] = []
+    public subscribers: any = {};
     constructor(
         public store: Store,
         public dataSource: OrderDataSource,
-        public activatedRoute: ActivatedRoute
+        public activatedRoute: ActivatedRoute,
+        private notificationService: NotificationService
     ) {
     }
 
@@ -46,7 +49,7 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
 
     }
     ngAfterViewInit(): void {
-        Observable.of()
+        this.subscribers.all = Observable.of()
             .pipe(
                 startWith(null),
                 delay(0),
@@ -67,23 +70,21 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
                         this.allAddedItemsList = [];
                     }
 
-                    subjectSubscriptions.push(
-                        this.scanPartNoSubject.pipe(
-                            takeWhile(() => this.validateOrderType()),
-                            map((matches) => {
-                                const partNo = matches.pop().partNumber;
-                                this.dataSource.getInventoryItems(partNo)
-                                    .subscribe(result => {
-                                        console.log('Available inventory items ---> ', result)
-                                        this.itemsList = [...result].filter(x => x.available) as any;
-                                    })
-                            })
-                        ).subscribe()
-                    )
+                    this.subscribers.scanPartNoSubs = this.scanPartNoSubject.pipe(
+                        takeWhile(() => this.validateOrderType()),
+                        map((matches) => {
+                            const partNo = matches.pop().partNumber;
+                            this.dataSource.getInventoryItems(partNo)
+                                .subscribe(result => {
+                                    console.log('Available inventory items ---> ', result)
+                                    this.itemsList = [...result].filter(x => x.available) as any;
+                                })
+                        })
+                    ).subscribe()
 
-                    subjectSubscriptions.push(
-                        this.saveSubject.subscribe(data => {
-                            this.validateOrderType();
+                    this.subscribers.saveSub = this.saveSubject.pipe(
+                        takeWhile(() => this.validateOrderType()),
+                        map(() => {
                             const dto = Object.assign({}, this.dto.order)
                             if (id) {
                                 this.dataSource.updateOrder(
@@ -100,13 +101,18 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
                                 ).subscribe(this.postRequest.bind(this))
                             }
                         })
-                    )
+                    ).subscribe()
                 })
             ).subscribe()
     }
 
     postRequest(response) {
-        console.log(response)
+        const message: Message = {
+            body: `Order Id: ${response.order.id} has been saved succesfully!`,
+            timeout: 2000,
+            type: AlertType.success
+        }
+        this.notificationService.push(message)
         this.store.dispatch(new Navigate(['/orders']))
     }
 
@@ -118,7 +124,11 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
         });
 
         if (alreadyExists) {
-            //this.ShowAlert('key already exists.', 2);
+            const message: Message = {
+                body: `Item already exists in selected items.`,
+                type: AlertType.warning
+            }
+            this.notificationService.push(message)
             return;
         };
 
@@ -130,12 +140,6 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
                 event.previousIndex,
                 event.currentIndex
             );
-        }
-    }
-
-    ngOnDestroy() {
-        if (subjectSubscriptions.length) {
-            subjectSubscriptions.forEach(subscription => subscription.unsubscribe())
         }
     }
 

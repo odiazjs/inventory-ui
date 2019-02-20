@@ -17,7 +17,7 @@ import {
 })
 
 export class OrderHeaderComponent implements OnInit, AfterViewInit {
-    orderDetail = ORDER_DETAIL_INITIAL_STATE;
+    orderDetail = ORDER_DETAIL_INITIAL_STATE();
     catalogs: any = {};
     orderTypes = DEFAULT_ORDER_TYPES;
     orderDirection = '';

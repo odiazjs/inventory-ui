@@ -5,9 +5,10 @@
 <div class="flex-grid padded-aside filter-fixed">
         <h2 class="padded-top-two">Search by: </h2>
         <div class="col-md">
-            <form class="flex-container row  example" action="javascript:void(0);">
-                <input class="search col-md padded-top padded-left" type="text" placeholder="Product name" name="searchByName" [(ngModel)] = "productSearchName" (keyup.enter)="searchProduct();">
-                <input class="search col-md padded-top padded-left" type="text" placeholder="EAN or Part No." name="searchByPartNumber" [(ngModel)] = "productSearchparNumber" (keyup.enter)="searchProduct();">
+            <form class="flex-container row  example" action="javascript:void(0);" 
+                style="width: 100%; min-width: 640px;">
+                <input class="search col-md padded-top padded-left" type="text" placeholder="Product name" name="searchByName" [(ngModel)]="productSearchName" (keyup.enter)="searchProduct();">
+                <input class="search col-md padded-top padded-left" type="text" placeholder="EAN or Part No." name="searchByPartNumber" [(ngModel)]="productSearchparNumber" (keyup.enter)="searchProduct();">
                 <div class="col-md">
                     <div class="col">
                         <div class="title">
