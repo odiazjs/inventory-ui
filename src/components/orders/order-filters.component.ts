@@ -72,7 +72,7 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
 
     canSave() {
         if (this.dto.order.orderType['orderDirection'] === 'In') {
-            return this.dto.products.length
+            return [...KeysPipe.pipe(this.orderDetailMap)].length
         }
         return this.orderOurListComponent && this.orderOurListComponent.allAddedItemsList.length
     }
