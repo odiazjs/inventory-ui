@@ -56,9 +56,9 @@
                         <div class="Rtable-cell small-cell">
                             <div class="Rtable-cell--heading">Delete</div>
                             <div class="Rtable-cell--content">
-                                <a href="javascript:void(0);" (click)="removeitem(item.partNumber, item.serialNumber)"
+                                <a href="javascript:void(0);" (click)="removeitem(item.partNumber, item.serialNumber)" [class.disabled]="canEdit()"
                                     class="btn-container">
-                                    <span><i class="material-icons small">delete_forever</i></span>
+                                    <span><i class="material-icons small;">delete</i></span>
                                 </a>
                             </div>
                         </div>

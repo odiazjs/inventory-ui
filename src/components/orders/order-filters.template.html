@@ -1,4 +1,4 @@
-<div class="flex-grid padded-aside filter-fixed">
+<div class="flex-grid padded-aside filter-fixed" [ngClass]="{'disabled':canEdit()}">
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
             <input [(ngModel)]="selectedProductKey" (keyup.enter)='scanPartNo($event)' class="search" type="text"

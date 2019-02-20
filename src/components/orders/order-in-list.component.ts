@@ -192,4 +192,10 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
                 this.catalogs = Object.assign({}, result);
             })
     }
+    canEdit() {
+        if (this.dto.order.orderState === 'Closed') {
+            return true
+        }
+        return false
+    }
 }
