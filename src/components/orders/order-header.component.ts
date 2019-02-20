@@ -9,19 +9,23 @@ import {
     DEFAULT_ORDER_SUBTYPES,
     OrderProductsDto,
 } from 'src/models/order.dto';
+import { DestroySubscribers } from 'src/common/destroySubscribers';
 
 @Component({
     selector: 'app-order-header',
     templateUrl: './order-header.template.html',
     styleUrls: ['./new-order.component.scss']
 })
-
+@DestroySubscribers()
 export class OrderHeaderComponent implements OnInit, AfterViewInit {
-    orderDetail = ORDER_DETAIL_INITIAL_STATE;
+    orderDetail = ORDER_DETAIL_INITIAL_STATE();
     catalogs: any = {};
     orderTypes = DEFAULT_ORDER_TYPES;
     orderDirection = '';
     orderSubTypes = [];
+    isEdit: boolean = false;
+
+    public subscribers: any = {}
 
     @Input('dto') dto: OrderProductsDto;
 
@@ -34,18 +38,29 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
 
     }
     ngAfterViewInit(): void {
-        Observable.of()
+        this.subscribers.all = Observable.of()
             .pipe(
                 startWith(null),
-                delay(1000),
+                delay(0),
                 tap(() => {
                     this.fillCatalogs();
-                    const { snapshot: { params: { id } } } = this.activatedRoute;
+                    const { snapshot: { params: { id, orderType } } } = this.activatedRoute;
                     if (id) {
-                        this.orderDirection = this.dataSource.dto.order.orderType['orderDirection']
+                        this.isEdit = true;
+                        this.orderDirection = orderType
+                    } else {
+                        this.isEdit = false;
                     }
                 })
             ).subscribe()
+    }
+
+    resolveOrderDirection (orderType) {
+        if (typeof this.dto.order.orderType == 'number') {
+            this.dto.order.orderType = { orderDirection: orderType } as any
+        } else {
+            this.dto.order.orderType['orderDirection'] = orderType
+        }
     }
 
     checkOrderType(index) {
@@ -71,7 +86,7 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
         this.orderDirection = newValue.orderDirection;
         this.fillCatalogs();
         this.filterOrderSubTypes();
-        this.dto.order.orderType['orderDirection'] = newValue.orderDirection;
+        this.resolveOrderDirection(newValue.orderDirection)
     }
 
 }

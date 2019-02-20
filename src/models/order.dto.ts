@@ -39,7 +39,14 @@ export class OrderDetailDto {
     price: string;
     assignedUser: number;
     serialNumber: string;
-    inventoryItem: number;
+    inventoryItem?: number;
+}
+
+export interface OrderDetailIds {
+    itemStatusId: number,
+    onInventoryStatusId: number,
+    inventoryId: number,
+    warehouseId: number
 }
 
 export class OrderProductsDto {
@@ -79,6 +86,13 @@ export const ORDER_DETAIL_CATALOGS_DEFAULT = {
     warehouse: DEFAULT_CATALOG_VALUE
 }
 
+export const ORDER_DETAIL_IDS_CATALOGS_DEFAULT = {
+    itemStatusId: 1,
+    onInventoryStatusId: 1,
+    inventoryId: 1,
+    warehouseId: 1
+}
+
 export const ORDER_INITIAL_STATE = (catalogs?) => {
     return Object.assign({}, {
         id: null,
@@ -87,8 +101,8 @@ export const ORDER_INITIAL_STATE = (catalogs?) => {
         orderDate: new Date().toLocaleDateString('en-US'),
         createdBy: null,
         orderState: DEFAULT_ORDER_STATES[0],
-        ticketNumber: '',
-        notes: null
+        ticketNumber: null,
+        notes: ''
     })
 }
 

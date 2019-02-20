@@ -1,4 +1,4 @@
-<div *ngIf="dto.order.orderType.orderDirection === 'In'">
+<div >
     <div class="new-order tabs-container padded-aside">
         <div class="flex-container row">
             <div class="col-xs" *ngFor="let item of dto.products">
@@ -58,7 +58,7 @@
                             <div class="Rtable-cell--content">
                                 <a href="javascript:void(0);" (click)="removeitem(item.partNumber, item.serialNumber)"
                                     class="btn-container">
-                                    <span><i class="material-icons small">delete_forever</i></span>
+                                    <span><i class="material-icons delete small">delete_forever</i></span>
                                 </a>
                             </div>
                         </div>

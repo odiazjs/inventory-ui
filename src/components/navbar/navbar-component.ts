@@ -28,7 +28,13 @@ export class NavbarComponent implements OnInit {
         this.routeState$.subscribe(routerState => {
             if (routerState.state) {
                 const stateUrl = parseUrl(routerState.state.url);
-                this.title = this.menuService.items.filter(item => item.routeUrl === stateUrl).pop().label;
+                const menuItem = this.menuService.items.filter(item => {
+                    if (routerState.state.params.id) {
+                        return item.routeUrl === stateUrl.substring(0, stateUrl.lastIndexOf('/'))
+                    }
+                    return item.routeUrl === stateUrl
+                });
+                this.title = menuItem.pop().label;
             }
         });
         this.authService.getUserInfo()

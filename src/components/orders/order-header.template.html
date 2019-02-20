@@ -6,7 +6,7 @@
     </div>
 </div>
 
-<div class="flex-container row padded-aside">
+<div class="flex-container row padded-aside" [ngClass]="{'disabled': isEdit}">
     <ng-container *ngFor="let orderType of orderTypes; let i = index">
         <div class="col-xxs">
             <label class="container">{{orderType.orderDirection}}
@@ -78,29 +78,29 @@
 <div class="flex-container row padded-aside">
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <select required [(ngModel)]="orderDetail.warehouse" name="warehouse">
-                <option *ngFor="let item of catalogs.warehouses" [ngValue]="item">{{item.name}}</option>
+            <select required [(ngModel)]="dataSource.orderDetailIds.warehouseId" name="warehouse">
+                <option *ngFor="let item of catalogs.warehouses" [ngValue]="item.id">{{item.name}}</option>
             </select>
         </form>
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <select required [(ngModel)]="orderDetail.inventory" name="inventory">
-                <option *ngFor="let item of catalogs.inventories" [ngValue]="item">{{item.name}}</option>
+            <select required [(ngModel)]="dataSource.orderDetailIds.inventoryId" name="inventory">
+                <option *ngFor="let item of catalogs.inventories" [ngValue]="item.id">{{item.name}}</option>
             </select>
         </form>
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <select required [(ngModel)]="orderDetail.onInventoryStatus" name="oninvstatus">
-                <option *ngFor="let item of catalogs.inventoryStatuses" [ngValue]="item">{{item.name}}</option>
+            <select required [(ngModel)]="dataSource.orderDetailIds.onInventoryStatusId" name="oninvstatus">
+                <option *ngFor="let item of catalogs.inventoryStatuses" [ngValue]="item.id">{{item.name}}</option>
             </select>
         </form>
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <select required [(ngModel)]="orderDetail.itemStatus" name="itemstatus">
-                <option *ngFor="let item of catalogs.itemStatuses" [ngValue]="item">{{item.name}}</option>
+            <select required [(ngModel)]="dataSource.orderDetailIds.itemStatusId" name="itemstatus">
+                <option *ngFor="let item of catalogs.itemStatuses" [ngValue]="item.id">{{item.name}}</option>
             </select>
         </form>
     </div>
@@ -110,4 +110,7 @@
 </div>
 
 <!-- FILTER CONTROLS -->
-<app-order-filters [(dto)]="dto" [(orderDetail)]="orderDetail"></app-order-filters>
+<app-order-filters 
+    [(dto)]="dto" 
+    [(orderDetail)]="orderDetail">
+</app-order-filters>

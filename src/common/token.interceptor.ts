@@ -21,7 +21,6 @@ export class TokenInterceptor implements HttpInterceptor {
     @Select(state => state.auth) authInfo$: Observable<AuthStateModel>;
     constructor(private httpWrapper: HttpWrapper<JwtInfoDto>) { }
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        this.httpWrapper.isInRequest = true
         this.authInfo$.subscribe((response: AuthStateModel) => {
             const { token } = response;
             request = request.clone({
@@ -33,12 +32,10 @@ export class TokenInterceptor implements HttpInterceptor {
         return next.handle(request)
             .pipe(
                 tap(err => {
-                    this.httpWrapper.isInRequest = false
                     return Observable.of(err)
                 }),
                 tap(response => {
                     if (response.type) {
-                        this.httpWrapper.isInRequest = false
                     }
                     return response
                 })

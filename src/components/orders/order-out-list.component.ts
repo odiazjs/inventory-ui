@@ -1,45 +1,57 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { startWith, delay, tap } from 'rxjs/operators';
+import { startWith, delay, tap, map, takeWhile } from 'rxjs/operators';
 import { OrderDataSource } from './order.dataSource';
 import { ActivatedRoute } from '@angular/router';
-import { OrderProductsDto, OrderDetailDto, ORDER_INITIAL_STATE } from 'src/models/order.dto';
+import { OrderProductsDto, OrderDetailDto, ORDER_INITIAL_STATE, ORDER_DETAIL_IDS_CATALOGS_DEFAULT, ORDER_DETAIL_INITIAL_STATE, ORDER_PRODUCTS_INITIAL_STATE } from 'src/models/order.dto';
 import { ProductDto } from 'src/models/product.dto';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ProductOrderDetailModel } from 'src/models/product.model';
 import { InventoryItemModel } from 'src/models/inventoryItem.model';
 import { Store } from '@ngxs/store';
 import { Navigate } from '@ngxs/router-plugin';
+import { Message, AlertType, NotificationService } from 'src/services/notifications.service';
+import { DestroySubscribers } from 'src/common/destroySubscribers';
+
 
 @Component({
     selector: 'app-order-out-list',
     templateUrl: './order-out-list.template.html',
     styleUrls: ['./new-order.component.scss']
 })
-
+@DestroySubscribers()
 export class OrderOutListComponent implements OnInit, AfterViewInit {
     @Input() dto: OrderProductsDto;
     @Input() orderDetail: OrderDetailDto;
     @Input() saveSubject: Subject<void>;
-    @Input() scanMacAddressSubject: Subject<string>;
+    @Input() scanMacAddressSubject: Subject<any>;
     @Input() scanPartNoSubject: Subject<ProductDto[]>;
-    
+
     paramsId: string;
     itemsList: InventoryItemModel[] = [];
     orderDetailList: OrderDetailDto[] = [];
     addedItemList: InventoryItemModel[] = [];
     allAddedItemsList: any[] = []
-    constructor (
+    public subscribers: any = {};
+    constructor(
         public store: Store,
         public dataSource: OrderDataSource,
-        public activatedRoute: ActivatedRoute
+        public activatedRoute: ActivatedRoute,
+        private notificationService: NotificationService
     ) {
     }
-    ngOnInit(): void {
 
+    validateOrderType() {
+        return this.dto.order.orderType['orderDirection'] === 'Out'
+    }
+
+    ngOnInit(): void {
+        console.log('init')
     }
     ngAfterViewInit(): void {
-        Observable.of()
+        this.dto = Object.assign({}, ORDER_PRODUCTS_INITIAL_STATE) as any
+        this.dataSource.orderDetailIds = ORDER_DETAIL_IDS_CATALOGS_DEFAULT;
+        this.subscribers.all = Observable.of()
             .pipe(
                 startWith(null),
                 delay(0),
@@ -47,57 +59,61 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
                     const { snapshot: { params: { id } } } = this.activatedRoute;
                     this.paramsId = id;
                     if (id) {
-                       this.dataSource.getOrderById(id)
-                        .subscribe(result => {
-                            console.log(result);
-                            this.dto.order = Object.assign({}, result.order);
-                            this.orderDetailList = [...result.products] as any;
-                            this.allAddedItemsList = [...result.products] as any;
-                        }) 
+                        this.dataSource.getOrderById(id)
+                            .subscribe(result => {
+                                console.log(result);
+                                this.dto.order = Object.assign({}, result.order);
+                                this.orderDetailList = [...result.products] as any;
+                                this.allAddedItemsList = [...result.products] as any;
+                            })
                     } else {
                         this.dto.order = ORDER_INITIAL_STATE()
                         this.dto.products = []
                         this.allAddedItemsList = [];
                     }
 
-                    this.scanPartNoSubject.subscribe(matches => {
-                        const partNo = matches.pop().partNumber;
-                        this.dataSource.getInventoryItems(partNo)
-                            .subscribe(result => {
-                                console.log(result)
-                                this.itemsList = [...result].filter(x => x.available) as any;
-                            })
-                    })
+                    this.subscribers.scanPartNoSubs = this.scanPartNoSubject.pipe(
+                        takeWhile(() => this.validateOrderType()),
+                        map((matches) => {
+                            const partNo = matches.pop().partNumber;
+                            this.dataSource.getInventoryItems(partNo)
+                                .subscribe(result => {
+                                    console.log('Available inventory items ---> ', result)
+                                    this.itemsList = [...result].filter(x => x.available) as any;
+                                })
+                        })
+                    ).subscribe()
 
-                    this.scanMacAddressSubject.subscribe(value => {
-                        
-                    })
-
-                    this.saveSubject.subscribe(data => {
-                        if (id){
-                            this.dataSource.updateOrder(
-                                id,
-                                this.dto.order, 
-                                this.orderDetail,
-                                this.allAddedItemsList as OrderDetailDto[]
-                            ).subscribe(this.postRequest.bind(this))
-                        } else {
-                            this.dataSource.saveOrder(
-                                this.dto.order, 
-                                this.orderDetail,
-                                this.allAddedItemsList as InventoryItemModel[]
-                            ).subscribe(this.postRequest.bind(this))
-                        }
-                    })
+                    this.subscribers.saveSub = this.saveSubject.pipe(
+                        takeWhile(() => this.validateOrderType()),
+                        map(() => {
+                            const dto = Object.assign({}, this.dto.order)
+                            if (id) {
+                                this.dataSource.updateOrder(
+                                    id,
+                                    dto,
+                                    this.allAddedItemsList as OrderDetailDto[]
+                                ).subscribe(this.postRequest.bind(this))
+                            } else {
+                                this.dataSource.saveOrder(
+                                    dto,
+                                    this.allAddedItemsList as InventoryItemModel[]
+                                ).subscribe(this.postRequest.bind(this))
+                            }
+                        })
+                    ).subscribe()
                 })
             ).subscribe()
     }
 
-    postRequest (response) {
-        console.log(response)
-        setTimeout(() => {
-            this.store.dispatch(new Navigate(['/orders']))
-        }, 2000)
+    postRequest(response) {
+        const message: Message = {
+            body: `Order Id: ${response.order.id} has been saved succesfully!`,
+            timeout: 2000,
+            type: AlertType.success
+        }
+        this.notificationService.push(message)
+        this.store.dispatch(new Navigate(['/orders']))
     }
 
     drop(event: CdkDragDrop<ProductOrderDetailModel[]>) {
@@ -108,7 +124,11 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
         });
 
         if (alreadyExists) {
-            //this.ShowAlert('key already exists.', 2);
+            const message: Message = {
+                body: `Item already exists in selected items.`,
+                type: AlertType.warning
+            }
+            this.notificationService.push(message)
             return;
         };
 
@@ -121,12 +141,6 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
                 event.currentIndex
             );
         }
-    }
-
-    ngOnDestroy () {
-        this.saveSubject.unsubscribe();
-        this.scanPartNoSubject.unsubscribe();
-        this.scanMacAddressSubject.unsubscribe();
     }
 
 }

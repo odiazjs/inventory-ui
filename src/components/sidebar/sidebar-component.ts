@@ -23,7 +23,12 @@ export class SidebarComponent implements OnInit {
             if (routerState.state) {
                 this.menu.map(item => item.isActive = false);
                 let stateUrl = parseUrl(routerState.state.url);
-                this.menu.filter(item => item.routeUrl == stateUrl).pop().isActive = true;
+                this.menu.filter(item => {
+                    if (routerState.state.params.id) {
+                        return item.routeUrl === stateUrl.substring(0, stateUrl.lastIndexOf('/'))
+                    }
+                    return item.routeUrl === stateUrl
+                }).pop().isActive = true;
             }
         });
     }

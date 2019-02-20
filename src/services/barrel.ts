@@ -11,4 +11,5 @@ export * from './catalog.service';
 export * from './inventory-item-filter.service';
 export * from './products-search.service';
 export * from './inventory-item-history.service'
+export * from '../services/notifications.service';
 export * from '../components/orders/order.dataSource';

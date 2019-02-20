@@ -1,15 +1,15 @@
-<div class="flex-grid padded-aside filter-fixed">
+<div class="flex-grid padded-aside filter-fixed" *ngIf="dto.order.orderState !== 'Closed'">
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <input [(ngModel)]="scannedPartNo" (keyup.enter)='scanPartNo($event)' class="search" type="text"
-                placeholder="EAN or Part Number" name="Search">
+            <input [(ngModel)]="selectedProductKey" (keyup.enter)='scanPartNo($event)' class="search" type="text"
+                placeholder="EAN or Part Number" name="Search" [class.disabled]="!dto.order.orderType.orderDirection" >
             <button type="submit"><i class="material-icons small">search</i></button>
         </form>
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
             <input #scaninput [(ngModel)]="scannedSerialNo"  (keyup.enter)='scanMacAddress(scaninput.value)'
-                class="search" type="text" placeholder="MAC Address" name="mac">
+                class="search" type="text" placeholder="MAC Address" name="mac" [class.disabled]="!dto.order.orderType.orderDirection">
             <button type="submit"><i class="material-icons small">search</i></button>
         </form>
     </div>
@@ -51,7 +51,7 @@
                 <div class="col">&nbsp;</div>
                 <div class="col-md">
                     <div class="btn-container">
-                        <a href="javascript:void(0);" (click)="showCompleteConfirmation = false;save(this.saveEvent);"
+                        <a href="javascript:void(0);" (click)="showCompleteConfirmation = false; save(this.saveEvent);"
                             class="btn-primary center">
                             <div class="btn-text">Save</div>
                         </a>
@@ -74,16 +74,23 @@
 
 <!--ORDERS ALL LIST -->
       
-<div>
+<div *ngIf="dto.order.orderType.orderDirection === 'In'">
     <app-order-in-list 
         [(dto)]="dto"
         [(orderDetail)]="orderDetail"
         [(selectedProductKey)]="selectedProductKey"
-        [(orderDetailMap)]="orderDetailMap">
+        [(orderDetailMap)]="orderDetailMap"
+        [(scanPartNoSubject)]="scanPartNoSubject" 
+        [(scanMacAddressSubject)]="scanMacAddressSubject"
+        [(saveSubject)]="onSaveSubject">
     </app-order-in-list>
 </div>
-<div class="flex-grid padded-aside">
-    <app-order-out-list [(dto)]="dto" [(orderDetail)]="orderDetail" [(saveSubject)]="onSaveSubject"
-        [(scanPartNoSubject)]="scanPartNoSubject" [(scanMacAddressSubject)]="scanMacAddressSubject">
+<div *ngIf="dto.order.orderType.orderDirection === 'Out'" class="flex-grid padded-aside">
+    <app-order-out-list 
+        [(dto)]="dto" 
+        [(orderDetail)]="orderDetail" 
+        [(saveSubject)]="onSaveSubject"
+        [(scanPartNoSubject)]="scanPartNoSubject" 
+        [(scanMacAddressSubject)]="scanMacAddressSubject">
     </app-order-out-list>
 </div>
