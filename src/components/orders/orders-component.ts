@@ -1,4 +1,4 @@
-import { Component, AfterContentInit } from '@angular/core';
+import { Component, AfterContentInit, OnInit } from '@angular/core';
 
 import * as moment from 'moment'
 import Chart from 'chart.js';
@@ -8,6 +8,8 @@ import OrderModel from '../../models/order.model';
 import { OrderService } from '../../services/order.service';
 import { startWith, delay } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { OrderDataSource } from './order.dataSource';
+import { DEFAULT_ORDER_STATES } from 'src/models/order.dto';
 
 @Component({
     selector: 'app-orders',
@@ -15,7 +17,7 @@ import { Observable } from 'rxjs';
     styleUrls: ['./orders.component.scss']
 })
 
-export class OrdersComponent implements AfterContentInit {
+export class OrdersComponent implements AfterContentInit, OnInit {
 
     lineChart: Array<any> = [];
     orderList: Array<OrderModel> = [];
@@ -25,8 +27,13 @@ export class OrdersComponent implements AfterContentInit {
 
     constructor(
         private store: Store,
-        public orderService: OrderService
+        public orderService: OrderService,
+        private dataSource: OrderDataSource
     ) { }
+
+    ngOnInit () {
+        this.dataSource.orderState = DEFAULT_ORDER_STATES[0];
+    }
 
     getAllOrders() {
         Observable.of().pipe(startWith(null), delay(0)).subscribe(() => {
