@@ -22,6 +22,7 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
     orderTypes = DEFAULT_ORDER_TYPES;
     orderDirection = '';
     orderSubTypes = [];
+    isEdit: boolean = false;
 
     @Input('dto') dto: OrderProductsDto;
 
@@ -42,7 +43,10 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
                     this.fillCatalogs();
                     const { snapshot: { params: { id, orderType } } } = this.activatedRoute;
                     if (id) {
+                        this.isEdit = true;
                         this.orderDirection = orderType
+                    } else {
+                        this.isEdit = false;
                     }
                 })
             ).subscribe()

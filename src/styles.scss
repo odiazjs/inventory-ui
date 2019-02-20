@@ -229,6 +229,10 @@ textarea{
   form.example button i.material-icons {
       color: snow;
   }
+
+  i.material-icons.delete {
+    color: darkgray !important;
+  } 
   
   form.example button:hover {
     transform:translateX(1px);
