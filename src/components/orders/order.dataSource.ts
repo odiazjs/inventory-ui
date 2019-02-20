@@ -20,7 +20,7 @@ import { AuthService } from 'src/services/auth.service';
 
 @Injectable()
 export class OrderDataSource {
-    dto: OrderProductsDto = ORDER_PRODUCTS_INITIAL_STATE;
+    dto: OrderProductsDto = Object.assign({}, ORDER_PRODUCTS_INITIAL_STATE);
     orderDetailIds: OrderDetailIds = ORDER_DETAIL_IDS_CATALOGS_DEFAULT;
     @Select(state => state.catalogs) catalogs$: Observable<Dictionary<CatalogDto[]>>;
     constructor(

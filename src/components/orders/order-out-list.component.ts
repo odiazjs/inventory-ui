@@ -3,7 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { startWith, delay, tap, map, takeWhile } from 'rxjs/operators';
 import { OrderDataSource } from './order.dataSource';
 import { ActivatedRoute } from '@angular/router';
-import { OrderProductsDto, OrderDetailDto, ORDER_INITIAL_STATE, ORDER_DETAIL_IDS_CATALOGS_DEFAULT } from 'src/models/order.dto';
+import { OrderProductsDto, OrderDetailDto, ORDER_INITIAL_STATE, ORDER_DETAIL_IDS_CATALOGS_DEFAULT, ORDER_DETAIL_INITIAL_STATE, ORDER_PRODUCTS_INITIAL_STATE } from 'src/models/order.dto';
 import { ProductDto } from 'src/models/product.dto';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ProductOrderDetailModel } from 'src/models/product.model';
@@ -49,7 +49,7 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
         console.log('init')
     }
     ngAfterViewInit(): void {
-        this.dto.order = ORDER_INITIAL_STATE();
+        this.dto = Object.assign({}, ORDER_PRODUCTS_INITIAL_STATE) as any
         this.dataSource.orderDetailIds = ORDER_DETAIL_IDS_CATALOGS_DEFAULT;
         this.subscribers.all = Observable.of()
             .pipe(

@@ -11,7 +11,7 @@ import { OrderProductsDto, ORDER_PRODUCTS_INITIAL_STATE } from 'src/models/order
 
 export class NewOrderComponent implements OnInit, AfterViewInit {
 
-    dto: OrderProductsDto = ORDER_PRODUCTS_INITIAL_STATE;
+    dto: OrderProductsDto = Object.assign({}, ORDER_PRODUCTS_INITIAL_STATE);
 
     showError = false;
     alertMessage: string;

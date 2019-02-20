@@ -31,8 +31,8 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
     @Output('selectedProductKeyChange') selectedProductKeyEmit: EventEmitter<string> = new EventEmitter<string>();
 
 
-    public macAddress = '';
-    public productMatches: ProductDto[] = [];
+    macAddress = '';
+    productMatches: ProductDto[] = [];
     scannedPartNo = this.selectedProductKey;
     paramsId: string; OrderProductsDto
     catalogs: any = {};
@@ -50,7 +50,7 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
         console.log('init')
     }
     ngAfterViewInit(): void {
-        this.dto.order = ORDER_INITIAL_STATE();
+        this.dto = Object.assign({}, ORDER_PRODUCTS_INITIAL_STATE) as any
         this.dataSource.orderDetailIds = ORDER_DETAIL_IDS_CATALOGS_DEFAULT;
         this.subscribers.all = Observable.of()
             .pipe(
