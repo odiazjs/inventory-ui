@@ -2,9 +2,11 @@ import {
     OrderProductsDto,
     ORDER_PRODUCTS_INITIAL_STATE,
     OrderDto,
-    OrderDetailDto
+    OrderDetailDto,
+    OrderDetailIds,
+    ORDER_DETAIL_IDS_CATALOGS_DEFAULT
 } from 'src/models/order.dto';
-import { map, concatAll } from 'rxjs/operators';
+import { map, concatAll, first } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
@@ -19,6 +21,7 @@ import { AuthService } from 'src/services/auth.service';
 @Injectable()
 export class OrderDataSource {
     dto: OrderProductsDto = ORDER_PRODUCTS_INITIAL_STATE;
+    orderDetailIds: OrderDetailIds = ORDER_DETAIL_IDS_CATALOGS_DEFAULT;
     @Select(state => state.catalogs) catalogs$: Observable<Dictionary<CatalogDto[]>>;
     constructor(
         private store: Store,
@@ -29,18 +32,18 @@ export class OrderDataSource {
     getOrderCatalogs() {
         const fillCatalogs = (data) => {
             return {
-                warehouses : data['Warehouses'],
-                inventories : data['Inventories'],
-                inventoryStatuses : data['InventoryStatus'],
-                itemStatuses : data['ItemStatus'],
-                orderSubTypes : data['OrderSubTypes']
+                warehouses: data['Warehouses'],
+                inventories: data['Inventories'],
+                inventoryStatuses: data['InventoryStatus'],
+                itemStatuses: data['ItemStatus'],
+                orderSubTypes: data['OrderSubTypes']
             }
         }
         return this.catalogs$.pipe(
             map(catalogDictionary => {
                 if (isEmpty(catalogDictionary)) {
                     this.store.dispatch(new GetAll())
-                        .pipe(map (result => {
+                        .pipe(map(result => {
                             return fillCatalogs(result.data)
                         }))
                 } else {
@@ -54,22 +57,29 @@ export class OrderDataSource {
             .pipe(
                 map(result => {
                     this.dto = Object.assign({}, result);
+                    const firstProduct = this.dto.products[0];
+                    const { inventory, onInventoryStatus, itemStatus, warehouse } = firstProduct;
+                    this.orderDetailIds = Object.assign({}, {
+                        inventoryId: inventory as any,
+                        itemStatusId: itemStatus as any,
+                        onInventoryStatusId: onInventoryStatus as any,
+                        warehouseId: warehouse as any,
+                    })
                     return new OrderProductsDto(result);
                 })
             )
     }
 
-    getInventoryItems (partNo: string) {
-        return this.inventoryItemService.getList({part_number: partNo});
+    getInventoryItems(partNo: string) {
+        return this.inventoryItemService.getList({ part_number: partNo });
     }
 
     saveOrderIn(
         order: OrderDto,
-        orderDetail: OrderDetailDto,
         inventoryItems: OrderDetailDto[]
-    ){
-        let theListofProducts:any  = [];
-        inventoryItems.forEach((product)=>{
+    ) {
+        let theListofProducts: any = [];
+        inventoryItems.forEach((product) => {
             product['value'].forEach(element => {
                 theListofProducts.push(element)
             });
@@ -80,13 +90,13 @@ export class OrderDataSource {
                 userId = info.user_id
                 let payload: OrderProductsDto = {
                     order,
-                    products: theListofProducts.map((item)=>{
-                        return{
+                    products: theListofProducts.map((item) => {
+                        return {
                             product: item.id,
-                            itemStatus: orderDetail.itemStatus['id'],
-                            onInventoryStatus: orderDetail.onInventoryStatus['id'],
-                            inventory: orderDetail.inventory['id'],
-                            warehouse: orderDetail.warehouse['id'],
+                            itemStatus: this.orderDetailIds.itemStatusId,
+                            onInventoryStatus: this.orderDetailIds.onInventoryStatusId,
+                            inventory: this.orderDetailIds.inventoryId,
+                            warehouse: this.orderDetailIds.warehouseId,
                             price: item.price,
                             assignedUser: userId,
                             serialNumber: item.serialNumber,
@@ -102,9 +112,8 @@ export class OrderDataSource {
         )
     }
 
-    saveOrder (
+    saveOrder(
         order: OrderDto,
-        orderDetail: OrderDetailDto,
         inventoryItems: InventoryItemModel[]
     ) {
         let payload: OrderProductsDto = {
@@ -112,10 +121,10 @@ export class OrderDataSource {
             products: inventoryItems.map<any>((item) => {
                 return {
                     product: item.product['id'],
-                    itemStatus: orderDetail.itemStatus['id'],
-                    onInventoryStatus: orderDetail.onInventoryStatus['id'],
-                    inventory: orderDetail.inventory['id'],
-                    warehouse: orderDetail.warehouse['id'],
+                    itemStatus: this.orderDetailIds.itemStatusId,
+                    onInventoryStatus: this.orderDetailIds.onInventoryStatusId,
+                    inventory: this.orderDetailIds.inventoryId,
+                    warehouse: this.orderDetailIds.warehouseId,
                     price: item.price,
                     assignedUser: item.assignedUser,
                     serialNumber: item.serialNumber,
@@ -129,7 +138,9 @@ export class OrderDataSource {
         return this.orderService.create(payload)
     }
 
-    updateOrder (id: string, order: OrderDto, orderDetail: OrderDetailDto, orderDetailList: OrderDetailDto[]) {
+    updateOrder(
+        id: string, order: OrderDto,
+        orderDetailList: OrderDetailDto[]) {
         let payload: OrderProductsDto = {
             order,
             products: orderDetailList.map<OrderDetailDto>((item: any, index) => {
@@ -137,10 +148,10 @@ export class OrderDataSource {
                     return {
                         order: parseInt(id),
                         product: item.product['id'],
-                        itemStatus: orderDetail.itemStatus['id'],
-                        onInventoryStatus: orderDetail.onInventoryStatus['id'],
-                        inventory: orderDetail.inventory['id'],
-                        warehouse: orderDetail.warehouse['id'],
+                        itemStatus: this.orderDetailIds.itemStatusId,
+                        onInventoryStatus: this.orderDetailIds.onInventoryStatusId,
+                        inventory: this.orderDetailIds.inventoryId,
+                        warehouse: this.orderDetailIds.warehouseId,
                         price: item.price,
                         assignedUser: item.assignedUser,
                         serialNumber: item.serialNumber,
@@ -158,9 +169,12 @@ export class OrderDataSource {
         return this.orderService.update(payload, id) as any;
     }
 
-    updateOrderIn (id: string, order: OrderDto, orderDetail: OrderDetailDto, inventoryItems: OrderDetailDto[]) {
+    updateOrderIn(
+        id: string,
+        order: OrderDto,
+        inventoryItems: OrderDetailDto[]) {
         const theListofProducts = [];
-        inventoryItems.forEach((product)=>{
+        inventoryItems.forEach((product) => {
             product['value'].forEach(element => {
                 theListofProducts.push(element)
             });
@@ -172,10 +186,10 @@ export class OrderDataSource {
                     return {
                         order: parseInt(id),
                         product: item.id,
-                        itemStatus: orderDetail.itemStatus['id'],
-                        onInventoryStatus: orderDetail.onInventoryStatus['id'],
-                        inventory: orderDetail.inventory['id'],
-                        warehouse: orderDetail.warehouse['id'],
+                        itemStatus: this.orderDetailIds.itemStatusId,
+                        onInventoryStatus: this.orderDetailIds.onInventoryStatusId,
+                        inventory: this.orderDetailIds.inventoryId,
+                        warehouse: this.orderDetailIds.warehouseId,
                         price: item.price,
                         serialNumber: item.serialNumber,
                         assignedUser: item.assignedUser

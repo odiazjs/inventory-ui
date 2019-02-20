@@ -4,7 +4,7 @@ import { startWith, delay, tap } from 'rxjs/operators';
 import { OrderDataSource } from './order.dataSource';
 import { ActivatedRoute } from '@angular/router';
 import { ProductDto } from 'src/models/product.dto';
-import { OrderProductsDto, OrderDetailDto, ORDER_INITIAL_STATE, ORDER_PRODUCTS_INITIAL_STATE } from 'src/models/order.dto';
+import { OrderProductsDto, OrderDetailDto, ORDER_INITIAL_STATE, ORDER_PRODUCTS_INITIAL_STATE, ORDER_DETAIL_IDS_CATALOGS_DEFAULT } from 'src/models/order.dto';
 import { KeysPipe } from 'src/common/keys.pipe';
 import { Store } from '@ngxs/store';
 import { Navigate } from '@ngxs/router-plugin';
@@ -47,7 +47,10 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
     ) {
     }
     ngOnInit(): void {
-
+        setTimeout(() => {
+            this.dto.order = ORDER_INITIAL_STATE();
+            this.dataSource.orderDetailIds = ORDER_DETAIL_IDS_CATALOGS_DEFAULT;
+        })
     }
     ngAfterViewInit(): void {
         this.subscribers.all = Observable.of()
@@ -96,7 +99,7 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
                     this.subscribers.saveSubscription = this.saveSubject.subscribe(data => {
                         if (this.paramsId) {
                             const dto = Object.assign({}, this.dto.order)
-                            this.dataSource.updateOrderIn(this.paramsId, dto, this.orderDetail, this.dto.products)
+                            this.dataSource.updateOrderIn(this.paramsId, dto, this.dto.products)
                                 .subscribe(response => {
                                     this.dto = ORDER_PRODUCTS_INITIAL_STATE;
                                     console.log('saved order dto ---> ', response);
@@ -104,7 +107,7 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
                                 })
                         } else {
                             const dto = Object.assign({}, this.dto.order)
-                            this.dataSource.saveOrderIn(dto, this.orderDetail, this.dto.products)
+                            this.dataSource.saveOrderIn(dto, this.dto.products)
                                 .subscribe(response => {
                                     console.log('saved order dto ---> ', response);
                                     addNotification(response.order.id);

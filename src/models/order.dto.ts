@@ -42,6 +42,13 @@ export class OrderDetailDto {
     inventoryItem?: number;
 }
 
+export interface OrderDetailIds {
+    itemStatusId: number,
+    onInventoryStatusId: number,
+    inventoryId: number,
+    warehouseId: number
+}
+
 export class OrderProductsDto {
     order: OrderDto;
     products: OrderDetailDto[];
@@ -77,6 +84,13 @@ export const ORDER_DETAIL_CATALOGS_DEFAULT = {
     onInventoryStatus: DEFAULT_CATALOG_VALUE,
     inventory: DEFAULT_CATALOG_VALUE,
     warehouse: DEFAULT_CATALOG_VALUE
+}
+
+export const ORDER_DETAIL_IDS_CATALOGS_DEFAULT = {
+    itemStatusId: 1,
+    onInventoryStatusId: 1,
+    inventoryId: 1,
+    warehouseId: 1
 }
 
 export const ORDER_INITIAL_STATE = (catalogs?) => {
