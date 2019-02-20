@@ -151,4 +151,10 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
     setFocusOnScanner(): void{
         this.macField.nativeElement.focus()
     }
+    canEdit() {
+        if (this.dto.order.orderState === 'Closed') {
+            return true
+        }
+        return false
+    }
 }

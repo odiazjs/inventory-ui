@@ -6,7 +6,7 @@
     </div>
 </div>
 
-<div class="flex-container row padded-aside">
+<div class="flex-container row padded-aside" [ngClass]="{'disabled':canEdit()}">
     <ng-container *ngFor="let orderType of orderTypes; let i = index">
         <div class="col-xxs">
             <label class="container">{{orderType.orderDirection}}
@@ -30,7 +30,7 @@
     </div>
 </div>
 
-<div class="flex-container row padded-aside">
+<div class="flex-container row padded-aside" [ngClass]="{'disabled':canEdit()}">
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
             <select required [(ngModel)]="dto.order.orderType.id" name="ordersubtype">
@@ -75,7 +75,7 @@
         </div>
     </div>
 </div>
-<div class="flex-container row padded-aside">
+<div class="flex-container row padded-aside" [ngClass]="{'disabled':canEdit()}">
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
             <select required [(ngModel)]="orderDetail.warehouse" name="warehouse">
@@ -105,7 +105,7 @@
         </form>
     </div>
 </div>
-<div class="padded-aside flex-container">
+<div class="padded-aside flex-container" [ngClass]="{'disabled':canEdit()}">
     <textarea class="search col" type="text" placeholder="Order notes..." [(ngModel)]="dto.order.notes"></textarea>
 </div>
 

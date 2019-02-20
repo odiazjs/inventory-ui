@@ -81,5 +81,10 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
         this.filterOrderSubTypes();
         this.resolveOrderDirection(newValue.orderDirection)
     }
-
+    canEdit() {
+        if (this.dto.order.orderState === 'Closed') {
+            return true
+        }
+        return false
+    }
 }
