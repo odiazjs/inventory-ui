@@ -47,12 +47,11 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
     ) {
     }
     ngOnInit(): void {
-        setTimeout(() => {
-            this.dto.order = ORDER_INITIAL_STATE();
-            this.dataSource.orderDetailIds = ORDER_DETAIL_IDS_CATALOGS_DEFAULT;
-        })
+        console.log('init')
     }
     ngAfterViewInit(): void {
+        this.dto.order = ORDER_INITIAL_STATE();
+        this.dataSource.orderDetailIds = ORDER_DETAIL_IDS_CATALOGS_DEFAULT;
         this.subscribers.all = Observable.of()
             .pipe(
                 startWith(null),

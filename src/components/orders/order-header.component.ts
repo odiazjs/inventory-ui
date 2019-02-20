@@ -9,13 +9,14 @@ import {
     DEFAULT_ORDER_SUBTYPES,
     OrderProductsDto,
 } from 'src/models/order.dto';
+import { DestroySubscribers } from 'src/common/destroySubscribers';
 
 @Component({
     selector: 'app-order-header',
     templateUrl: './order-header.template.html',
     styleUrls: ['./new-order.component.scss']
 })
-
+@DestroySubscribers()
 export class OrderHeaderComponent implements OnInit, AfterViewInit {
     orderDetail = ORDER_DETAIL_INITIAL_STATE();
     catalogs: any = {};
@@ -23,6 +24,8 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
     orderDirection = '';
     orderSubTypes = [];
     isEdit: boolean = false;
+
+    public subscribers: any = {}
 
     @Input('dto') dto: OrderProductsDto;
 
@@ -35,7 +38,7 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
 
     }
     ngAfterViewInit(): void {
-        Observable.of()
+        this.subscribers.all = Observable.of()
             .pipe(
                 startWith(null),
                 delay(0),
