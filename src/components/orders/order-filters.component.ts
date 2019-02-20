@@ -1,4 +1,4 @@
-import { ProductService, NotificationService, AlertType, Message } from 'src/services/barrel';
+import { ProductService, NotificationService, AlertType, Message, OrderDataSource } from 'src/services/barrel';
 import { Component, OnInit, AfterViewInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { startWith, delay, tap } from 'rxjs/operators';
@@ -35,6 +35,7 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
         'Completed',
         'Discarded'
     ];
+    filtersOrderState = this.orderStates[0];
     orderDetailMap: Dictionary<any[]> = {};
     scannedSerialNo: string = '';
     result: ProductModel[]
@@ -45,6 +46,7 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
     scanMacAddressSubject: Subject<any> = new Subject();
 
     constructor(
+        public dataSource: OrderDataSource,
         public activatedRoute: ActivatedRoute,
         private productService: ProductService,
         private notificationService: NotificationService
@@ -68,6 +70,10 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
     }
     ngAfterViewInit(): void {
         
+    }
+
+    changeSaveAs (event) {
+        //this.filtersOrderState = this.dataSource.dto.order.orderState;
     }
 
     canSave() {

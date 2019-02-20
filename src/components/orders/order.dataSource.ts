@@ -4,9 +4,10 @@ import {
     OrderDto,
     OrderDetailDto,
     OrderDetailIds,
-    ORDER_DETAIL_IDS_CATALOGS_DEFAULT
+    ORDER_DETAIL_IDS_CATALOGS_DEFAULT,
+    DEFAULT_ORDER_STATES
 } from 'src/models/order.dto';
-import { map, concatAll, first } from 'rxjs/operators';
+import { map, concatAll } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
@@ -22,6 +23,7 @@ import { AuthService } from 'src/services/auth.service';
 export class OrderDataSource {
     dto: OrderProductsDto = Object.assign({}, ORDER_PRODUCTS_INITIAL_STATE);
     orderDetailIds: OrderDetailIds = ORDER_DETAIL_IDS_CATALOGS_DEFAULT;
+    orderState: string = DEFAULT_ORDER_STATES[0];
     @Select(state => state.catalogs) catalogs$: Observable<Dictionary<CatalogDto[]>>;
     constructor(
         private store: Store,
@@ -65,6 +67,12 @@ export class OrderDataSource {
                         onInventoryStatusId: onInventoryStatus as any,
                         warehouseId: warehouse as any,
                     })
+                    this.orderState = result.order.orderState;
+                    if (result.order.orderState === 'Closed') {
+                        this.dto.order.orderState = 'Completed'
+                    } else {
+                        this.dto.order.orderState = DEFAULT_ORDER_STATES.filter(state => state === result.order.orderState)[0];
+                    }
                     return new OrderProductsDto(result);
                 })
             )
@@ -75,7 +83,6 @@ export class OrderDataSource {
     }
 
     saveOrderIn(
-        order: OrderDto,
         inventoryItems: OrderDetailDto[]
     ) {
         let theListofProducts: any = [];
@@ -85,6 +92,7 @@ export class OrderDataSource {
             });
         })
         let userId: number;
+        const order = Object.assign({}, this.dto.order);
         return this.authService.getUserInfo().pipe(
             map((info) => {
                 userId = info.user_id
@@ -113,9 +121,9 @@ export class OrderDataSource {
     }
 
     saveOrder(
-        order: OrderDto,
         inventoryItems: InventoryItemModel[]
     ) {
+        const order = Object.assign({}, this.dto.order);
         let payload: OrderProductsDto = {
             order,
             products: inventoryItems.map<any>((item) => {
@@ -135,12 +143,14 @@ export class OrderDataSource {
         const immutableOrder = Object.assign(new Object(), order);
         payload.order.orderType = immutableOrder.orderType['id'];
         payload.order.orderDate = new Date() as any;
-        return this.orderService.create(payload)
+        return this.orderService.create(payload);
     }
 
     updateOrder(
-        id: string, order: OrderDto,
-        orderDetailList: OrderDetailDto[]) {
+        id: string,
+        orderDetailList: OrderDetailDto[]
+    ) {
+        const order = Object.assign({}, this.dto.order);
         let payload: OrderProductsDto = {
             order,
             products: orderDetailList.map<OrderDetailDto>((item: any, index) => {
@@ -166,19 +176,21 @@ export class OrderDataSource {
         const immutableOrder = Object.assign(new Object(), order);
         payload.order.orderType = immutableOrder.orderType['id']
         payload.order.orderDate = new Date() as any;
+        payload.order.orderState = this.dto.order.orderState;
         return this.orderService.update(payload, id) as any;
     }
 
     updateOrderIn(
         id: string,
-        order: OrderDto,
-        inventoryItems: OrderDetailDto[]) {
+        inventoryItems: OrderDetailDto[]
+    ) {
         const theListofProducts = [];
         inventoryItems.forEach((product) => {
             product['value'].forEach(element => {
                 theListofProducts.push(element)
             });
         })
+        const order = Object.assign({}, this.dto.order);
         let payload: OrderProductsDto = {
             order,
             products: theListofProducts.map<OrderDetailDto>((item) => {
@@ -201,6 +213,7 @@ export class OrderDataSource {
             })
         }
         const immutableOrder = Object.assign(new Object(), order);
+        payload.order.orderState = this.dto.order.orderState;
         payload.order.orderType = immutableOrder.orderType['id']
         return this.orderService.update(payload, id) as any;
     }

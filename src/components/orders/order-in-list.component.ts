@@ -97,16 +97,14 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
                     }
                     this.subscribers.saveSubscription = this.saveSubject.subscribe(data => {
                         if (this.paramsId) {
-                            const dto = Object.assign({}, this.dto.order)
-                            this.dataSource.updateOrderIn(this.paramsId, dto, this.dto.products)
+                            this.dataSource.updateOrderIn(this.paramsId, this.dto.products)
                                 .subscribe(response => {
                                     this.dto = ORDER_PRODUCTS_INITIAL_STATE;
                                     console.log('saved order dto ---> ', response);
                                     addNotification(response.order.id);
                                 })
                         } else {
-                            const dto = Object.assign({}, this.dto.order)
-                            this.dataSource.saveOrderIn(dto, this.dto.products)
+                            this.dataSource.saveOrderIn(this.dto.products)
                                 .subscribe(response => {
                                     console.log('saved order dto ---> ', response);
                                     addNotification(response.order.id);

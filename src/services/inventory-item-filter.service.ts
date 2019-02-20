@@ -33,6 +33,5 @@ export class InventoryItemFilterService extends ResourceService<InventoryItemMod
 }
 
 const inventoryItemFactory: any = (value: InventoryItemModel[]) => {
-    console.log('serializer', value)
     return value.map(item => new InventoryItemModel())
 }

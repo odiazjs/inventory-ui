@@ -33,20 +33,20 @@
 <div class="flex-container row padded-aside">
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <select required [(ngModel)]="dto.order.orderType.id" name="ordersubtype">
+            <select required [(ngModel)]="dataSource.dto.order.orderType.id" name="ordersubtype">
                 <option *ngFor="let item of orderSubTypes" [ngValue]="item.id">{{item.name}}</option>
             </select>
         </form>
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <input [ngModel]="dto.order.orderDate | date:'yyyy-MM-dd'" (ngModelChange)="dto.order.orderDate = $event"
+            <input [ngModel]="dataSource.dto.order.orderDate | date:'yyyy-MM-dd'" (ngModelChange)="dataSource.dto.order.orderDate = $event"
                 type="date" name="orderdate" />
         </form>
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <input type="text" [(ngModel)]="dto.order.ticketNumber" placeholder="Ticket No" name="ticketnumber">
+            <input type="text" [(ngModel)]="dataSource.dto.order.ticketNumber" placeholder="Ticket No" name="ticketnumber">
         </form>
     </div>
     <div class="col-sm">
@@ -106,7 +106,7 @@
     </div>
 </div>
 <div class="padded-aside flex-container">
-    <textarea class="search col" type="text" placeholder="Order notes..." [(ngModel)]="dto.order.notes"></textarea>
+    <textarea class="search col" type="text" placeholder="Order notes..." [(ngModel)]="dataSource.dto.order.notes"></textarea>
 </div>
 
 <!-- FILTER CONTROLS -->

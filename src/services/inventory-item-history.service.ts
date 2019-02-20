@@ -32,6 +32,5 @@ export class InventoryItemHistoryService extends ResourceService<InventoryItemDt
 }
 
 const inventoryItemFactory: any = (value: InventoryItemModel[]) => {
-  console.log('serializer', value)
   return value.map(item => new InventoryItemModel())
 }

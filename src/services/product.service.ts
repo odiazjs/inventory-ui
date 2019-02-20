@@ -18,6 +18,5 @@ export class ProductService extends ResourceService<ProductDto[]> {
 }
 
 const productServiceFactory = (value: ProductDto[]) => {
-    console.log('serializer', value)
     return value.map(item => new ProductModel(item))
 }

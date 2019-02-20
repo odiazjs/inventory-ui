@@ -34,6 +34,5 @@ export class ProductSearchService extends ResourceService<ProductDto[]> {
 }
 
 const inventoryItemFactory: any = (value: ProductDto[]) => {
-    console.log('serializer', value)
     return value.map(item => new ProductModel(item))
 }

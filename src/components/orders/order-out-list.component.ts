@@ -87,16 +87,13 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
                     this.subscribers.saveSub = this.saveSubject.pipe(
                         takeWhile(() => this.validateOrderType()),
                         map(() => {
-                            const dto = Object.assign({}, this.dto.order)
                             if (id) {
                                 this.dataSource.updateOrder(
                                     id,
-                                    dto,
                                     this.allAddedItemsList as OrderDetailDto[]
                                 ).subscribe(this.postRequest.bind(this))
                             } else {
                                 this.dataSource.saveOrder(
-                                    dto,
                                     this.allAddedItemsList as InventoryItemModel[]
                                 ).subscribe(this.postRequest.bind(this))
                             }

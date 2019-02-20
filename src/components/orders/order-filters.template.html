@@ -1,4 +1,5 @@
-<div class="flex-grid padded-aside filter-fixed" *ngIf="dto.order.orderState !== 'Closed'">
+<div class="flex-grid padded-aside filter-fixed" 
+    *ngIf="dataSource.orderState === 'Draft'">
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
             <input [(ngModel)]="selectedProductKey" (keyup.enter)='scanPartNo($event)' class="search" type="text"
@@ -18,7 +19,7 @@
     </div>
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
-            <select  required [(ngModel)]="dto.order.orderState" name="orderstate">
+            <select  required [(ngModel)]="dataSource.dto.order.orderState" name="orderstate" (change)="changeSaveAs($event)">
                 <option *ngFor="let state of orderStates" [ngValue]="state">Save as {{state}}</option>
             </select>
         </form>

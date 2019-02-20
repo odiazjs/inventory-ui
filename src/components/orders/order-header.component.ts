@@ -47,7 +47,8 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
                     const { snapshot: { params: { id, orderType } } } = this.activatedRoute;
                     if (id) {
                         this.isEdit = true;
-                        this.orderDirection = orderType
+                        this.orderDirection = orderType;
+                        this.filterOrderSubTypes();
                     } else {
                         this.isEdit = false;
                     }
