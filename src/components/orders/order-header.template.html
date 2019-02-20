@@ -6,7 +6,7 @@
     </div>
 </div>
 
-<div class="flex-container row padded-aside">
+<div class="flex-container row padded-aside" [ngClass]="{'disabled': dto.order.orderState === 'Closed'}">
     <ng-container *ngFor="let orderType of orderTypes; let i = index">
         <div class="col-xxs">
             <label class="container">{{orderType.orderDirection}}
