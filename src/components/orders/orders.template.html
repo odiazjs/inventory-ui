@@ -76,12 +76,12 @@
         <div class="Rtable Rtable--5cols Rtable--collapse">
             <div class="Rtable-row Rtable-row--head headers-fixed">
                 <div class="Rtable-cell small-cell column-heading">Checkbox</div>
-                <div class="Rtable-cell topic-cell column-heading">Order No.</div>
-                <div class="Rtable-cell small-cell column-heading">Ticket No.</div>
-                <div class="Rtable-cell small-cell column-heading">Order Direction</div>
-                <div class="Rtable-cell date-cell column-heading">Order Type</div>
-                <div class="Rtable-cell date-cell column-heading">Date</div>
-                <div class="Rtable-cell date-cell column-heading">Status</div>
+                <div class="Rtable-cell topic-cell column-heading"(click)="orderBy('orderNumber')" >Order No.</div>
+                <div class="Rtable-cell small-cell column-heading"(click)="orderBy('ticketNumber')">Ticket No.</div>
+                <div class="Rtable-cell small-cell column-heading"(click)="orderByOrderType('orderDirection')">Order Direction</div>
+                <div class="Rtable-cell date-cell column-heading"(click)="orderByOrderType('name')">Order Type</div>
+                <div class="Rtable-cell date-cell column-heading"(click)="orderBy('orderDate')">Date</div>
+                <div class="Rtable-cell date-cell column-heading"(click)="orderBy('orderNumber')">Status</div>
                 <!-- <div class="Rtable-cell date-cell column-heading">Select</div> -->
             </div>
 

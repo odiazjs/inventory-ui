@@ -22,6 +22,8 @@ export class OrdersComponent implements AfterContentInit {
 
     canEdit: boolean = false;
     canView: boolean = false;
+    asce = true;
+    sorteredBy: string = '';
 
     constructor(
         private store: Store,
@@ -77,6 +79,29 @@ export class OrdersComponent implements AfterContentInit {
         }
         this.validateCanEdit();
     }
+
+    orderBy(param: string) {
+        const list = [...this.orderList]
+        if (this.asce) {
+            this.orderList = list.sort((a, b) => (a[param] > b[param]) ? 1 : ((b[param] > a[param]) ? -1 : 0))
+            this.asce = !this.asce
+        } else {
+            this.orderList = list.sort((a, b) => (a[param] < b[param]) ? 1 : ((b[param] < a[param]) ? -1 : 0))
+            this.asce = !this.asce
+        }
+    }
+
+    orderByOrderType(param: string){
+        const list = [...this.orderList]
+        if (this.asce) {
+            this.orderList = list.sort((a, b) => (a.orderType[param] > b.orderType[param]) ? 1 : ((b.orderType[param] > a.orderType[param]) ? -1 : 0))
+            this.asce = !this.asce
+        } else {
+            this.orderList = list.sort((a, b) => (a.orderType[param] < b.orderType[param]) ? 1 : ((b.orderType[param] < a.orderType[param]) ? -1 : 0))
+            this.asce = !this.asce
+        }
+    }
+
 
     ngAfterContentInit(): void {
 
