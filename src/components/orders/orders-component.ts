@@ -21,6 +21,7 @@ export class OrdersComponent implements AfterContentInit, OnInit {
 
     lineChart: Array<any> = [];
     orderList: Array<OrderModel> = [];
+    fetchedList: Array<OrderModel> = [];
 
     canEdit: boolean = false;
     canView: boolean = false;
@@ -40,9 +41,23 @@ export class OrdersComponent implements AfterContentInit, OnInit {
             this.orderService.getList()
                 .subscribe((result: any) => {
                     console.log('orders...', result);
-                    this.orderList = [...result]
+                    this.orderList = [...result];
+                    this.fetchedList = [...result];
                 })
         })
+    }
+
+    filterOrders(value: string, isClear: boolean) {
+        if (isClear) {
+            this.orderList = [...this.fetchedList];
+            return;
+        }
+        this.orderList = [...this.orderList.filter((order: OrderModel | any) => 
+                order.id.toString().includes(value) || 
+                    order.orderState.toLowerCase().includes(value) || 
+                        order.orderType.name.toLowerCase().includes(value)
+                    )
+                ]
     }
 
     newOrder() {

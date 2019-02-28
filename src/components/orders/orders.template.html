@@ -39,8 +39,13 @@
             </div>
             <div class="col-md">
                 <form class="example" action="javascript:void(0);">
-                    <input class="search" type="text" placeholder="Search.." name="search">
-                    <button type="submit"><i class="material-icons small">search</i></button>
+                    <input #filterInput
+                        class="search" type="text" 
+                        placeholder="Id, Type or Status" name="search"
+                        (keyup.enter)='filterOrders(filterInput.value, false)'>
+                    <button type="submit" (click)="filterOrders(filterInput.value, true)">
+                        <i class="material-icons small">clear</i>
+                    </button>
                 </form>
             </div>
         </div>
