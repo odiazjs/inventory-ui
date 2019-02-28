@@ -44,6 +44,7 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
     onSaveSubject: Subject<void> = new Subject();
     scanPartNoSubject: Subject<ProductDto[]> = new Subject();
     scanMacAddressSubject: Subject<any> = new Subject();
+    searchByMacAddressSubject: Subject<any> = new Subject();
 
     constructor(
         public dataSource: OrderDataSource,
@@ -148,6 +149,10 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
         productItem.serialNumber = value;
         this.scannedSerialNo = '';
         this.scanMacAddressSubject.next(productItem);
+    }
+
+    searchByMacAddress (value: string, isClear: boolean) {
+        this.searchByMacAddressSubject.next({value, isClear})
     }
 
 

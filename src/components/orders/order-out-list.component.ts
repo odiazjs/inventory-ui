@@ -19,20 +19,22 @@ import { DestroySubscribers } from 'src/common/destroySubscribers';
     templateUrl: './order-out-list.template.html',
     styleUrls: ['./new-order.component.scss']
 })
+
 @DestroySubscribers()
 export class OrderOutListComponent implements OnInit, AfterViewInit {
     @Input() dto: OrderProductsDto;
     @Input() orderDetail: OrderDetailDto;
     @Input() saveSubject: Subject<void>;
-    @Input() scanMacAddressSubject: Subject<any>;
+    @Input() searchByMacAddressSubject: Subject<any>;
     @Input() scanPartNoSubject: Subject<ProductDto[]>;
 
     paramsId: string;
+    subscribers: any = {};
+    fetchedList: InventoryItemModel[] = [];
+    allAddedItemsList: InventoryItemModel[] = [];
     itemsList: InventoryItemModel[] = [];
     orderDetailList: OrderDetailDto[] = [];
-    addedItemList: InventoryItemModel[] = [];
-    allAddedItemsList: any[] = []
-    public subscribers: any = {};
+
     constructor(
         public store: Store,
         public dataSource: OrderDataSource,
@@ -78,11 +80,24 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
                             const partNo = matches.pop().partNumber;
                             this.dataSource.getInventoryItems(partNo)
                                 .subscribe(result => {
-                                    console.log('Available inventory items ---> ', result)
+                                    this.fetchedList = [...result].filter(x => x.available) as any;
                                     this.itemsList = [...result].filter(x => x.available) as any;
                                 })
                         })
                     ).subscribe()
+
+                    this.subscribers.searchByMacAddressSubject = this.searchByMacAddressSubject.pipe(
+                        takeWhile(() => this.validateOrderType()),
+                        map(({ value, isClear }) => {
+                            if (isClear) {
+                                this.itemsList = [...this.fetchedList]
+                            } else {
+                                this.itemsList = [...this.itemsList.filter(item =>
+                                    item.product.partNumber.includes(value) || item.serialNumber.includes(value))
+                                ]
+                            }
+                        })
+                    ).subscribe();
 
                     this.subscribers.saveSub = this.saveSubject.pipe(
                         takeWhile(() => this.validateOrderType()),
@@ -101,6 +116,13 @@ export class OrderOutListComponent implements OnInit, AfterViewInit {
                     ).subscribe()
                 })
             ).subscribe()
+    }
+
+    getInventoryItems(partNo) {
+        this.dataSource.getInventoryItems(partNo)
+            .subscribe(result => {
+                this.itemsList = [...result].filter(x => x.available) as any;
+            })
     }
 
     postRequest(response) {

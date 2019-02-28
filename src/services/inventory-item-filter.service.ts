@@ -26,12 +26,17 @@ export class InventoryItemFilterService extends ResourceService<InventoryItemMod
           .get(`${queryUrl}`)
           .pipe(
             map((list: any[]) => {
-                return list['results'] ? list['results'].map(serializeCase) : []
+                return list['results'] ? list['results'].map(item => {
+                    if (item.product) {
+                        item.product = Object.assign({}, serializeCase(item.product)) as any
+                    }
+                    return serializeCase(item);
+                }) : []
               })
           );
         }
 }
 
 const inventoryItemFactory: any = (value: InventoryItemModel[]) => {
-    return value.map(item => new InventoryItemModel())
+    return value.map(item => item);
 }
