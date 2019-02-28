@@ -8,6 +8,7 @@ import {
     ORDER_DETAIL_INITIAL_STATE,
     DEFAULT_ORDER_SUBTYPES,
     OrderProductsDto,
+    ORDER_INITIAL_STATE,
 } from 'src/models/order.dto';
 import { DestroySubscribers } from 'src/common/destroySubscribers';
 
@@ -23,6 +24,7 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
     orderTypes = DEFAULT_ORDER_TYPES;
     orderDirection = '';
     orderSubTypes = [];
+    ordersubtype = null;
     isEdit: boolean = false;
 
     public subscribers: any = {}
@@ -87,6 +89,8 @@ export class OrderHeaderComponent implements OnInit, AfterViewInit {
         this.orderDirection = newValue.orderDirection;
         this.fillCatalogs();
         this.filterOrderSubTypes();
+        this.dataSource.dto.order.orderType['id'] = this.orderSubTypes[0].id;
+        this.dataSource.orderDetailIds.onInventoryStatusId = this.catalogs['inventoryStatuses'][0].id;
         this.resolveOrderDirection(newValue.orderDirection)
     }
 

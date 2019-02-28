@@ -34,7 +34,7 @@
     <div class="col-sm">
         <form class="example" action="javascript:void(0);">
             <select required [(ngModel)]="dataSource.dto.order.orderType.id" name="ordersubtype">
-                <option *ngFor="let item of orderSubTypes" [ngValue]="item.id">{{item.name}}</option>
+                <option *ngFor="let item of orderSubTypes;" [ngValue]="item.id">{{item.name}}</option>
             </select>
         </form>
     </div>
