@@ -10,7 +10,7 @@ export const configFile = {
     'protocol': 'http',
     'scheme': 'Bearer',
     'api': {
-        'baseUrl': 'localhost:8000/api',
+        'baseUrl': '192.168.0.56:8000/api',
         'apiVersion': 'v1'
     },
     'urlConfig': {

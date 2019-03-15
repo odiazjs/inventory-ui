@@ -78,8 +78,8 @@ export class OrderDataSource {
             )
     }
 
-    getInventoryItems(partNo: string) {
-        return this.inventoryItemService.getList({ part_number: partNo });
+    getInventoryItems(serialNo: string) {
+        return this.inventoryItemService.getList({ serial_number: serialNo });
     }
 
     saveOrderIn(
@@ -123,10 +123,16 @@ export class OrderDataSource {
     saveOrder(
         inventoryItems: InventoryItemModel[]
     ) {
+        let productList: any = [];
+        inventoryItems.forEach((product) => {
+            product['value'].forEach(element => {
+                productList.push(element)
+            });
+        })
         const order = Object.assign({}, this.dto.order);
         let payload: OrderProductsDto = {
             order,
-            products: inventoryItems.map<any>((item) => {
+            products: productList.map((item) => {
                 return {
                     product: item.product['id'],
                     itemStatus: this.orderDetailIds.itemStatusId,
@@ -150,10 +156,16 @@ export class OrderDataSource {
         id: string,
         orderDetailList: OrderDetailDto[]
     ) {
+        let productList: any = [];
+        orderDetailList.forEach((product) => {
+            product['value'].forEach(element => {
+                productList.push(element)
+            });
+        })
         const order = Object.assign({}, this.dto.order);
         let payload: OrderProductsDto = {
             order,
-            products: orderDetailList.map<OrderDetailDto>((item: any, index) => {
+            products: productList.map((item: any, index) => {
                 if (!item.inventoryItem) {
                     return {
                         order: parseInt(id),

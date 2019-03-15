@@ -74,14 +74,11 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
     }
 
     changeSaveAs (event) {
-        //this.filtersOrderState = this.dataSource.dto.order.orderState;
+        //
     }
 
     canSave() {
-        if (this.dto.order.orderType['orderDirection'] === 'In') {
-            return [...KeysPipe.pipe(this.orderDetailMap)].length
-        }
-        return this.orderOurListComponent && this.orderOurListComponent.allAddedItemsList.length
+        return [...KeysPipe.pipe(this.orderDetailMap)].length;
     }
 
     saveCompleteConfirmtation(ev: Event) {
@@ -123,19 +120,21 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
     }
 
     scanMacAddress(value: string) {
-        if (!this.orderDetailMap[this.selectedProductKey]){
+        if (!this.orderDetailMap[this.selectedProductKey] && this.dto.order.orderType['orderDirection'] === 'In' ) {
             this.notificationService.push({
                 body: 'Please enter a EAN or Part Number first.', 
                 type: AlertType.info
             })
             return;
         }
-        if (this.orderDetailMap[this.selectedProductKey].find(y => y.serialNumber === value)) {
-            this.notificationService.push({
-                body: 'This item already exists in this order', 
-                type: AlertType.warning
-            })
-            return
+        if (this.dto.order.orderType['orderDirection'] === 'In') {
+            if (this.orderDetailMap[this.selectedProductKey].find(y => y.serialNumber === value)) {
+                this.notificationService.push({
+                    body: 'This item already exists in this order', 
+                    type: AlertType.warning
+                })
+                return
+            }
         }
         if (value === null || value === '') {
             this.notificationService.push({
@@ -148,7 +147,7 @@ export class OrderFiltersComponent implements OnInit, AfterViewInit {
         const productItem: any = { product: [...matches].shift() };
         productItem.serialNumber = value;
         this.scannedSerialNo = '';
-        this.scanMacAddressSubject.next(productItem);
+        this.scanMacAddressSubject.next({ value, productItem });
     }
 
     searchByMacAddress (value: string, isClear: boolean) {

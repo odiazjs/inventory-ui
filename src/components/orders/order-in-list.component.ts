@@ -97,18 +97,31 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
                     }
                     this.subscribers.saveSubscription = this.saveSubject.subscribe(data => {
                         if (this.paramsId) {
-                            this.dataSource.updateOrderIn(this.paramsId, this.dto.products)
+                            if (this.dto.order.orderType['orderDirection'] === 'Out') {
+                                this.dataSource.updateOrder(this.paramsId, this.dto.products)
+                                    .subscribe(response => {
+                                        this.dto = ORDER_PRODUCTS_INITIAL_STATE;
+                                        addNotification(response.order.id);
+                                    })
+                            } else {
+                                this.dataSource.updateOrderIn(this.paramsId, this.dto.products)
                                 .subscribe(response => {
                                     this.dto = ORDER_PRODUCTS_INITIAL_STATE;
-                                    console.log('saved order dto ---> ', response);
                                     addNotification(response.order.id);
                                 })
+                            }
                         } else {
-                            this.dataSource.saveOrderIn(this.dto.products)
+                            if (this.dto.order.orderType['orderDirection'] === 'Out') {
+                                this.dataSource.saveOrder(this.dto.products as any)
+                                    .subscribe(response => {
+                                        addNotification(response.order.id);
+                                    })
+                            } else {
+                                this.dataSource.saveOrderIn(this.dto.products)
                                 .subscribe(response => {
-                                    console.log('saved order dto ---> ', response);
                                     addNotification(response.order.id);
                                 })
+                            }
                         }
                     })
                     this.subscribers.scanSubscripton = this.scanPartNoSubject.subscribe((matches) => {
@@ -117,9 +130,29 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
                     })
 
                     this.subscribers.scanMacAddressSubscription = this.scanMacAddressSubject.subscribe(
-                        (productItem) => {
+                        (data: any) => {
                             const orderDetail = Object.assign({}, this.orderDetail)
-                            this.handleProductItems(1, productItem, orderDetail)
+                            const serialNo = data.value;
+                            if (this.dto.order.orderType['orderDirection'] == 'Out') {
+                                this.dataSource.getInventoryItems(serialNo)
+                                    .subscribe(result => {
+                                        if (!result.length) return;
+                                        const match = result[0];
+                                        this.handleProductDict(match.product);
+                                        if (this.orderDetailMap[this.selectedProductKey].find(
+                                            y => y.serialNumber === data.value)
+                                        ) {
+                                            this.notificationService.push({
+                                                body: 'This item already exists in this order', 
+                                                type: AlertType.warning
+                                            })
+                                            return
+                                        }
+                                        this.handleProductItems(1, match, orderDetail);
+                                    })
+                            } else {
+                                this.handleProductItems(1, data.productItem, orderDetail)
+                            }
                         }
                     )
                 })
@@ -157,22 +190,22 @@ export class OrderInListComponent implements OnInit, AfterViewInit {
     }
 
     handleProductItems(qtyCounter, item, orderDetail) {
-        // console.log('handle product item ', item)
-        const { order, serialNumber, product: { partNumber, id, name, avgPrice } } = item;
+        const { order, assignedUser, serialNumber, price, product: { partNumber, id, name, avgPrice } } = item;
+        const isOut = this.dto.order.orderType['orderDirection'] === 'Out';
         const orderConfig = {
             id: item.product.id,
             order,
             serialNumber,
             partNumber,
-            product: id,
+            product: isOut ? item.product : id,
             name: name,
             quantity: qtyCounter + 1,
-            price: avgPrice,
+            price: isOut ? price : avgPrice,
             warehouseCat: orderDetail.warehouse,
             inventoryCat: orderDetail.inventory,
             itemStatusCat: orderDetail.itemStatus,
             onInventoryStatusCat: orderDetail.onInventoryStatus,
-            assignedUser: this.dto.order.createdBy
+            assignedUser: isOut ? assignedUser : this.dto.order.createdBy
         };
         this.orderDetailMap[partNumber].push(orderConfig);
         this.dto.products = [...KeysPipe.pipe(this.orderDetailMap)];
